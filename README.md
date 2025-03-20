@@ -21,6 +21,111 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+# Base Backend 2025
+
+Base para projetos backend usando NestJS, TypeORM e PostgreSQL.
+
+## Pré-requisitos
+
+- Node.js (v18+)
+- Docker e Docker Compose
+- npm ou yarn
+
+## Configuração do ambiente de desenvolvimento
+
+1. Clone o repositório
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Copie o arquivo de ambiente:
+   ```bash
+   cp .env.example .env
+   ```
+4. Inicie o banco de dados PostgreSQL usando Docker:
+   ```bash
+   docker-compose up -d
+   ```
+   Isso iniciará:
+   - PostgreSQL em `localhost:5432`
+   - pgAdmin em `localhost:5050` (email: admin@admin.com, senha: pgadmin)
+
+5. Execute a aplicação:
+   ```bash
+   npm run start:dev
+   ```
+
+## Banco de dados
+
+O projeto usa PostgreSQL através do TypeORM. Para administrar o banco de dados, você pode:
+
+1. Usar o pgAdmin incluído em `http://localhost:5050`
+2. Conectar-se diretamente usando as credenciais:
+   - Host: localhost
+   - Port: 5432
+   - User: postgres
+   - Password: postgres
+   - Database: base_backend_2025
+
+## Scripts
+
+- `npm run start:dev` - Inicia o servidor em modo de desenvolvimento
+- `npm run build` - Compila o projeto
+- `npm run start:prod` - Inicia o servidor em modo de produção
+- `npm run test` - Executa testes unitários
+- `npm run test:e2e` - Executa testes end-to-end
+
+## Estrutura do projeto
+
+```
+src/
+├── config/               # Configurações da aplicação
+├── shared/               # Recursos compartilhados
+│   └── database/         # Configuração e entidades do banco de dados
+│       ├── dto/          # DTOs base
+│       ├── entities/     # Entidades base
+│       └── interfaces/   # Interfaces para entidades
+```
+
+## Validação
+
+O projeto utiliza um sistema de validação robusto baseado em `class-validator` e `class-transformer`:
+
+### Características principais:
+
+- **Validação automática** - Todas as requisições são validadas automaticamente usando ValidationPipe global
+- **Whitelist** - Propriedades não definidas nos DTOs são automaticamente removidas
+- **Transform** - Os dados de entrada são automaticamente convertidos para os tipos apropriados
+- **DTOs tipados** - Todos os DTOs são definidos como classes com decoradores de validação
+- **Mensagens personalizadas** - Mensagens de erro claras e em português
+
+### Exemplos de uso:
+
+```typescript
+// DTO com validações
+export class CreateUserDto {
+  @IsNotEmpty({ message: 'O email é obrigatório' })
+  @IsEmail({}, { message: 'Email inválido' })
+  email: string;
+}
+
+// Controller com validação automática
+@Post()
+create(@Body() createUserDto: CreateUserDto) {
+  // createUserDto já está validado
+  return this.userService.create(createUserDto);
+}
+
+// Validação de arrays
+@Post('bulk')
+createMany(
+  @Body(new ParseArrayPipe({ items: CreateUserDto }))
+  dtos: CreateUserDto[]
+) {
+  return this.userService.createMany(dtos);
+}
+```
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
