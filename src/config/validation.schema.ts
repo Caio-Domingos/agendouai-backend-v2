@@ -1,25 +1,14 @@
 import * as Joi from 'joi';
+import { appValidationSchema } from './validations/app.validation';
+import { databaseValidationSchema } from './validations/database.validation';
+import { authValidationSchema } from './validations/auth.validation';
 
+/**
+ * Schema de validação combinado para todas as variáveis de ambiente
+ * Cada domínio tem seu próprio schema em um arquivo separado para melhor organização
+ */
 export const validationSchema = Joi.object({
-  // Application
-  NODE_ENV: Joi.string()
-    .valid('development', 'production', 'test', 'staging')
-    .default('development'),
-  PORT: Joi.number().default(3000),
-  API_PREFIX: Joi.string().default('api'),
-  API_VERSION: Joi.string().default('v1'),
-  APP_NAME: Joi.string().default('Base Backend 2025'),
-  APP_URL: Joi.string().default('http://localhost:3000'),
-  CORS_ALLOWED_ORIGINS: Joi.string().default('http://localhost:3000'),
-
-  // Database
-  DATABASE_HOST: Joi.string().required(),
-  DATABASE_PORT: Joi.number().default(5432),
-  DATABASE_USERNAME: Joi.string().required(),
-  DATABASE_PASSWORD: Joi.string().required(),
-  DATABASE_NAME: Joi.string().required(),
-
-  // JWT Auth
-  JWT_SECRET: Joi.string().required(),
-  JWT_EXPIRATION_TIME: Joi.number().default(3600),
+  ...appValidationSchema.keys(),
+  ...databaseValidationSchema.keys(),
+  ...authValidationSchema.keys(),
 });
