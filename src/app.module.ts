@@ -7,7 +7,6 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { RolesGuard } from './auth/guards/roles.guard';
 import { InterceptorsModule } from './shared/interceptors/interceptors.module';
 import { MorganMiddleware } from './shared/interceptors/logging/morgan.middleware';
 
@@ -17,7 +16,7 @@ import { MorganMiddleware } from './shared/interceptors/logging/morgan.middlewar
     DatabaseModule,
     UsersModule,
     AuthModule,
-    InterceptorsModule, // Novo módulo para interceptores
+    InterceptorsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -27,11 +26,7 @@ import { MorganMiddleware } from './shared/interceptors/logging/morgan.middlewar
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
-    // Aplica o RolesGuard globalmente - verifica papéis quando decoradores @Roles são usados
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
+    // Removido o RolesGuard global
   ],
 })
 export class AppModule implements NestModule {

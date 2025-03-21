@@ -1,6 +1,5 @@
 import { Controller, Post } from '@nestjs/common';
 import { SeedsService } from './seeds.service';
-import { Roles, Role } from '../../auth/decorators/roles.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../shared/swagger/response-decorators';
 import { ApiCommonResponses } from '../../shared/swagger/error-responses.decorator';
@@ -18,10 +17,9 @@ export class SeedsController {
 
   /**
    * Executa todas as seeds
-   * Acessível apenas para administradores
+   * Acessível para usuários autenticados
    */
   @Post('run')
-  @Roles(Role.SUPER_ADMIN)
   @ApiEndpoint({
     summary: 'Executar todas as seeds',
     description:
@@ -35,10 +33,9 @@ export class SeedsController {
 
   /**
    * Executa seed de usuários apenas
-   * Acessível apenas para administradores
+   * Acessível para usuários autenticados
    */
   @Post('users')
-  @Roles(Role.SUPER_ADMIN)
   @ApiEndpoint({
     summary: 'Executar seed de usuários',
     description: 'Cria usuários de exemplo no banco de dados',
@@ -51,10 +48,9 @@ export class SeedsController {
 
   /**
    * Limpa todos os dados do banco, exceto migrations
-   * Acessível apenas para administradores
+   * Acessível para usuários autenticados
    */
   @Post('clear')
-  @Roles(Role.SUPER_ADMIN)
   @ApiEndpoint({
     summary: 'Limpar banco de dados',
     description:

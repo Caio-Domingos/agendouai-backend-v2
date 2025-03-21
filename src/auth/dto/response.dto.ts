@@ -12,9 +12,6 @@ export class UserResponseDto {
 
   @ApiProperty({ example: 'Silva' })
   lastName: string;
-
-  @ApiProperty({ type: [String], example: ['user'] })
-  roles: string[];
 }
 
 export class AuthResponseDto {

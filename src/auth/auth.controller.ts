@@ -11,7 +11,6 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Public } from './decorators/public.decorator';
-import { Roles, Role } from './decorators/roles.decorator';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApiEndpoint } from '../shared/swagger/response-decorators';
 import { ApiCommonResponses } from '../shared/swagger/error-responses.decorator';
@@ -83,21 +82,5 @@ export class AuthController {
   @ApiCommonResponses()
   getProfile(@Request() req) {
     return req.user;
-  }
-
-  /**
-   * Endpoint que exige papel específico
-   */
-  @Roles(Role.ADMIN)
-  @Get('admin')
-  @ApiBearerAuth('JWT')
-  @ApiEndpoint({
-    summary: 'Acesso a dados administrativos (somente admin)',
-  })
-  @ApiCommonResponses()
-  getAdminData() {
-    return {
-      message: 'Dados confidenciais acessíveis apenas para administradores',
-    };
   }
 }

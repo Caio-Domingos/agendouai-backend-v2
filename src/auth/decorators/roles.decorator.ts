@@ -1,13 +1,15 @@
+// Este arquivo foi simplificado e agora serve apenas para manter compatibilidade com código existente
+// Para ser removido completamente em uma atualização futura
+
 import { SetMetadata } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * Chave para marcar os papéis necessários para acessar uma rota
+ * @deprecated Este decorator não tem mais efeito e será removido em versões futuras.
  */
 export const ROLES_KEY = 'roles';
 
 /**
- * Enum de papéis disponíveis no sistema
+ * @deprecated Estes papéis não são mais usados e serão removidos em versões futuras.
  */
 export enum Role {
   USER = 'user',
@@ -15,15 +17,7 @@ export enum Role {
   SUPER_ADMIN = 'super_admin',
 }
 
-// Esta função ajuda a expor o enum Role para o Swagger
-export function getEnumValues(enumType: any): string[] {
-  return Object.keys(enumType)
-    .filter(key => isNaN(Number(key)))
-    .map(key => enumType[key]);
-}
-
 /**
- * Decorator que especifica quais papéis podem acessar uma rota
- * Exemplo de uso: @Roles(Role.ADMIN)
+ * @deprecated Este decorator não tem mais efeito e será removido em versões futuras.
  */
 export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);

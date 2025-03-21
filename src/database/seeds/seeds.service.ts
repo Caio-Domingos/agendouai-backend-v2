@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { User } from '../../shared/database/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import { Role } from '../../auth/decorators/roles.decorator';
 
 @Injectable()
 export class SeedsService {
@@ -53,7 +52,6 @@ export class SeedsService {
         lastName: 'User',
         email: 'admin@example.com',
         password: hashedPassword,
-        roles: [Role.ADMIN, Role.USER],
         isActive: true,
       });
 
@@ -80,7 +78,6 @@ export class SeedsService {
         lastName: 'User',
         email: 'user@example.com',
         password: hashedPassword,
-        roles: [Role.USER],
         isActive: true,
       });
 

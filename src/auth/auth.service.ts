@@ -81,7 +81,6 @@ export class AuthService {
     const user = await this.usersService.create({
       ...registerDto,
       password: hashedPassword,
-      roles: ['user'], // Papel padrão para novos usuários
     });
 
     // Retorna os tokens de acesso
@@ -95,7 +94,6 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
-      roles: user.roles,
     };
 
     // Gera o token de acesso
@@ -115,7 +113,6 @@ export class AuthService {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        roles: user.roles,
       },
     };
   }

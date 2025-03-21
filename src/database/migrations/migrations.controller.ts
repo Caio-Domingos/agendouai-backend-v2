@@ -1,6 +1,5 @@
 import { Controller, Post, Get } from '@nestjs/common';
 import { MigrationsService } from './migrations.service';
-import { Roles, Role } from '../../auth/decorators/roles.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../shared/swagger/response-decorators';
 import { ApiCommonResponses } from '../../shared/swagger/error-responses.decorator';
@@ -19,13 +18,12 @@ export class MigrationsController {
 
   /**
    * Executa as migrations pendentes
-   * Acessível apenas para administradores
+   * Acessível para usuários autenticados
    */
   @Post('run')
-  @Roles(Role.SUPER_ADMIN)
   @ApiEndpoint({
     summary: 'Executar migrations pendentes',
-    description: 'Requer papel SUPER_ADMIN',
+    description: 'Executa as migrations pendentes no banco de dados',
     responseType: MigrationsRunResponseDto,
   })
   @ApiCommonResponses()
@@ -35,13 +33,12 @@ export class MigrationsController {
 
   /**
    * Reverte a última migration
-   * Acessível apenas para administradores
+   * Acessível para usuários autenticados
    */
   @Post('revert')
-  @Roles(Role.SUPER_ADMIN)
   @ApiEndpoint({
     summary: 'Reverter última migration',
-    description: 'Requer papel SUPER_ADMIN',
+    description: 'Reverte a última migration executada',
     responseType: MigrationSuccessDto,
   })
   @ApiCommonResponses()
@@ -51,13 +48,12 @@ export class MigrationsController {
 
   /**
    * Lista as migrations pendentes
-   * Acessível apenas para administradores
+   * Acessível para usuários autenticados
    */
   @Get('pending')
-  @Roles(Role.SUPER_ADMIN)
   @ApiEndpoint({
     summary: 'Listar migrations pendentes',
-    description: 'Requer papel SUPER_ADMIN',
+    description: 'Lista todas as migrations pendentes',
     responseType: PendingMigrationsDto,
   })
   @ApiCommonResponses()
@@ -67,13 +63,12 @@ export class MigrationsController {
 
   /**
    * Obtém o histórico de migrations executadas
-   * Acessível apenas para administradores
+   * Acessível para usuários autenticados
    */
   @Get('history')
-  @Roles(Role.SUPER_ADMIN)
   @ApiEndpoint({
     summary: 'Ver histórico de migrations',
-    description: 'Requer papel SUPER_ADMIN',
+    description: 'Obtém o histórico de migrations já executadas',
     responseType: MigrationHistoryDto,
   })
   @ApiCommonResponses()

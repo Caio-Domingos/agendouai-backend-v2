@@ -1,6 +1,5 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { Role } from '../../../auth/decorators/roles.decorator';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -16,11 +15,6 @@ export class User extends BaseEntity {
   @Column({ select: false })
   password: string;
 
-  @Column({ type: 'simple-array', default: Role.USER })
-  roles: string[];
-
   @Column({ default: true })
   isActive: boolean;
-
-  // Removi o campo code, lastLogin e loginAttempts que eram desnecessários
 }
