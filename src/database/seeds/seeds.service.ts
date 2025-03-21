@@ -5,7 +5,6 @@ import { User } from '../../shared/database/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../../auth/decorators/roles.decorator';
-import { ProductsSeedService } from './products-seed.service';
 
 @Injectable()
 export class SeedsService {
@@ -15,7 +14,6 @@ export class SeedsService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private configService: ConfigService,
-    private productsSeedService: ProductsSeedService,
   ) {}
 
   /**
@@ -26,7 +24,6 @@ export class SeedsService {
 
     // Executa seeds na ordem correta
     await this.seedUsers();
-    await this.seedProducts();
 
     this.logger.log('Seeds executadas com sucesso.');
     return { success: true };
@@ -51,9 +48,6 @@ export class SeedsService {
       );
       const hashedPassword = await bcrypt.hash('Admin123456', saltRounds || 10);
 
-      // Gerar código único para o admin
-      const adminCode = `ADMIN-${Date.now()}`;
-
       await this.userRepository.save({
         firstName: 'Admin',
         lastName: 'User',
@@ -61,7 +55,6 @@ export class SeedsService {
         password: hashedPassword,
         roles: [Role.ADMIN, Role.USER],
         isActive: true,
-        code: adminCode, // Adicionando o código obrigatório
       });
 
       this.logger.log('Usuário admin criado com sucesso.');
@@ -82,9 +75,6 @@ export class SeedsService {
       );
       const hashedPassword = await bcrypt.hash('User123456', saltRounds || 10);
 
-      // Gerar código único para o usuário comum
-      const userCode = `USER-${Date.now()}`;
-
       await this.userRepository.save({
         firstName: 'Regular',
         lastName: 'User',
@@ -92,7 +82,6 @@ export class SeedsService {
         password: hashedPassword,
         roles: [Role.USER],
         isActive: true,
-        code: userCode, // Adicionando o código obrigatório
       });
 
       this.logger.log('Usuário comum criado com sucesso.');
@@ -101,12 +90,5 @@ export class SeedsService {
     }
 
     return { success: true };
-  }
-
-  /**
-   * Seed para criar produtos de teste
-   */
-  async seedProducts() {
-    return this.productsSeedService.seedProducts();
   }
 }

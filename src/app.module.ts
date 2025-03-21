@@ -5,7 +5,6 @@ import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './shared/database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { ProductsModule } from './modules/products/products.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
@@ -18,7 +17,6 @@ import { MorganMiddleware } from './shared/interceptors/logging/morgan.middlewar
     DatabaseModule,
     UsersModule,
     AuthModule,
-    ProductsModule,
     InterceptorsModule, // Novo módulo para interceptores
   ],
   controllers: [AppController],

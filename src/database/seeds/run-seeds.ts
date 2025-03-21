@@ -8,8 +8,6 @@ import appConfig from '../../config/app.config';
 import databaseConfig from '../../config/database.config';
 import authConfig from '../../config/auth.config';
 import { User } from '../../shared/database/entities/user.entity';
-import { Product } from '../../shared/database/entities/product.entity';
-import { ProductsSeedService } from './products-seed.service';
 
 // Criar um módulo especial apenas para executar as seeds
 @Module({
@@ -28,13 +26,13 @@ import { ProductsSeedService } from './products-seed.service';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User, Product], // Especificar diretamente as entidades
+      entities: [User], // Especificar diretamente as entidades
       synchronize: false,
     }),
     // Importar as entidades necessárias
-    TypeOrmModule.forFeature([User, Product]),
+    TypeOrmModule.forFeature([User]),
   ],
-  providers: [SeedsService, ProductsSeedService],
+  providers: [SeedsService],
 })
 class SeedExecutorModule {}
 

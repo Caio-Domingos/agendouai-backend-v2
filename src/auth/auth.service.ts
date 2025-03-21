@@ -30,6 +30,11 @@ export class AuthService {
       return null;
     }
 
+    // Verifica se o usuário está ativo
+    if (!user.isActive) {
+      return null;
+    }
+
     // Compara a senha fornecida com o hash armazenado
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -130,6 +135,11 @@ export class AuthService {
 
       if (!user) {
         throw new UnauthorizedException('Usuário não encontrado');
+      }
+
+      // Verifica se o usuário está ativo
+      if (!user.isActive) {
+        throw new UnauthorizedException('Usuário inativo');
       }
 
       // Gera novos tokens

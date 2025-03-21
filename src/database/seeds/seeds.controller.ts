@@ -50,22 +50,6 @@ export class SeedsController {
   }
 
   /**
-   * Executa seed de produtos apenas
-   * Acessível apenas para administradores
-   */
-  @Post('products')
-  @Roles(Role.SUPER_ADMIN)
-  @ApiEndpoint({
-    summary: 'Executar seed de produtos',
-    description: 'Cria 20 produtos fictícios para testes',
-    responseType: SeedSuccessDto,
-  })
-  @ApiCommonResponses()
-  async seedProducts() {
-    return this.seedsService.seedProducts();
-  }
-
-  /**
    * Limpa todos os dados do banco, exceto migrations
    * Acessível apenas para administradores
    */

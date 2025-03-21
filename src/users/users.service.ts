@@ -45,19 +45,9 @@ export class UsersService {
   }
 
   /**
-   * Atualiza o contador de tentativas de login
+   * Atualiza o status de ativação do usuário
    */
-  async updateLoginAttempts(id: string, attempts: number): Promise<void> {
-    await this.usersRepository.update(id, { loginAttempts: attempts });
-  }
-
-  /**
-   * Registra o último login bem-sucedido
-   */
-  async updateLastLogin(id: string): Promise<void> {
-    await this.usersRepository.update(id, {
-      lastLogin: new Date(),
-      loginAttempts: 0,
-    });
+  async updateActiveStatus(id: string, isActive: boolean): Promise<void> {
+    await this.usersRepository.update(id, { isActive });
   }
 }

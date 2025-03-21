@@ -13,10 +13,6 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
-  // Tornar o código opcional para evitar o erro de NULL
-  @Column({ unique: true, nullable: true })
-  code: string;
-
   @Column({ select: false })
   password: string;
 
@@ -26,9 +22,5 @@ export class User extends BaseEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column({ nullable: true })
-  lastLogin: Date;
-
-  @Column({ default: 0 })
-  loginAttempts: number;
+  // Removi o campo code, lastLogin e loginAttempts que eram desnecessários
 }
