@@ -1,17 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
-import { Product } from '../../shared/database/entities/product.entity';
-import { CrudModule } from '../../shared/crud/crud.module';
+import { ProductsService } from './products.service';
+import { ProductRepository } from './repositories/product.repository';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Product]),
-    CrudModule, // Importa nosso módulo CRUD genérico
-  ],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, ProductRepository],
   exports: [ProductsService],
 })
 export class ProductsModule {}

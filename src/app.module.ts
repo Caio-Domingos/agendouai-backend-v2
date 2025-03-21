@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
@@ -9,6 +9,8 @@ import { ProductsModule } from './modules/products/products.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { InterceptorsModule } from './shared/interceptors/interceptors.module';
+import { MorganMiddleware } from './shared/interceptors/logging/morgan.middleware';
 
 @Module({
   imports: [
@@ -16,7 +18,8 @@ import { RolesGuard } from './auth/guards/roles.guard';
     DatabaseModule,
     UsersModule,
     AuthModule,
-    ProductsModule, // Importando do novo caminho
+    ProductsModule,
+    InterceptorsModule, // Novo módulo para interceptores
   ],
   controllers: [AppController],
   providers: [
@@ -33,4 +36,9 @@ import { RolesGuard } from './auth/guards/roles.guard';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // Aplicar o Morgan middleware para todas as rotas
+    consumer.apply(MorganMiddleware).forRoutes('*');
+  }
+}

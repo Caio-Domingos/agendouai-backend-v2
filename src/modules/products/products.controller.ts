@@ -4,6 +4,9 @@ import {
   Query,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Post,
+  Body,
+  Param,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +24,9 @@ import {
 } from '../../shared/database/dto/product.dto';
 import { ProductsService } from './products.service';
 import { Roles, Role } from '../../auth/decorators/roles.decorator';
+import { TransactionInterceptor } from '../../shared/interceptors/transaction/transaction.interceptor';
+import { TransactionManager } from '../../shared/interceptors/transaction/transaction.decorator';
+import { EntityManager } from 'typeorm';
 
 @ApiTags('products')
 @Controller('products')
@@ -36,26 +42,23 @@ export class ProductsController extends CrudController<
     super(productsService);
   }
 
-  /**
-   * Endpoint personalizado para encontrar produtos com estoque baixo
-   */
-  @Get('low-stock')
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Encontrar produtos com estoque baixo' })
-  @ApiQuery({
-    name: 'threshold',
-    required: false,
-    type: Number,
-    description: 'Limite de estoque para considerar como baixo (padrão: 10)',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de produtos com estoque baixo',
-    type: [ProductDto],
-  })
-  async findLowStock(@Query('threshold') threshold?: number) {
-    return this.productsService.findLowStock(
-      threshold ? Number(threshold) : undefined,
-    );
+  @Post()
+  @UseInterceptors(TransactionInterceptor) // Aplica o interceptor para gerenciar a transação
+  async create(
+    @Body() createDto: CreateProductDto,
+    @TransactionManager() manager: EntityManager, // Recebe o EntityManager da transação
+  ) {
+    // Passa o EntityManager para o serviço
+    return this.productsService.create(createDto);
+  }
+
+  @Get()
+  async findAll() {
+    return this.productsService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.productsService.findOne(id);
   }
 }
