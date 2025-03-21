@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MigrationsModule } from '../../database/migrations/migrations.module';
+import { SeedsModule } from '../../database/seeds/seeds.module';
 
 @Module({
   imports: [
@@ -18,10 +20,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: configService.get('app.nodeEnv') !== 'production',
         logging: configService.get('app.nodeEnv') === 'development',
         autoLoadEntities: true,
-        migrationsRun: configService.get('app.nodeEnv') === 'production',
-        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+        // Não executamos migrations automaticamente, isso será controlado pelo serviço de migrations
+        migrationsRun: false,
       }),
     }),
+    // Importa os módulos de migrations e seeds
+    MigrationsModule,
+    SeedsModule,
   ],
+  exports: [MigrationsModule, SeedsModule],
 })
 export class DatabaseModule {}

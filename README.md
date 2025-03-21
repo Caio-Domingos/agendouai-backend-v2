@@ -126,6 +126,36 @@ createMany(
 }
 ```
 
+## Migrations e Seeds
+
+O projeto utiliza TypeORM para gerenciar o esquema do banco de dados através de migrations. As migrations permitem controlar todas as alterações no banco de dados de forma versionada.
+
+### Scripts de Migrations
+
+- `npm run migration:generate -- src/database/migrations/NomeDaMigration` - Gera uma nova migration baseada nas alterações das entidades
+- `npm run migration:create -- src/database/migrations/NomeDaMigration` - Cria um arquivo de migration vazio
+- `npm run migration:run` - Executa todas as migrations pendentes
+- `npm run migration:revert` - Reverte a última migration aplicada
+- `npm run migration:show` - Mostra o status das migrations (aplicadas/pendentes)
+- `npm run seed:run` - Executa seeds para popular o banco com dados iniciais
+
+### Ambiente de Produção
+
+Em ambiente de produção, você deve:
+
+1. **NUNCA** usar a opção `synchronize: true`
+2. Sempre executar migrations para alterações no banco
+3. Testar as migrations em um ambiente de staging antes de aplicar em produção
+
+### API de Administração
+
+As migrations também podem ser gerenciadas via API (apenas para administradores):
+
+- `POST /admin/migrations/run` - Executa migrations pendentes
+- `POST /admin/migrations/revert` - Reverte a última migration
+- `GET /admin/migrations/pending` - Lista migrations pendentes
+- `GET /admin/migrations/history` - Mostra histórico de migrations
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.

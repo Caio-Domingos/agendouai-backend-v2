@@ -6,9 +6,8 @@ import { authValidationSchema } from './validations/auth.validation';
 /**
  * Schema de validação combinado para todas as variáveis de ambiente
  * Cada domínio tem seu próprio schema em um arquivo separado para melhor organização
+ * Usamos o método concat para combinar corretamente os schemas Joi
  */
-export const validationSchema = Joi.object({
-  ...appValidationSchema.keys(),
-  ...databaseValidationSchema.keys(),
-  ...authValidationSchema.keys(),
-});
+export const validationSchema = appValidationSchema
+  .concat(databaseValidationSchema)
+  .concat(authValidationSchema);
