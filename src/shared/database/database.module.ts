@@ -9,20 +9,25 @@ import { SeedsModule } from '../../database/seeds/seeds.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('database.host'),
-        port: configService.get('database.port'),
-        username: configService.get('database.username'),
-        password: configService.get('database.password'),
-        database: configService.get('database.name'),
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: configService.get('app.nodeEnv') !== 'production',
-        logging: configService.get('app.nodeEnv') === 'development',
-        autoLoadEntities: true,
-        // Não executamos migrations automaticamente, isso será controlado pelo serviço de migrations
-        migrationsRun: false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const nodeEnv = configService.get('app.nodeEnv');
+        return {
+          type: 'postgres',
+          host: configService.get('database.host'),
+          port: configService.get('database.port'),
+          username: configService.get('database.username'),
+          password: configService.get('database.password'),
+          database: configService.get('database.name'),
+          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+          // Desabilitar synchronize em todos os ambientes
+          // Usar somente em desenvolvimento para testes iniciais
+          synchronize: false,
+          logging: nodeEnv === 'development',
+          autoLoadEntities: true,
+          // Não executamos migrations automaticamente, isso será controlado pelo serviço de migrations
+          migrationsRun: false,
+        };
+      },
     }),
     // Importa os módulos de migrations e seeds
     MigrationsModule,

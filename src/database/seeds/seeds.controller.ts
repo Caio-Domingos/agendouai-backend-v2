@@ -5,12 +5,16 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../shared/swagger/response-decorators';
 import { ApiCommonResponses } from '../../shared/swagger/error-responses.decorator';
 import { SeedSuccessDto } from './dto/seed-response.dto';
+import { DatabaseCleanService } from '../clean/database-clean.service';
 
 @ApiTags('admin')
 @Controller('admin/seeds')
 @ApiBearerAuth('JWT')
 export class SeedsController {
-  constructor(private seedsService: SeedsService) {}
+  constructor(
+    private seedsService: SeedsService,
+    private databaseCleanService: DatabaseCleanService,
+  ) {}
 
   /**
    * Executa todas as seeds
@@ -43,5 +47,38 @@ export class SeedsController {
   @ApiCommonResponses()
   async seedUsers() {
     return this.seedsService.seedUsers();
+  }
+
+  /**
+   * Executa seed de produtos apenas
+   * Acessível apenas para administradores
+   */
+  @Post('products')
+  @Roles(Role.SUPER_ADMIN)
+  @ApiEndpoint({
+    summary: 'Executar seed de produtos',
+    description: 'Cria 20 produtos fictícios para testes',
+    responseType: SeedSuccessDto,
+  })
+  @ApiCommonResponses()
+  async seedProducts() {
+    return this.seedsService.seedProducts();
+  }
+
+  /**
+   * Limpa todos os dados do banco, exceto migrations
+   * Acessível apenas para administradores
+   */
+  @Post('clear')
+  @Roles(Role.SUPER_ADMIN)
+  @ApiEndpoint({
+    summary: 'Limpar banco de dados',
+    description:
+      'Remove todos os registros de todas as tabelas (CUIDADO: operação destrutiva)',
+    responseType: SeedSuccessDto,
+  })
+  @ApiCommonResponses()
+  async clearDatabase() {
+    return this.databaseCleanService.cleanDatabase();
   }
 }

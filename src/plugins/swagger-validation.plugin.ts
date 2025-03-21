@@ -14,6 +14,7 @@ import {
   MigrationHistoryDto,
 } from '../database/migrations/dto/migration-response.dto';
 import { SeedSuccessDto } from '../database/seeds/dto/seed-response.dto';
+import { PaginatedResponseDto } from '../shared/crud/dto/paginated-response.dto';
 
 /**
  * Configures Swagger documentation for the application
@@ -38,6 +39,7 @@ export function setupSwagger(
     )
     .addTag('auth', 'Authentication endpoints')
     .addTag('users', 'User management endpoints')
+    .addTag('products', 'Product management endpoints')
     .addTag('admin', 'Admin only endpoints')
     .build();
 
@@ -55,6 +57,7 @@ export function setupSwagger(
       PendingMigrationsDto,
       MigrationHistoryDto,
       SeedSuccessDto,
+      PaginatedResponseDto,
     ],
   };
 
