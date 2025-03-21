@@ -1,8 +1,14 @@
 import { Controller, Post } from '@nestjs/common';
 import { SeedsService } from './seeds.service';
 import { Roles, Role } from '../../auth/decorators/roles.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiEndpoint } from '../../shared/swagger/response-decorators';
+import { ApiCommonResponses } from '../../shared/swagger/error-responses.decorator';
+import { SeedSuccessDto } from './dto/seed-response.dto';
 
+@ApiTags('admin')
 @Controller('admin/seeds')
+@ApiBearerAuth('JWT')
 export class SeedsController {
   constructor(private seedsService: SeedsService) {}
 
@@ -12,6 +18,13 @@ export class SeedsController {
    */
   @Post('run')
   @Roles(Role.SUPER_ADMIN)
+  @ApiEndpoint({
+    summary: 'Executar todas as seeds',
+    description:
+      'Executa todas as seeds para popular o banco com dados iniciais',
+    responseType: SeedSuccessDto,
+  })
+  @ApiCommonResponses()
   async runAllSeeds() {
     return this.seedsService.runAllSeeds();
   }
@@ -22,6 +35,12 @@ export class SeedsController {
    */
   @Post('users')
   @Roles(Role.SUPER_ADMIN)
+  @ApiEndpoint({
+    summary: 'Executar seed de usuários',
+    description: 'Cria usuários de exemplo no banco de dados',
+    responseType: SeedSuccessDto,
+  })
+  @ApiCommonResponses()
   async seedUsers() {
     return this.seedsService.seedUsers();
   }

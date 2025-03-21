@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { setupSwagger } from './plugins/swagger-validation.plugin';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,8 +23,13 @@ async function bootstrap() {
     }),
   );
 
-  // Aplica configurações do app
+  // Configuração do Swagger
   const appConfig = configService.get('app');
+
+  // Criando a configuração do Swagger
+  setupSwagger(app, appConfig.name, appConfig.apiVersion);
+
+  // Aplica configurações do app
   const port = appConfig.port;
   const globalPrefix = `${appConfig.apiPrefix}/${appConfig.apiVersion}`;
 
@@ -37,5 +44,6 @@ async function bootstrap() {
 
   await app.listen(port);
   console.log(`Application is running on: ${appConfig.appUrl}/${globalPrefix}`);
+  console.log(`Documentation is available at: ${appConfig.appUrl}/api/docs`);
 }
 bootstrap();

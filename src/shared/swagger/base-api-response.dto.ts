@@ -1,0 +1,11 @@
+import { ApiProperty } from '@nestjs/swagger';
+
+export class ApiResponseDto<T> {
+  @ApiProperty({ example: true })
+  success: boolean;
+
+  @ApiProperty({ example: 'Operação realizada com sucesso' })
+  message: string;
+
+  data?: T;
+}

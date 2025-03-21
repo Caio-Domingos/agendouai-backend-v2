@@ -156,6 +156,49 @@ As migrations também podem ser gerenciadas via API (apenas para administradores
 - `GET /admin/migrations/pending` - Lista migrations pendentes
 - `GET /admin/migrations/history` - Mostra histórico de migrations
 
+## Documentação da API
+
+O projeto utiliza Swagger para documentação automática da API. A documentação está disponível em:
+
+```
+http://localhost:3000/api/docs
+```
+
+### Características da documentação:
+
+- **Geração automática**: Endpoints, parâmetros e modelos são automaticamente documentados
+- **Interativa**: Você pode testar os endpoints diretamente pela interface do Swagger
+- **Autenticação**: Suporte para autenticação JWT diretamente na interface
+- **Organizada por tags**: Endpoints agrupados por domínio funcional
+
+Para adicionar novos endpoints à documentação:
+
+1. Use os decoradores do `@nestjs/swagger` nos controladores e DTOs:
+   - `@ApiTags('tag')` - Agrupa endpoints por categoria
+   - `@ApiOperation({ summary: '...' })` - Descreve o propósito do endpoint
+   - `@ApiResponse({ status: x, description: '...' })` - Documenta respostas possíveis
+   - `@ApiProperty()` - Documenta propriedades nos DTOs
+
+2. Para endpoints autenticados, adicione:
+   - `@ApiBearerAuth('JWT')` - Indica que o endpoint requer JWT
+
+Exemplo:
+
+```typescript
+@ApiTags('users')
+@Controller('users')
+export class UsersController {
+  @Get()
+  @ApiBearerAuth('JWT')
+  @ApiOperation({ summary: 'Listar todos os usuários' })
+  @ApiResponse({ status: 200, description: 'Lista de usuários' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  findAll() {
+    // ...
+  }
+}
+```
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.

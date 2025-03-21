@@ -1,9 +1,19 @@
-import { Controller, Post, Get, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get } from '@nestjs/common';
 import { MigrationsService } from './migrations.service';
-import { Public } from '../../auth/decorators/public.decorator';
 import { Roles, Role } from '../../auth/decorators/roles.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiEndpoint } from '../../shared/swagger/response-decorators';
+import { ApiCommonResponses } from '../../shared/swagger/error-responses.decorator';
+import {
+  MigrationsRunResponseDto,
+  MigrationSuccessDto,
+  PendingMigrationsDto,
+  MigrationHistoryDto,
+} from './dto/migration-response.dto';
 
+@ApiTags('admin')
 @Controller('admin/migrations')
+@ApiBearerAuth('JWT')
 export class MigrationsController {
   constructor(private migrationsService: MigrationsService) {}
 
@@ -13,6 +23,12 @@ export class MigrationsController {
    */
   @Post('run')
   @Roles(Role.SUPER_ADMIN)
+  @ApiEndpoint({
+    summary: 'Executar migrations pendentes',
+    description: 'Requer papel SUPER_ADMIN',
+    responseType: MigrationsRunResponseDto,
+  })
+  @ApiCommonResponses()
   async runMigrations() {
     return this.migrationsService.runMigrations();
   }
@@ -23,6 +39,12 @@ export class MigrationsController {
    */
   @Post('revert')
   @Roles(Role.SUPER_ADMIN)
+  @ApiEndpoint({
+    summary: 'Reverter última migration',
+    description: 'Requer papel SUPER_ADMIN',
+    responseType: MigrationSuccessDto,
+  })
+  @ApiCommonResponses()
   async revertLastMigration() {
     return this.migrationsService.revertLastMigration();
   }
@@ -33,6 +55,12 @@ export class MigrationsController {
    */
   @Get('pending')
   @Roles(Role.SUPER_ADMIN)
+  @ApiEndpoint({
+    summary: 'Listar migrations pendentes',
+    description: 'Requer papel SUPER_ADMIN',
+    responseType: PendingMigrationsDto,
+  })
+  @ApiCommonResponses()
   async getPendingMigrations() {
     return this.migrationsService.getPendingMigrations();
   }
@@ -43,6 +71,12 @@ export class MigrationsController {
    */
   @Get('history')
   @Roles(Role.SUPER_ADMIN)
+  @ApiEndpoint({
+    summary: 'Ver histórico de migrations',
+    description: 'Requer papel SUPER_ADMIN',
+    responseType: MigrationHistoryDto,
+  })
+  @ApiCommonResponses()
   async getMigrationHistory() {
     return this.migrationsService.getMigrationHistory();
   }
