@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from '../schemas/user/user.entity';
+import { UserStatus } from '../schemas/user/user.model';
 
 @Injectable()
 export class SeedsService {
@@ -34,58 +35,87 @@ export class SeedsService {
   async seedUsers() {
     this.logger.log('Iniciando seed de usuários...');
 
-    // Verifica se já existe um usuário admin
-    const adminExists = await this.userRepository.findOneBy({
-      email: 'admin@example.com',
-    });
+    // Verificar quantos usuários já existem
+    const existingUserCount = await this.userRepository.count();
+    this.logger.log(`Usuários existentes: ${existingUserCount}`);
 
-    if (!adminExists) {
-      this.logger.log('Criando usuário admin...');
-
-      const saltRounds = this.configService.get<number>(
-        'auth.security.bcryptSaltRounds',
+    // Se já temos 10 ou mais usuários, não precisamos criar mais
+    if (existingUserCount >= 10) {
+      this.logger.log(
+        'Já existem pelo menos 10 usuários. Seed não necessário.',
       );
-      const hashedPassword = await bcrypt.hash('Admin123456', saltRounds || 10);
-
-      await this.userRepository.save({
-        firstName: 'Admin',
-        lastName: 'User',
-        email: 'admin@example.com',
-        password: hashedPassword,
-        isActive: true,
-      });
-
-      this.logger.log('Usuário admin criado com sucesso.');
-    } else {
-      this.logger.log('Usuário admin já existe, pulando...');
+      return { success: true };
     }
 
-    // Verifica se já existe um usuário normal
-    const userExists = await this.userRepository.findOneBy({
-      email: 'user@example.com',
-    });
+    // Quantos usuários precisamos criar
+    const usersToCreate = 10 - existingUserCount;
+    this.logger.log(`Criando ${usersToCreate} novos usuários...`);
 
-    if (!userExists) {
-      this.logger.log('Criando usuário comum...');
+    // Senha padrão para todos os usuários
+    const saltRounds = this.configService.get<number>(
+      'auth.security.bcryptSaltRounds',
+      10,
+    );
+    const hashedPassword = await bcrypt.hash('Caio1234', saltRounds);
 
-      const saltRounds = this.configService.get<number>(
-        'auth.security.bcryptSaltRounds',
-      );
-      const hashedPassword = await bcrypt.hash('User123456', saltRounds || 10);
+    // Listas para gerar nomes aleatórios
+    const firstNames = [
+      'Ana',
+      'Carlos',
+      'Maria',
+      'João',
+      'Pedro',
+      'Lucas',
+      'Mariana',
+      'Paulo',
+      'Lúcia',
+      'Fernando',
+      'Julia',
+      'Rafael',
+      'Fernanda',
+      'Roberto',
+      'Camila',
+    ];
+    const lastNames = [
+      'Silva',
+      'Santos',
+      'Oliveira',
+      'Souza',
+      'Pereira',
+      'Costa',
+      'Rodrigues',
+      'Almeida',
+      'Nascimento',
+      'Lima',
+      'Araújo',
+      'Fernandes',
+      'Carvalho',
+      'Gomes',
+      'Martins',
+    ];
+
+    // Criar usuários aleatórios
+    for (let i = 0; i < usersToCreate; i++) {
+      const firstName =
+        firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      const name = `${firstName} ${lastName}`;
+
+      // Criar email único baseado no nome (adicionando timestamp para evitar duplicatas)
+      const timestamp = Date.now() + i; // Adicionando i para garantir unicidade mesmo em criações rápidas
+      const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}.${timestamp}@example.com`;
 
       await this.userRepository.save({
-        firstName: 'Regular',
-        lastName: 'User',
-        email: 'user@example.com',
+        name,
+        email,
         password: hashedPassword,
-        isActive: true,
+        status: UserStatus.ACTIVE,
       });
 
-      this.logger.log('Usuário comum criado com sucesso.');
-    } else {
-      this.logger.log('Usuário comum já existe, pulando...');
+      this.logger.log(`Usuário criado: ${name} (${email})`);
     }
 
+    this.logger.log(`${usersToCreate} usuários criados com sucesso.`);
     return { success: true };
   }
 }

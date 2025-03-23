@@ -1,8 +1,8 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 
 export enum UserStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
   // TODO: Add more statuses
 }
 

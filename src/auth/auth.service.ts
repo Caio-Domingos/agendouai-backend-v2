@@ -31,6 +31,8 @@ export class AuthService {
       return null;
     }
 
+    console.log('user', user);
+
     // Verifica se o usuário está ativo
     if (user.status !== UserStatus.ACTIVE) {
       throw new UnauthorizedException('Usuário inativo');

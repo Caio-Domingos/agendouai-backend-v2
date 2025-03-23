@@ -46,29 +46,20 @@ export function CrudQueryController<
   updateDto: UpdateDto,
   returnDto: ReturnDto,
 ): Type<any> {
-  // Obter a classe base do CrudController
-  const BaseCrudController = CrudController<T, CreateDto, UpdateDto, ReturnDto>(
-    entityName,
-    createDto,
-    updateDto,
-    returnDto,
-  );
+  // Não reutilizamos a classe base CrudController para evitar duplicação de rotas
+  // Em vez disso, definimos todas as rotas aqui de uma só vez
 
-  // Criar uma nova classe que estende o CrudController e adiciona os métodos de consulta avançada
-  class CrudQueryControllerHost extends BaseCrudController {
+  class CrudQueryControllerHost {
     constructor(
       protected readonly crudQueryService: CrudQueryService<
         T,
         InstanceType<CreateDto>,
         InstanceType<UpdateDto>
       >,
-    ) {
-      super(crudQueryService);
-    }
+    ) {}
 
     /**
      * Busca entidades com opções avançadas de consulta (paginação, filtros, relações, etc)
-     * @param options Opções de consulta
      */
     @Get('query')
     @ApiOperation({ summary: `Consulta avançada de ${entityName}` })
@@ -86,8 +77,6 @@ export function CrudQueryController<
 
     /**
      * Busca uma entidade por ID com opções de relações e seleção
-     * @param id ID da entidade
-     * @param options Opções de consulta
      */
     @Get(':id/query')
     @ApiOperation({ summary: `Consulta avançada de ${entityName} por ID` })
@@ -106,7 +95,7 @@ export function CrudQueryController<
     }
 
     /**
-     * Sobrescreve o método findAll para garantir compatibilidade
+     * Lista todas as entidades
      */
     @Get()
     @ApiOperation({ summary: `Listar ${entityName}` })
@@ -116,13 +105,11 @@ export function CrudQueryController<
       type: [returnDto],
     })
     async findAll(): Promise<T[]> {
-      return super.findAll();
+      return this.crudQueryService.findAll();
     }
 
     /**
-     * Sobrescreve o método findById para suportar opções de consulta
-     * @param id ID da entidade
-     * @param options Opções de consulta
+     * Busca uma entidade por ID
      */
     @Get(':id')
     @ApiOperation({ summary: `Buscar ${entityName} pelo ID` })
@@ -140,6 +127,9 @@ export function CrudQueryController<
       return this.crudQueryService.findById(id, options);
     }
 
+    /**
+     * Cria uma nova entidade
+     */
     @Post()
     @ApiOperation({ summary: `Criar novo ${entityName}` })
     @ApiBody({ type: createDto })
@@ -152,6 +142,9 @@ export function CrudQueryController<
       return this.crudQueryService.create(dto);
     }
 
+    /**
+     * Atualiza uma entidade existente
+     */
     @Put(':id')
     @ApiOperation({ summary: `Atualizar ${entityName}` })
     @ApiParam({ name: 'id', type: Number, description: `ID do ${entityName}` })
@@ -169,6 +162,9 @@ export function CrudQueryController<
       return this.crudQueryService.update(id, dto);
     }
 
+    /**
+     * Remove uma entidade
+     */
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: `Remover ${entityName}` })

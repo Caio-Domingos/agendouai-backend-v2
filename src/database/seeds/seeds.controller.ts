@@ -5,7 +5,9 @@ import { ApiEndpoint } from '../../shared/swagger/response-decorators';
 import { ApiCommonResponses } from '../../shared/swagger/error-responses.decorator';
 import { SeedSuccessDto } from './dto/seed-response.dto';
 import { DatabaseCleanService } from '../clean/database-clean.service';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@Public()
 @ApiTags('admin')
 @Controller('admin/seeds')
 @ApiBearerAuth('JWT')

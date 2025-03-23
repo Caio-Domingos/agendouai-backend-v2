@@ -20,7 +20,7 @@ import { SeedsModule } from './seeds/seeds.module';
           database: configService.get('database.name'),
           entities: [__dirname + '/../**/*.entity{.ts,.js}'],
 
-          synchronize: false,
+          synchronize: nodeEnv === 'development',
           logging: nodeEnv === 'development',
           // autoLoadEntities: true, // TODO: This is more safe than entities, but more annoying to use
 

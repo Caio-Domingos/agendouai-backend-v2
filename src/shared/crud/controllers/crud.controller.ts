@@ -59,6 +59,8 @@ export function CrudController<
     })
     @ApiResponse({ status: 404, description: `${entityName} não encontrado` })
     async findById(@Param('id') id: number) {
+      console.log('findById 2');
+
       return this.crudService.findById(id);
     }
 
