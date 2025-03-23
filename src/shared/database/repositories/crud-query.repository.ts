@@ -6,6 +6,7 @@ import {
   QueryOptions,
   PaginatedResult,
 } from '../../crud/interfaces/crud.types';
+import { IEntity } from '../interfaces/entity.interface';
 
 /**
  * Repositório que combina funcionalidades CRUD e de consulta avançada
@@ -16,11 +17,11 @@ import {
  * @template UpdateDto - Tipo do DTO para atualização
  */
 export abstract class CrudQueryRepository<
-  T extends object,
+  T extends IEntity,
   CreateDto extends object = Partial<T>,
   UpdateDto extends object = Partial<T>,
 > extends BaseCrudRepository<T, CreateDto, UpdateDto> {
-  private queryRepo: BaseQueryRepository<T>;
+  private queryRepo: CrudQueryRepository<T, CreateDto, UpdateDto>;
 
   constructor(
     dataSource: DataSource,
@@ -31,7 +32,11 @@ export abstract class CrudQueryRepository<
     super(dataSource, request, entityClass);
 
     // Criamos uma instância interna de BaseQueryRepository para reutilizar a lógica de consulta
-    this.queryRepo = new (class extends BaseQueryRepository<T> {
+    this.queryRepo = new (class extends CrudQueryRepository<
+      T,
+      CreateDto,
+      UpdateDto
+    > {
       constructor() {
         super(dataSource, request, entityClass, tableName);
       }
@@ -50,7 +55,7 @@ export abstract class CrudQueryRepository<
   /**
    * Encontra uma entidade por ID com opções de relações e seleção
    */
-  async findOneWithOptions(id: string, options: QueryOptions = {}): Promise<T> {
+  async findOneWithOptions(id: number, options: QueryOptions = {}): Promise<T> {
     return this.queryRepo.findOneWithOptions(id, options);
   }
 }

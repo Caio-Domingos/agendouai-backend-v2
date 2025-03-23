@@ -9,20 +9,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterDto {
   @ApiProperty({
-    description: 'Primeiro nome do usuário',
+    description: 'Nome do usuário',
     example: 'João',
   })
-  @IsNotEmpty({ message: 'O nome é obrigatório' })
-  @IsString({ message: 'O nome deve ser uma string' })
-  firstName: string;
-
-  @ApiProperty({
-    description: 'Sobrenome do usuário',
-    example: 'Silva',
-  })
-  @IsNotEmpty({ message: 'O sobrenome é obrigatório' })
-  @IsString({ message: 'O sobrenome deve ser uma string' })
-  lastName: string;
+  @IsNotEmpty({ message: 'O Nome é obrigatório' })
+  @IsString({ message: 'O Nome deve ser uma string' })
+  name: string;
 
   @ApiProperty({
     description: 'Email do usuário',
@@ -33,7 +25,8 @@ export class RegisterDto {
   email: string;
 
   @ApiProperty({
-    description: 'Senha do usuário (deve conter maiúsculas, minúsculas e números)',
+    description:
+      'Senha do usuário (deve conter maiúsculas, minúsculas e números)',
     example: 'Senha123',
     minLength: 8,
   })

@@ -2,6 +2,8 @@ import { NotFoundException } from '@nestjs/common';
 import { DataSource, FindOptionsWhere } from 'typeorm';
 import { Request } from 'express';
 import { BaseRepository } from './base.repository';
+import { ICrudRepository } from '../interfaces/repository.interface';
+import { IEntity } from '../interfaces/entity.interface';
 
 /**
  * Repositório base que implementa operações CRUD padrão
@@ -12,10 +14,13 @@ import { BaseRepository } from './base.repository';
  * @template UpdateDto - Tipo do DTO para atualização
  */
 export abstract class BaseCrudRepository<
-  T extends object,
-  CreateDto extends object = Partial<T>,
-  UpdateDto extends object = Partial<T>,
-> extends BaseRepository<T> {
+    T extends IEntity,
+    CreateDto extends object = Partial<T>,
+    UpdateDto extends object = Partial<T>,
+  >
+  extends BaseRepository<T>
+  implements ICrudRepository<T, CreateDto, UpdateDto>
+{
   protected readonly entityClass: new () => T;
 
   constructor(

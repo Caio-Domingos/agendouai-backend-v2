@@ -12,4 +12,15 @@ export class UserRepository extends CrudQueryRepository<
   constructor(dataSource: DataSource, request: Request) {
     super(dataSource, request, UserEntity);
   }
+
+  findByEmail(email: string) {
+    return this.getRepository(UserEntity).findOne({ where: { email } });
+  }
+
+  findByEmailWithPassword(email: string) {
+    return this.getRepository(UserEntity).findOne({
+      where: { email },
+      select: ['id', 'email', 'password'],
+    });
+  }
 }

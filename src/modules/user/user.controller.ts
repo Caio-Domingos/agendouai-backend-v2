@@ -1,7 +1,41 @@
 import { Controller } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
+import { CrudQueryController } from '../../shared/crud/controllers/crud-query.controller';
+import { UserEntity } from 'src/database/schemas/user/user.entity';
+import {
+  CreateUserDTO,
+  UpdateUserDTO,
+  UserDto,
+} from 'src/database/schemas/user/user.dto';
 
-@Controller('user')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+// Criamos o controlador base usando a função factory
+const UserControllerBase = CrudQueryController<
+  UserEntity, // Tipo da entidade
+  typeof CreateUserDTO, // Tipo do DTO de criação
+  typeof UpdateUserDTO, // Tipo do DTO de atualização
+  typeof UserDto // Tipo do DTO de resposta
+>(
+  'users', // Nome da entidade para mensagens e documentação
+  CreateUserDTO, // Classe do DTO de criação
+  UpdateUserDTO, // Classe do DTO de atualização
+  UserDto, // Classe do DTO de resposta
+);
+
+// Aplicamos os decoradores específicos deste controller
+@ApiTags('Usuários')
+@Controller('users')
+export class UserController extends UserControllerBase {
+  constructor(readonly userService: UserService) {
+    // Passamos o serviço para o construtor da classe base
+    super(userService);
+  }
+
+  // Aqui você pode adicionar métodos específicos deste controller
+  // que não fazem parte do CRUD básico, se necessário
+  // Por exemplo:
+  // @Post('reset-password')
+  // resetPassword(@Body() dto: ResetPasswordDto) {
+  //   return this.userService.resetPassword(dto);
+  // }
 }

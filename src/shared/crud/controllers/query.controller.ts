@@ -5,6 +5,7 @@ import {
   Type,
   ClassSerializerInterceptor,
   UseInterceptors,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -136,7 +137,7 @@ export function QueryController<T extends Entity>(
     /**
      * Busca um registro pelo ID
      *
-     * @param {string} id - ID do registro a ser encontrado
+     * @param {number} id - ID do registro a ser encontrado
      * @param {QueryOptions} options - Opções de consulta (para relations e select)
      * @returns {Promise<T>} Registro encontrado
      *
@@ -158,7 +159,7 @@ export function QueryController<T extends Entity>(
       type: returnDto,
     })
     @ApiResponse({ status: 404, description: `${entityName} não encontrado` })
-    @ApiParam({ name: 'id', type: String, description: `ID do ${entityName}` })
+    @ApiParam({ name: 'id', type: Number, description: `ID do ${entityName}` })
     @ApiQuery({
       name: 'relations',
       required: false,
@@ -172,7 +173,7 @@ export function QueryController<T extends Entity>(
       description: 'Campos a serem selecionados (ex: id,name,price)',
     })
     async findOne(
-      @Param('id') id: string,
+      @Param('id', ParseIntPipe) id: number,
       @Query(QueryOptionsPipe) options: QueryOptions,
     ) {
       return this.service.findOne(id, options);

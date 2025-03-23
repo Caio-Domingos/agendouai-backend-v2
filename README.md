@@ -121,7 +121,7 @@ Para criar um novo recurso (ex: "orders"), siga estes passos:
    // src/shared/database/entities/order.entity.ts
    import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
    import { BaseEntity } from './base.entity';
-   import { User } from './user.entity';
+   import { UserEntity } from './user.entity';
 
    @Entity('orders')
    export class Order extends BaseEntity {

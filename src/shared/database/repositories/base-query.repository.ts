@@ -18,6 +18,8 @@ import {
   FilterGroup,
   LogicalOperator,
 } from '../../crud/interfaces/crud.types';
+import { IEntity } from '../interfaces/entity.interface';
+import { IQueryRepository } from '../interfaces/repository.interface';
 
 /**
  * Repositório base que implementa operações de consulta avançadas
@@ -25,9 +27,10 @@ import {
  *
  * @template T - Tipo da entidade
  */
-export abstract class BaseQueryRepository<
-  T extends object,
-> extends BaseRepository<T> {
+export abstract class BaseQueryRepository<T extends IEntity>
+  extends BaseRepository<T>
+  implements IQueryRepository<T>
+{
   protected readonly entityClass: new () => T;
   protected readonly tableName: string;
 
@@ -381,7 +384,7 @@ export abstract class BaseQueryRepository<
   /**
    * Encontrar uma entidade com opções de relações e seleção
    */
-  async findOneWithOptions(id: string, options: QueryOptions = {}): Promise<T> {
+  async findOneWithOptions(id: number, options: QueryOptions = {}): Promise<T> {
     const { relations, select } = options;
 
     const queryBuilder = this.getRepository(

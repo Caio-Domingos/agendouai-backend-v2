@@ -9,12 +9,13 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from './strategies/jwt.strategy';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/modules/user/user.service';
+import { UserStatus } from 'src/database/schemas/user/user.model';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private usersService: UserService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -31,8 +32,8 @@ export class AuthService {
     }
 
     // Verifica se o usuário está ativo
-    if (!user.isActive) {
-      return null;
+    if (user.status !== UserStatus.ACTIVE) {
+      throw new UnauthorizedException('Usuário inativo');
     }
 
     // Compara a senha fornecida com o hash armazenado
@@ -135,7 +136,7 @@ export class AuthService {
       }
 
       // Verifica se o usuário está ativo
-      if (!user.isActive) {
+      if (user.status !== UserStatus.ACTIVE) {
         throw new UnauthorizedException('Usuário inativo');
       }
 
