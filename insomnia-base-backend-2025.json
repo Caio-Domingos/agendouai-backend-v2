@@ -1,0 +1,488 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-03-20T23:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_collection",
+      "parentId": "wrk_base_backend",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "name": "Base Backend 2025",
+      "description": "",
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_base_backend",
+      "parentId": null,
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "name": "Base Backend 2025",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_base_backend",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000/api/v1",
+        "auth_token": "",
+        "refresh_token": ""
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "auth_token", "refresh_token"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1679356800000,
+      "_type": "environment"
+    },
+    {
+      "_id": "folder_auth",
+      "parentId": "req_collection",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "name": "Authentication",
+      "description": "",
+      "_type": "request_group"
+    },
+    {
+      "_id": "folder_admin",
+      "parentId": "req_collection",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "name": "Admin",
+      "description": "",
+      "_type": "request_group"
+    },
+    {
+      "_id": "folder_products",
+      "parentId": "req_collection",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "name": "Products",
+      "description": "",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_root",
+      "parentId": "req_collection",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}",
+      "name": "Root",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_login",
+      "parentId": "folder_auth",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login",
+      "description": "Autenticação de usuário com email e senha",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"email\": \"admin@example.com\",\n\t\"password\": \"Admin123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_register",
+      "parentId": "folder_auth",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/auth/register",
+      "name": "Register",
+      "description": "Registro de novo usuário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"firstName\": \"Novo\",\n\t\"lastName\": \"Usuário\",\n\t\"email\": \"novo@exemplo.com\",\n\t\"password\": \"Senha123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_refresh",
+      "parentId": "folder_auth",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/auth/refresh",
+      "name": "Refresh Token",
+      "description": "Renovar tokens usando refresh token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"refreshToken\": \"{{ _.refresh_token }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_profile",
+      "parentId": "folder_auth",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/auth/profile",
+      "name": "Profile",
+      "description": "Obter perfil do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_admin",
+      "parentId": "folder_auth",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/auth/admin",
+      "name": "Admin Only",
+      "description": "Endpoint restrito a administradores",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_migrations_run",
+      "parentId": "folder_admin",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/admin/migrations/run",
+      "name": "Run Migrations",
+      "description": "Executar migrations pendentes",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_migrations_revert",
+      "parentId": "folder_admin",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/admin/migrations/revert",
+      "name": "Revert Last Migration",
+      "description": "Reverter última migration aplicada",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_migrations_pending",
+      "parentId": "folder_admin",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/admin/migrations/pending",
+      "name": "Pending Migrations",
+      "description": "Listar migrations pendentes",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_migrations_history",
+      "parentId": "folder_admin",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/admin/migrations/history",
+      "name": "Migrations History",
+      "description": "Ver histórico de migrations executadas",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_seeds_run",
+      "parentId": "folder_admin",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/admin/seeds/run",
+      "name": "Run All Seeds",
+      "description": "Executar todas as seeds",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_seeds_users",
+      "parentId": "folder_admin",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/admin/seeds/users",
+      "name": "Seed Users",
+      "description": "Criar usuários iniciais",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_seeds_products",
+      "parentId": "folder_admin",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/admin/seeds/products",
+      "name": "Seed Products",
+      "description": "Criar produtos de exemplo",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_list",
+      "parentId": "folder_products",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/products",
+      "name": "List Products",
+      "description": "Obter lista de produtos com paginação e filtros",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "description": "Página atual",
+          "disabled": false
+        },
+        {
+          "name": "size",
+          "value": "10",
+          "description": "Itens por página",
+          "disabled": false
+        },
+        {
+          "name": "orderBy",
+          "value": "price:DESC",
+          "description": "Ordenação",
+          "disabled": false
+        },
+        {
+          "name": "filters",
+          "value": "[{\"field\":\"stock\",\"operator\":\"gt\",\"value\":0}]",
+          "description": "Filtros",
+          "disabled": false
+        },
+        {
+          "name": "relations",
+          "value": "creator",
+          "description": "Relacionamentos",
+          "disabled": false
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_detail",
+      "parentId": "folder_products",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/products/1",
+      "name": "Get Product",
+      "description": "Obter detalhes de um produto específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "relations",
+          "value": "creator",
+          "description": "Incluir criador",
+          "disabled": false
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_create",
+      "parentId": "folder_products",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/products",
+      "name": "Create Product",
+      "description": "Criar um novo produto",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Novo Produto\",\n\t\"description\": \"Descrição detalhada do novo produto\",\n\t\"price\": 99.99,\n\t\"stock\": 50,\n\t\"isActive\": true,\n\t\"sku\": \"NOVO-0001\",\n\t\"creatorId\": \"1\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_update",
+      "parentId": "folder_products",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/products/1",
+      "name": "Update Product",
+      "description": "Atualizar um produto existente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Produto Atualizado\",\n\t\"price\": 129.99,\n\t\"stock\": 45\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_delete",
+      "parentId": "folder_products",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/products/1",
+      "name": "Delete Product",
+      "description": "Remover um produto",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_low_stock",
+      "parentId": "folder_products",
+      "modified": 1679356800000,
+      "created": 1679356800000,
+      "url": "{{ _.base_url }}/products/low-stock",
+      "name": "Low Stock Products",
+      "description": "Obter produtos com estoque baixo",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "threshold",
+          "value": "20",
+          "description": "Limite de estoque",
+          "disabled": false
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.auth_token }}"
+      },
+      "_type": "request"
+    }
+  ]
+}
