@@ -1,38 +1,23 @@
-<<<<<<< HEAD
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
-@Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
-})
-export class AppModule {}
-=======
-import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ConfigModule } from './config/config.module';
-import { DatabaseModule } from './shared/database/database.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ConfigModule } from './config/config.module';
+import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { InterceptorsModule } from './shared/interceptors/interceptors.module';
 import { MorganMiddleware } from './shared/interceptors/logging/morgan.middleware';
+import { DatabaseModule } from './database/database.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
     ConfigModule,
     DatabaseModule,
-    UsersModule,
     AuthModule,
     InterceptorsModule,
+    UserModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     // Aplica o JwtAuthGuard globalmente - todas as rotas precisam de autenticação por padrão
     {
       provide: APP_GUARD,
@@ -47,4 +32,3 @@ export class AppModule implements NestModule {
     consumer.apply(MorganMiddleware).forRoutes('*');
   }
 }
->>>>>>> f1ba7d12bf7316417667175c3a006a4e9363c5eb

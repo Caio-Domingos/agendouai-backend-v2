@@ -1,11 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-<<<<<<< HEAD
-import { AppModule } from './app.module';
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
-=======
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -52,6 +45,5 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`Application is running on: ${appConfig.appUrl}/${globalPrefix}`);
   console.log(`Documentation is available at: ${appConfig.appUrl}/api/docs`);
->>>>>>> f1ba7d12bf7316417667175c3a006a4e9363c5eb
 }
 bootstrap();
