@@ -3,9 +3,6 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-<<<<<<< HEAD
-    "deleteOutDir": true
-=======
     "deleteOutDir": true,
     "plugins": [
       {
@@ -18,6 +15,5 @@
         }
       }
     ]
->>>>>>> f1ba7d12bf7316417667175c3a006a4e9363c5eb
   }
 }

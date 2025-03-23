@@ -7,7 +7,7 @@ import appConfig from '../../config/app.config';
 import databaseConfig from '../../config/database.config';
 import authConfig from '../../config/auth.config';
 import { DatabaseCleanService } from './database-clean.service';
-import { User } from '../../shared/database/entities/user.entity';
+import { User } from '../schemas/user/user.entity';
 
 // Criar um módulo especial apenas para executar a limpeza
 @Module({

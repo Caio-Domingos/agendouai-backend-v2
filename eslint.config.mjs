@@ -28,13 +28,6 @@ export default tseslint.config(
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
-<<<<<<< HEAD
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
-    },
-  },
-);
-=======
       '@typescript-eslint/no-floating-promises': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -47,4 +40,3 @@ export default tseslint.config(
     },
   },
 );
->>>>>>> f1ba7d12bf7316417667175c3a006a4e9363c5eb

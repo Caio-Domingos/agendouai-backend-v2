@@ -7,7 +7,7 @@ import { Module } from '@nestjs/common';
 import appConfig from '../../config/app.config';
 import databaseConfig from '../../config/database.config';
 import authConfig from '../../config/auth.config';
-import { User } from '../../shared/database/entities/user.entity';
+import { User } from '../schemas/user/user.entity';
 
 // Criar um módulo especial apenas para executar as seeds
 @Module({

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MigrationsModule } from '../../database/migrations/migrations.module';
-import { SeedsModule } from '../../database/seeds/seeds.module';
+import { MigrationsModule } from './migrations/migrations.module';
+import { SeedsModule } from './seeds/seeds.module';
 
 @Module({
   imports: [
@@ -19,17 +19,30 @@ import { SeedsModule } from '../../database/seeds/seeds.module';
           password: configService.get('database.password'),
           database: configService.get('database.name'),
           entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-          // Desabilitar synchronize em todos os ambientes
-          // Usar somente em desenvolvimento para testes iniciais
+
           synchronize: false,
           logging: nodeEnv === 'development',
-          autoLoadEntities: true,
-          // Não executamos migrations automaticamente, isso será controlado pelo serviço de migrations
+          // autoLoadEntities: true, // TODO: This is more safe than entities, but more annoying to use
+
           migrationsRun: false,
+
+          poolSize: 10,
+          connectTimeoutMS: 30000,
+          extra: {
+            max: 10,
+            min: 2,
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 30000,
+            query_timeout: 30000,
+            maxUses: 5000,
+            keepAlive: true,
+            keepAliveInitialDelayMillis: 10000,
+            statement_timeout: 30000,
+          },
         };
       },
     }),
-    // Importa os módulos de migrations e seeds
+
     MigrationsModule,
     SeedsModule,
   ],
