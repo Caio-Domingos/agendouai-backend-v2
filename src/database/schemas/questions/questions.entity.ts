@@ -1,6 +1,8 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Question, QuestionType } from './questions.model';
+import { PageQuestionEntity } from '../page-question/page-question.entity';
+import { Relation } from 'typeorm';
 
 @Entity('questions')
 export class QuestionEntity extends BaseEntity implements Question {
@@ -24,4 +26,13 @@ export class QuestionEntity extends BaseEntity implements Question {
     default: {},
   })
   configuration: Record<string, any>;
+
+  @OneToMany(
+    () => PageQuestionEntity,
+    (pageQuestion) => pageQuestion.question,
+    {
+      cascade: true,
+    },
+  )
+  pageQuestions: Relation<PageQuestionEntity[]>;
 }

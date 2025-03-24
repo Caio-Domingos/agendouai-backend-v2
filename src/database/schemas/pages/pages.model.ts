@@ -1,4 +1,5 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { PageQuestion } from '../page-question/page-question.model';
 
 /**
  * Representa uma página dentro de um questionário no sistema.
@@ -11,10 +12,12 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
  * @property {string} title - Título da página
  * @property {number} sequenceNumber - Número de sequência que define a ordem da página no questionário
  * @property {boolean} isIdentificationPage - Indica se esta é uma página de identificação do respondente
+ * @property {PageQuestion[]} pageQuestions - As questões vinculadas a esta página
  */
 export interface Page extends IEntity {
   questionnaireId: number;
   title: string;
   sequenceNumber: number;
   isIdentificationPage: boolean;
+  pageQuestions?: PageQuestion[];
 }

@@ -1,4 +1,5 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { PageQuestion } from '../page-question/page-question.model';
 
 /**
  * Enum que define os tipos possíveis de questões no sistema.
@@ -23,6 +24,7 @@ export enum QuestionType {
  * @property {string} description - Descrição detalhada da questão (opcional)
  * @property {QuestionType} type - Tipo da questão que define como será respondida
  * @property {object} configuration - Configurações específicas da questão em formato JSON
+ * @property {PageQuestion[]} pageQuestions - As páginas às quais esta questão está vinculada
  */
 export interface Question extends IEntity {
   slug: string;
@@ -30,4 +32,5 @@ export interface Question extends IEntity {
   description?: string;
   type: QuestionType;
   configuration: Record<string, any>;
+  pageQuestions?: PageQuestion[];
 }

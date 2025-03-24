@@ -41,9 +41,10 @@ CREATE TABLE page_questions (
   id SERIAL PRIMARY KEY,
   page_id INT NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
   question_id INT NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
-  sequence_number INT NOT NULL,
+  priority INT NOT NULL,
   required BOOLEAN NOT NULL DEFAULT false,
   configuration JSONB NOT NULL DEFAULT '{}'
+  alerts JSONB NOT NULL DEFAULT '[]',
 );
 
 -- Tabelas de Respostas
