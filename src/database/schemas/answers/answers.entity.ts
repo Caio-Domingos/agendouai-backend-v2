@@ -1,0 +1,29 @@
+import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import { BaseEntity } from '../../../shared/database/entities/base.entity';
+import { Answer } from './answers.model';
+import { SubmissionEntity } from '../submissions/submissions.entity';
+import { PageQuestionEntity } from '../page-question/page-question.entity';
+
+@Entity('answers')
+export class AnswerEntity extends BaseEntity implements Answer {
+  @Column({ name: 'submission_id' })
+  submissionId: number;
+
+  @Column({ name: 'page_question_id' })
+  pageQuestionId: number;
+
+  @Column({
+    type: 'jsonb',
+  })
+  value: Record<string, any>;
+
+  @ManyToOne(() => SubmissionEntity, (submission) => submission.answers, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'submission_id' })
+  submission: Relation<SubmissionEntity>;
+
+  @ManyToOne(() => PageQuestionEntity, (pageQuestion) => pageQuestion.answers)
+  @JoinColumn({ name: 'page_question_id' })
+  pageQuestion: Relation<PageQuestionEntity>;
+}

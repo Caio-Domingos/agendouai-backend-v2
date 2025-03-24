@@ -1,8 +1,16 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { PageQuestion } from './page-question.model';
 import { PageEntity } from '../pages/pages.entity';
 import { QuestionEntity } from '../questions/questions.entity';
+import { AnswerEntity } from '../answers/answers.entity';
 
 @Entity('page_questions')
 export class PageQuestionEntity extends BaseEntity implements PageQuestion {
@@ -41,4 +49,7 @@ export class PageQuestionEntity extends BaseEntity implements PageQuestion {
   })
   @JoinColumn({ name: 'question_id' })
   question: Relation<QuestionEntity>;
+
+  @OneToMany(() => AnswerEntity, (answer) => answer.pageQuestion)
+  answers: Relation<AnswerEntity[]>;
 }

@@ -1,6 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { Page } from '../pages/pages.model';
 import { Question } from '../questions/questions.model';
+import { Answer } from '../answers/answers.model';
 
 /**
  * Representa a relação entre uma página e uma questão no sistema.
@@ -15,6 +16,7 @@ import { Question } from '../questions/questions.model';
  * @property {boolean} required - Indica se a questão é obrigatória para ser respondida
  * @property {object} configuration - Configurações específicas para esta instância da questão
  * @property {Array} alerts - Lista de alertas ou validações adicionais para esta questão
+ * @property {Answer[]} answers - Respostas fornecidas para esta questão em páginas
  */
 export interface PageQuestion extends IEntity {
   pageId: number;
@@ -25,5 +27,6 @@ export interface PageQuestion extends IEntity {
   alerts: Array<any>;
 
   page?: Page;
-  question: Question;
+  question?: Question;
+  answers?: Answer[];
 }

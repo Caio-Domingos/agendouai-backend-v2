@@ -1,7 +1,15 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Submission, SubmissionStatus } from './submissions.model';
 import { QuestionnaireEntity } from '../questionnaires/questionnaires.entity';
+import { AnswerEntity } from '../answers/answers.entity';
 
 @Entity('submissions')
 export class SubmissionEntity extends BaseEntity implements Submission {
@@ -35,4 +43,9 @@ export class SubmissionEntity extends BaseEntity implements Submission {
   )
   @JoinColumn({ name: 'questionnaire_id' })
   questionnaire: Relation<QuestionnaireEntity>;
+
+  @OneToMany(() => AnswerEntity, (answer) => answer.submission, {
+    cascade: true,
+  })
+  answers: Relation<AnswerEntity[]>;
 }
