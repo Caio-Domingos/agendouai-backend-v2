@@ -1,5 +1,6 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { Page } from '../pages/pages.model';
+import { Submission } from '../submissions/submissions.model';
 
 export enum QuestionnaireStatus {
   DRAFT = 'draft',
@@ -28,4 +29,5 @@ export interface Questionnaire extends IEntity {
   createdAt: Date;
 
   pages?: Page[];
+  submissions?: Submission[];
 }

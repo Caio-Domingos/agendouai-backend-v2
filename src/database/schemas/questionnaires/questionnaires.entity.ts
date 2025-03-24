@@ -10,6 +10,7 @@ import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Questionnaire, QuestionnaireStatus } from './questionnaires.model';
 import { UserEntity } from '../user/user.entity';
 import { PageEntity } from '../pages/pages.entity';
+import { SubmissionEntity } from '../submissions/submissions.entity';
 
 @Entity('questionnaires')
 export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
@@ -37,4 +38,7 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
     cascade: true,
   })
   pages: Relation<PageEntity[]>;
+
+  @OneToMany(() => SubmissionEntity, (submission) => submission.questionnaire)
+  submissions: Relation<SubmissionEntity[]>;
 }
