@@ -30,12 +30,4 @@ export class UserController extends UserControllerBase {
     // Passamos o serviço para o construtor da classe base
     super(userService);
   }
-
-  // Aqui você pode adicionar métodos específicos deste controller
-  // que não fazem parte do CRUD básico, se necessário
-  // Por exemplo:
-  // @Post('reset-password')
-  // resetPassword(@Body() dto: ResetPasswordDto) {
-  //   return this.userService.resetPassword(dto);
-  // }
 }

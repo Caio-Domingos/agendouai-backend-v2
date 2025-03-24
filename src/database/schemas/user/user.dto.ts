@@ -3,31 +3,35 @@ import { PartialType } from 'src/shared/validation/dto-helpers';
 import { UserStatus } from './user.model';
 
 export class UserDto {
-  @IsNumber()
+  @IsNumber({}, { message: 'ID deve ser um número inteiro' })
   id: number;
 
-  @IsString()
+  @IsString({ message: 'Nome deve ser uma string' })
   name: string;
-  @IsString()
+  @IsString({ message: 'Email deve ser uma string' })
   email: string;
 
   @IsOptional()
-  @IsEnum(UserStatus)
+  @IsEnum(UserStatus, {
+    message: `Status deve ser um dos valores: ${Object.values(UserStatus).join(', ')}`,
+  })
   status: UserStatus;
 }
 
-// TODO: better validation
 export class CreateUserDTO {
-  @IsString()
+  @IsString({ message: 'Nome deve ser uma string' })
   name: string;
-  @IsString()
+  @IsString({ message: 'Email deve ser uma string' })
   email: string;
-  @IsString()
-  password: string;
 
   @IsOptional()
-  @IsEnum(UserStatus)
+  @IsEnum(UserStatus, {
+    message: `Status deve ser um dos valores: ${Object.values(UserStatus).join(', ')}`,
+  })
   status?: UserStatus;
+
+  @IsString({ message: 'Senha deve ser uma string' })
+  password: string;
 }
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO) {}
