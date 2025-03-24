@@ -1,6 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { Questionnaire } from '../questionnaires/questionnaires.model';
 import { Answer } from '../answers/answers.model';
+import { Alert } from '../alerts/alerts.model';
 
 /**
  * Enum que define os status possíveis de uma submissão no sistema.
@@ -22,6 +23,7 @@ export enum SubmissionStatus {
  * @property {Date} completedAt - Data e hora em que o preenchimento foi concluído (opcional)
  * @property {SubmissionStatus} status - Status atual da submissão (parcial ou completa)
  * @property {Answer[]} answers - Respostas fornecidas nesta submissão
+ * @property {Alert[]} alerts - Alertas gerados a partir das respostas desta submissão
  */
 export interface Submission extends IEntity {
   questionnaireId: number;
@@ -31,4 +33,5 @@ export interface Submission extends IEntity {
 
   questionnaire?: Questionnaire;
   answers?: Answer[];
+  alerts?: Alert[];
 }

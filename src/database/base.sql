@@ -67,7 +67,7 @@ CREATE TABLE alerts (
   id SERIAL PRIMARY KEY,
   submission_id INT NOT NULL REFERENCES submissions(id) ON DELETE CASCADE,
   answer_id INT NOT NULL REFERENCES answers(id) ON DELETE CASCADE,
-  alert_config JSONB NOT NULL,
+  alert_config JSONB NOT NULL default '{}',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   status VARCHAR(20) NOT NULL CHECK (status IN ('new', 'viewed', 'resolved')) DEFAULT 'new'
 );

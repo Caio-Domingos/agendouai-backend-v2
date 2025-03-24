@@ -1,8 +1,16 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Answer } from './answers.model';
 import { SubmissionEntity } from '../submissions/submissions.entity';
 import { PageQuestionEntity } from '../page-question/page-question.entity';
+import { AlertEntity } from '../alerts/alerts.entity';
 
 @Entity('answers')
 export class AnswerEntity extends BaseEntity implements Answer {
@@ -26,4 +34,9 @@ export class AnswerEntity extends BaseEntity implements Answer {
   @ManyToOne(() => PageQuestionEntity, (pageQuestion) => pageQuestion.answers)
   @JoinColumn({ name: 'page_question_id' })
   pageQuestion: Relation<PageQuestionEntity>;
+
+  @OneToMany(() => AlertEntity, (alert) => alert.answer, {
+    cascade: true,
+  })
+  alerts: Relation<AlertEntity[]>;
 }

@@ -10,6 +10,7 @@ import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Submission, SubmissionStatus } from './submissions.model';
 import { QuestionnaireEntity } from '../questionnaires/questionnaires.entity';
 import { AnswerEntity } from '../answers/answers.entity';
+import { AlertEntity } from '../alerts/alerts.entity';
 
 @Entity('submissions')
 export class SubmissionEntity extends BaseEntity implements Submission {
@@ -48,4 +49,9 @@ export class SubmissionEntity extends BaseEntity implements Submission {
     cascade: true,
   })
   answers: Relation<AnswerEntity[]>;
+
+  @OneToMany(() => AlertEntity, (alert) => alert.submission, {
+    cascade: true,
+  })
+  alerts: Relation<AlertEntity[]>;
 }
