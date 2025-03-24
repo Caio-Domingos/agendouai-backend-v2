@@ -27,11 +27,13 @@ CREATE TABLE pages (
 
 CREATE TABLE questions (
   id SERIAL PRIMARY KEY,
+  slug VARCHAR(255) NOT NULL,
   title VARCHAR(255) NOT NULL,
   description TEXT,
   type VARCHAR(20) NOT NULL CHECK (
     type IN ('text', 'number', 'date', 'file', 'choice')
   ),
+  configuration JSONB NOT NULL DEFAULT '{}'
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
