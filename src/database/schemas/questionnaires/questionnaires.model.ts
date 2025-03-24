@@ -1,4 +1,5 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Page } from '../pages/pages.model';
 
 export enum QuestionnaireStatus {
   DRAFT = 'draft',
@@ -17,6 +18,7 @@ export enum QuestionnaireStatus {
  * @property {QuestionnaireStatus} status - Status atual do questionário (rascunho ou publicado)
  * @property {number} createdBy - ID do usuário que criou o questionário
  * @property {Date} createdAt - Data e hora de criação do questionário
+ * @property {Page[]} pages - Páginas do questionário
  */
 export interface Questionnaire extends IEntity {
   title: string;
@@ -24,4 +26,6 @@ export interface Questionnaire extends IEntity {
   status: QuestionnaireStatus;
   createdBy: number;
   createdAt: Date;
+
+  pages?: Page[];
 }
