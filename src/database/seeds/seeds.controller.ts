@@ -8,7 +8,7 @@ import { DatabaseCleanService } from '../clean/database-clean.service';
 import { Public } from 'src/auth/decorators/public.decorator';
 
 @Public()
-@ApiTags('admin')
+@ApiTags('_DB')
 @Controller('admin/seeds')
 @ApiBearerAuth('JWT')
 export class SeedsController {

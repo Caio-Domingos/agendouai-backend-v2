@@ -37,8 +37,7 @@ export function setupSwagger(
       },
       'JWT',
     )
-    .addTag('auth', 'Authentication endpoints')
-    .addTag('admin', 'Admin only endpoints')
+
     .build();
 
   const options: SwaggerDocumentOptions = {
