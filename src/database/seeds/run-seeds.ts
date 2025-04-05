@@ -8,6 +8,13 @@ import appConfig from '../../config/app.config';
 import databaseConfig from '../../config/database.config';
 import authConfig from '../../config/auth.config';
 import { UserEntity } from '../schemas/user/user.entity';
+import { PageQuestionEntity } from '../schemas/page-question/page-question.entity';
+import { PageEntity } from '../schemas/pages/pages.entity';
+import { QuestionnaireEntity } from '../schemas/questionnaires/questionnaires.entity';
+import { QuestionEntity } from '../schemas/questions/questions.entity';
+import { AlertEntity } from '../schemas/alerts/alerts.entity';
+import { AnswerEntity } from '../schemas/answers/answers.entity';
+import { SubmissionEntity } from '../schemas/submissions/submissions.entity';
 
 // Criar um módulo especial apenas para executar as seeds
 @Module({
@@ -26,11 +33,29 @@ import { UserEntity } from '../schemas/user/user.entity';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [UserEntity], // Especificar diretamente as entidades
+      entities: [
+        UserEntity,
+        QuestionEntity,
+        PageEntity,
+        PageQuestionEntity,
+        QuestionnaireEntity,
+        SubmissionEntity,
+        AnswerEntity,
+        AlertEntity,
+      ], // Especificar diretamente as entidades
       synchronize: false,
     }),
     // Importar as entidades necessárias
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      QuestionEntity,
+      PageEntity,
+      PageQuestionEntity,
+      QuestionnaireEntity,
+      SubmissionEntity,
+      AnswerEntity,
+      AlertEntity,
+    ]),
   ],
   providers: [SeedsService],
 })
@@ -48,7 +73,6 @@ async function bootstrap() {
     // Obtém o serviço de seeds
     const seedsService = app.get(SeedsService);
 
-    // Executa todas as seeds
     await seedsService.runAllSeeds();
 
     logger.log('Seeds executadas com sucesso!');

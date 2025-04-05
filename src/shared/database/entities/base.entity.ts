@@ -7,7 +7,7 @@ import { IEntity } from '../interfaces/entity.interface';
 
 export abstract class BaseEntity implements IEntity {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @CreateDateColumn({
     name: 'created_at',
