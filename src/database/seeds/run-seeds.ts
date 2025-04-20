@@ -15,6 +15,7 @@ import { QuestionEntity } from '../schemas/questions/questions.entity';
 import { AlertEntity } from '../schemas/alerts/alerts.entity';
 import { AnswerEntity } from '../schemas/answers/answers.entity';
 import { SubmissionEntity } from '../schemas/submissions/submissions.entity';
+import { CompanyEntity } from '../schemas/companies/companies.entity';
 
 // Criar um módulo especial apenas para executar as seeds
 @Module({
@@ -42,6 +43,7 @@ import { SubmissionEntity } from '../schemas/submissions/submissions.entity';
         SubmissionEntity,
         AnswerEntity,
         AlertEntity,
+        CompanyEntity,
       ], // Especificar diretamente as entidades
       synchronize: false,
     }),
@@ -55,6 +57,7 @@ import { SubmissionEntity } from '../schemas/submissions/submissions.entity';
       SubmissionEntity,
       AnswerEntity,
       AlertEntity,
+      CompanyEntity,
     ]),
   ],
   providers: [SeedsService],
