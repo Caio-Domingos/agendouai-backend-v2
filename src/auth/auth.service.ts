@@ -10,7 +10,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from './strategies/jwt.strategy';
 import { UserService } from 'src/modules/user/user.service';
-import { UserStatus } from 'src/database/schemas/user/user.model';
+import { User, UserStatus } from 'src/database/schemas/user/user.model';
 
 @Injectable()
 export class AuthService {
@@ -93,10 +93,12 @@ export class AuthService {
   /**
    * Gera tokens de acesso e refresh para um usuário
    */
-  private generateTokens(user: any) {
+  private generateTokens(user: User) {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
+      name: user.name,
+      role: user.role,
     };
 
     // Gera o token de acesso
@@ -114,8 +116,8 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        name: user.name,
+        role: user.role,
       },
     };
   }

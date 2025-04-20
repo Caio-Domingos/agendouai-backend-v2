@@ -4,8 +4,12 @@ import {
   IsString,
   MinLength,
   Matches,
+  IsOptional,
+  IsEnum,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from 'src/database/schemas/user/user.model';
+import { Transform } from 'class-transformer';
 
 export class RegisterDto {
   @ApiProperty({
@@ -38,4 +42,17 @@ export class RegisterDto {
       'A senha deve conter pelo menos uma letra maiúscula, uma minúscula e um número',
   })
   password: string;
+
+  @ApiProperty({
+    description: 'Papel do usuário',
+    example: 'ADMIN',
+    enum: UserRole,
+    enumName: 'UserRole',
+  })
+  @IsOptional()
+  @IsEnum(UserRole, {
+    message: `Papel deve ser um dos valores: ${Object.values(UserRole).join(', ')}`,
+  })
+  @Transform(({ value }) => (value !== undefined ? value : UserRole.EMPLOYEE))
+  role: UserRole;
 }

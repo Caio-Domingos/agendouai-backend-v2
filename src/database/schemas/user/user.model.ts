@@ -6,6 +6,13 @@ export enum UserStatus {
   // TODO: Add more statuses
 }
 
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  COMPANY = 'COMPANY',
+  UNIT = 'UNIT',
+  EMPLOYEE = 'EMPLOYEE',
+}
+
 /**
  * Representa uma entidade de usuário no sistema.
  *
@@ -24,4 +31,5 @@ export interface User extends IEntity {
   email: string;
   password: string;
   status: UserStatus;
+  role: UserRole;
 }
