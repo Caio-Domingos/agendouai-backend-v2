@@ -7,6 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { PartialType } from 'src/shared/validation/dto-helpers';
+
 import { CompanyStatus } from './companies.model';
 
 export class CompanyDto {

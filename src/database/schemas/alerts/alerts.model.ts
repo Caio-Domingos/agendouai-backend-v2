@@ -1,6 +1,8 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
-import { Submission } from '../submissions/submissions.model';
+
 import { Answer } from '../answers/answers.model';
+import { Company } from '../companies/companies.model';
+import { Submission } from '../submissions/submissions.model';
 
 /**
  * Enum que define os status possíveis de um alerta no sistema.
@@ -23,13 +25,23 @@ export enum AlertStatus {
  * @property {number} answerId - ID da resposta que gerou o alerta
  * @property {Record<string, any>} alertConfig - Configuração do alerta em formato JSON
  * @property {AlertStatus} status - Status atual do alerta (novo, visualizado ou resolvido)
+ * @property {number} companyId - ID da empresa à qual este alerta pertence (opcional)
+ *
+ * Relacionamentos:
+ * @property {Company} company - Empresa à qual este alerta está vinculado
+ * @property {Submission} submission - Submissão que originou este alerta
+ * @property {Answer} answer - Resposta específica que gerou este alerta
  */
 export interface Alert extends IEntity {
+  // Propriedades principais
   submissionId: number;
   answerId: number;
   alertConfig: Record<string, any>;
   status: AlertStatus;
+  companyId?: number;
 
+  // Relacionamentos
+  company?: Company;
   submission?: Submission;
   answer?: Answer;
 }

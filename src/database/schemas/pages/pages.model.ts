@@ -1,4 +1,5 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+
 import { PageQuestion } from '../page-question/page-question.model';
 
 /**

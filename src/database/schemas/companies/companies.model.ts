@@ -1,5 +1,11 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 
+import { Alert } from '../alerts/alerts.model';
+import { Questionnaire } from '../questionnaires/questionnaires.model';
+import { Question } from '../questions/questions.model';
+import { Submission } from '../submissions/submissions.model';
+import { User } from '../user/user.model';
+
 export enum CompanyStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
@@ -24,4 +30,10 @@ export interface Company extends IEntity {
   tradingName?: string;
   phone?: string;
   status: CompanyStatus;
+
+  users?: User[];
+  questionnaires?: Questionnaire[];
+  questions: Question[];
+  submissions?: Submission[];
+  alerts: Alert[];
 }

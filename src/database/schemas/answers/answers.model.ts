@@ -1,7 +1,8 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+
+import { Alert } from '../alerts/alerts.model';
 import { PageQuestion } from '../page-question/page-question.model';
 import { Submission } from '../submissions/submissions.model';
-import { Alert } from '../alerts/alerts.model';
 
 /**
  * Representa uma resposta de usuário a uma questão em uma submissão.

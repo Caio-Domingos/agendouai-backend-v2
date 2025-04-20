@@ -1,5 +1,6 @@
 import { IsEnum, IsNumber, IsObject, IsOptional } from 'class-validator';
 import { PartialType } from 'src/shared/validation/dto-helpers';
+
 import { AlertStatus } from './alerts.model';
 
 export class AlertDto {
@@ -21,6 +22,10 @@ export class AlertDto {
     message: `Status deve ser um dos valores: ${Object.values(AlertStatus).join(', ')}`,
   })
   status: AlertStatus;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
+  companyId?: number;
 }
 
 export class CreateAlertDTO {
@@ -41,6 +46,10 @@ export class CreateAlertDTO {
     message: `Status deve ser um dos valores: ${Object.values(AlertStatus).join(', ')}`,
   })
   status?: AlertStatus;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
+  companyId?: number;
 }
 
 export class UpdateAlertDTO extends PartialType(CreateAlertDTO) {}

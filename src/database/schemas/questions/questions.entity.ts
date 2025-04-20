@@ -1,11 +1,26 @@
-import { Entity, Column, OneToMany } from 'typeorm';
-import { BaseEntity } from '../../../shared/database/entities/base.entity';
-import { Question, QuestionType } from './questions.model';
-import { PageQuestionEntity } from '../page-question/page-question.entity';
-import { Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  Relation,
+} from 'typeorm';
 
+import { BaseEntity } from '../../../shared/database/entities/base.entity';
+import { CompanyEntity } from '../companies/companies.entity';
+import { PageQuestionEntity } from '../page-question/page-question.entity';
+import { Question, QuestionType } from './questions.model';
+
+/**
+ * Entidade de questão para persistência no banco de dados.
+ *
+ * Implementa a interface Question e define as colunas e relacionamentos
+ * necessários para o armazenamento de questões no sistema.
+ */
 @Entity('questions')
 export class QuestionEntity extends BaseEntity implements Question {
+  // Propriedades principais
   @Column()
   slug: string;
 
@@ -26,6 +41,14 @@ export class QuestionEntity extends BaseEntity implements Question {
     default: {},
   })
   configuration: Record<string, any>;
+
+  @Column({ nullable: true, name: 'company_id' })
+  companyId?: number;
+
+  // Relacionamentos
+  @ManyToOne(() => CompanyEntity, (company) => company.questions)
+  @JoinColumn({ name: 'company_id' })
+  company: Relation<CompanyEntity>;
 
   @OneToMany(
     () => PageQuestionEntity,

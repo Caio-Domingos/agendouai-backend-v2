@@ -1,5 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 
+import { Company } from '../companies/companies.model';
+
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
@@ -25,11 +27,21 @@ export enum UserRole {
  * @property {string} email - Endereço de e-mail único do usuário, usado para identificação e login
  * @property {string} password - Senha criptografada do usuário
  * @property {UserStatus} status - Status atual do usuário no sistema
+ * @property {UserRole} role - Papel do usuário no sistema, definindo suas permissões
+ * @property {number} companyId - ID da empresa à qual este usuário pertence (opcional)
+ *
+ * Relacionamentos:
+ * @property {Company} company - Empresa à qual este usuário está vinculado
  */
 export interface User extends IEntity {
+  // Propriedades principais
   name: string;
   email: string;
   password: string;
   status: UserStatus;
   role: UserRole;
+  companyId?: number;
+
+  // Relacionamentos
+  company?: Company;
 }

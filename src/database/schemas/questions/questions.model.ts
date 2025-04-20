@@ -1,4 +1,6 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+
+import { Company } from '../companies/companies.model';
 import { PageQuestion } from '../page-question/page-question.model';
 
 /**
@@ -24,13 +26,22 @@ export enum QuestionType {
  * @property {string} description - Descrição detalhada da questão (opcional)
  * @property {QuestionType} type - Tipo da questão que define como será respondida
  * @property {object} configuration - Configurações específicas da questão em formato JSON
+ * @property {number} companyId - ID da empresa à qual esta questão pertence (opcional)
+ *
+ * Relacionamentos:
+ * @property {Company} company - Empresa à qual esta questão está vinculada
  * @property {PageQuestion[]} pageQuestions - As páginas às quais esta questão está vinculada
  */
 export interface Question extends IEntity {
+  // Propriedades principais
   slug: string;
   title: string;
   description?: string;
   type: QuestionType;
   configuration: Record<string, any>;
+  companyId?: number;
+
+  // Relacionamentos
+  company?: Company;
   pageQuestions?: PageQuestion[];
 }

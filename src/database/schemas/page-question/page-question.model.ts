@@ -1,7 +1,8 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+
+import { Answer } from '../answers/answers.model';
 import { Page } from '../pages/pages.model';
 import { Question } from '../questions/questions.model';
-import { Answer } from '../answers/answers.model';
 
 /**
  * Representa a relação entre uma página e uma questão no sistema.

@@ -1,16 +1,10 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  Relation,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Relation } from 'typeorm';
+
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
-import { Answer } from './answers.model';
-import { SubmissionEntity } from '../submissions/submissions.entity';
-import { PageQuestionEntity } from '../page-question/page-question.entity';
 import { AlertEntity } from '../alerts/alerts.entity';
+import { PageQuestionEntity } from '../page-question/page-question.entity';
+import { SubmissionEntity } from '../submissions/submissions.entity';
+import { Answer } from './answers.model';
 
 @Entity('answers')
 export class AnswerEntity extends BaseEntity implements Answer {

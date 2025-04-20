@@ -1,10 +1,12 @@
+import { Request } from 'express';
 import { CrudQueryRepository } from 'src/shared/database/repositories/crud-query.repository';
 import { DataSource } from 'typeorm';
-import { Request } from 'express';
-import { REQUEST } from '@nestjs/core';
+
 import { Inject, Injectable } from '@nestjs/common';
-import { QuestionEntity } from './questions.entity';
+import { REQUEST } from '@nestjs/core';
+
 import { CreateQuestionDTO, UpdateQuestionDTO } from './questions.dto';
+import { QuestionEntity } from './questions.entity';
 
 @Injectable()
 export class QuestionRepository extends CrudQueryRepository<

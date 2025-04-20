@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsEnum,
   IsNumber,
@@ -6,10 +7,10 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { PartialType } from 'src/shared/validation/dto-helpers';
-import { QuestionType } from './questions.model';
-import { Transform } from 'class-transformer';
 import slugify from 'slugify';
+import { PartialType } from 'src/shared/validation/dto-helpers';
+
+import { QuestionType } from './questions.model';
 
 export class QuestionDto {
   @IsNumber({}, { message: 'ID deve ser um número inteiro' })
@@ -32,6 +33,10 @@ export class QuestionDto {
 
   @IsObject({ message: 'Configuração deve ser um objeto JSON válido' })
   configuration: Record<string, any>;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
+  companyId?: number;
 }
 
 export class CreateQuestionDTO {
@@ -59,6 +64,10 @@ export class CreateQuestionDTO {
   @IsOptional()
   @IsObject({ message: 'Configuração deve ser um objeto JSON válido' })
   configuration?: Record<string, any>;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
+  companyId?: number;
 }
 
 export class UpdateQuestionDTO extends PartialType(CreateQuestionDTO) {}

@@ -1,6 +1,7 @@
-import { IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { PartialType } from 'src/shared/validation/dto-helpers';
+
 import { SubmissionStatus } from './submissions.model';
 
 export class SubmissionDto {
@@ -21,6 +22,10 @@ export class SubmissionDto {
     message: `Status deve ser um dos valores: ${Object.values(SubmissionStatus).join(', ')}`,
   })
   status: SubmissionStatus;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
+  companyId?: number;
 }
 
 export class CreateSubmissionDTO {
@@ -42,6 +47,10 @@ export class CreateSubmissionDTO {
     message: `Status deve ser um dos valores: ${Object.values(SubmissionStatus).join(', ')}`,
   })
   status?: SubmissionStatus;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
+  companyId?: number;
 }
 
 export class UpdateSubmissionDTO extends PartialType(CreateSubmissionDTO) {}

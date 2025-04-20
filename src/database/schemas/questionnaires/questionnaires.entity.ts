@@ -1,19 +1,28 @@
 import {
-  Entity,
   Column,
-  ManyToOne,
+  Entity,
   JoinColumn,
-  Relation,
+  ManyToOne,
   OneToMany,
+  Relation,
 } from 'typeorm';
+
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
-import { Questionnaire, QuestionnaireStatus } from './questionnaires.model';
-import { UserEntity } from '../user/user.entity';
+import { CompanyEntity } from '../companies/companies.entity';
 import { PageEntity } from '../pages/pages.entity';
 import { SubmissionEntity } from '../submissions/submissions.entity';
+import { UserEntity } from '../user/user.entity';
+import { Questionnaire, QuestionnaireStatus } from './questionnaires.model';
 
+/**
+ * Entidade de questionário para persistência no banco de dados.
+ *
+ * Implementa a interface Questionnaire e define as colunas e relacionamentos
+ * necessários para o armazenamento de questionários no sistema.
+ */
 @Entity('questionnaires')
 export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
+  // Propriedades principais
   @Column()
   title: string;
 
@@ -29,6 +38,14 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
 
   @Column({ name: 'created_by' })
   createdBy: number;
+
+  @Column({ nullable: true, name: 'company_id' })
+  companyId?: number;
+
+  // Relacionamentos
+  @ManyToOne(() => CompanyEntity, (company) => company.questionnaires)
+  @JoinColumn({ name: 'company_id' })
+  company: Relation<CompanyEntity>;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'created_by' })

@@ -1,10 +1,18 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { BaseEntity } from '../../../shared/database/entities/base.entity';
-import { User, UserRole, UserStatus } from './user.model';
-import { CompanyEntity } from '../companies/companies.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
+import { BaseEntity } from '../../../shared/database/entities/base.entity';
+import { CompanyEntity } from '../companies/companies.entity';
+import { User, UserRole, UserStatus } from './user.model';
+
+/**
+ * Entidade de usuário para persistência no banco de dados.
+ *
+ * Implementa a interface User e define as colunas e relacionamentos
+ * necessários para o armazenamento de usuários no sistema.
+ */
 @Entity('users')
 export class UserEntity extends BaseEntity implements User {
+  // Propriedades principais
   @Column()
   name: string;
 
@@ -25,9 +33,10 @@ export class UserEntity extends BaseEntity implements User {
   role: UserRole;
 
   @Column({ nullable: true, name: 'company_id' })
-  companyId?: string;
+  companyId?: number;
 
-  @ManyToOne(() => CompanyEntity, (user) => user.users)
+  // Relacionamentos
+  @ManyToOne(() => CompanyEntity, (company) => company.users)
   @JoinColumn({ name: 'company_id' })
   company: CompanyEntity;
 }

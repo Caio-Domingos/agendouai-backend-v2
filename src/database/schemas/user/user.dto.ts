@@ -1,7 +1,14 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { PartialType } from 'src/shared/validation/dto-helpers';
-import { UserRole, UserStatus } from './user.model';
 import { Transform } from 'class-transformer';
+import {
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateIf,
+} from 'class-validator';
+import { PartialType } from 'src/shared/validation/dto-helpers';
+
+import { UserRole, UserStatus } from './user.model';
 
 export class UserDto {
   @IsNumber({}, { message: 'ID deve ser um número inteiro' })
@@ -23,6 +30,10 @@ export class UserDto {
     message: `Papel deve ser um dos valores: ${Object.values(UserRole).join(', ')}`,
   })
   role: UserRole;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
+  companyId?: number;
 }
 
 export class CreateUserDTO {
@@ -47,6 +58,15 @@ export class CreateUserDTO {
   })
   @Transform(({ value }) => (value !== undefined ? value : UserRole.EMPLOYEE))
   role: UserRole;
+
+  @ValidateIf((o) => o.role !== UserRole.ADMIN)
+  @IsNumber(
+    {},
+    {
+      message: 'ID da empresa é obrigatório para usuários não-administradores',
+    },
+  )
+  companyId?: number;
 }
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO) {
