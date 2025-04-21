@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  Relation,
+} from 'typeorm';
 
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { AnswerEntity } from '../answers/answers.entity';
@@ -13,6 +20,11 @@ import { Alert, AlertStatus } from './alerts.model';
  * necessários para o armazenamento de alertas no sistema.
  */
 @Entity('alerts')
+@Index('idx_alert_submission', ['submissionId'])
+@Index('idx_alert_answer', ['answerId'])
+@Index('idx_alert_company', ['companyId'])
+@Index('idx_alert_status', ['status'])
+@Index('idx_alert_company_status', ['companyId', 'status'])
 export class AlertEntity extends BaseEntity implements Alert {
   // Propriedades principais
   @Column({ name: 'submission_id' })
@@ -39,7 +51,9 @@ export class AlertEntity extends BaseEntity implements Alert {
   companyId?: number;
 
   // Relacionamentos
-  @ManyToOne(() => CompanyEntity, (company) => company.alerts)
+  @ManyToOne(() => CompanyEntity, (company) => company.alerts, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompanyEntity>;
 

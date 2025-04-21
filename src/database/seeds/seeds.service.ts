@@ -78,6 +78,7 @@ export class SeedsService {
       await manager.query('TRUNCATE TABLE questionnaires CASCADE');
       await manager.query('TRUNCATE TABLE questions CASCADE');
       await manager.query('TRUNCATE TABLE users CASCADE');
+      await manager.query('TRUNCATE TABLE companies CASCADE');
     });
 
     this.logger.log('Tabelas truncadas com sucesso.');

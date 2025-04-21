@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { CompanyEntity } from '../companies/companies.entity';
@@ -11,12 +11,14 @@ import { User, UserRole, UserStatus } from './user.model';
  * necessários para o armazenamento de usuários no sistema.
  */
 @Entity('users')
+@Index('idx_user_company', ['companyId'])
 export class UserEntity extends BaseEntity implements User {
   // Propriedades principais
   @Column()
   name: string;
 
   @Column({ unique: true })
+  @Index('idx_user_email')
   email: string;
 
   @Column({ select: false })
@@ -36,7 +38,9 @@ export class UserEntity extends BaseEntity implements User {
   companyId?: number;
 
   // Relacionamentos
-  @ManyToOne(() => CompanyEntity, (company) => company.users)
+  @ManyToOne(() => CompanyEntity, (company) => company.users, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'company_id' })
   company: CompanyEntity;
 }

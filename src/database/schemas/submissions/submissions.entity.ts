@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -21,6 +22,10 @@ import { Submission, SubmissionStatus } from './submissions.model';
  * necessários para o armazenamento de submissões no sistema.
  */
 @Entity('submissions')
+@Index('idx_submission_questionnaire', ['questionnaireId'])
+@Index('idx_submission_company', ['companyId'])
+@Index('idx_submission_status', ['status'])
+@Index('idx_submission_quest_status', ['questionnaireId', 'status'])
 export class SubmissionEntity extends BaseEntity implements Submission {
   // Propriedades principais
   @Column({ name: 'questionnaire_id' })
@@ -51,13 +56,18 @@ export class SubmissionEntity extends BaseEntity implements Submission {
   companyId?: number;
 
   // Relacionamentos
-  @ManyToOne(() => CompanyEntity, (company) => company.submissions)
+  @ManyToOne(() => CompanyEntity, (company) => company.submissions, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompanyEntity>;
 
   @ManyToOne(
     () => QuestionnaireEntity,
     (questionnaire) => questionnaire.submissions,
+    {
+      onDelete: 'CASCADE',
+    },
   )
   @JoinColumn({ name: 'questionnaire_id' })
   questionnaire: Relation<QuestionnaireEntity>;

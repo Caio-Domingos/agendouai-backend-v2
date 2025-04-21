@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -19,6 +20,9 @@ import { Question, QuestionType } from './questions.model';
  * necessários para o armazenamento de questões no sistema.
  */
 @Entity('questions')
+@Index('idx_question_slug', ['slug'])
+@Index('idx_question_company', ['companyId'])
+@Index('idx_question_type', ['type'])
 export class QuestionEntity extends BaseEntity implements Question {
   // Propriedades principais
   @Column()
@@ -46,7 +50,9 @@ export class QuestionEntity extends BaseEntity implements Question {
   companyId?: number;
 
   // Relacionamentos
-  @ManyToOne(() => CompanyEntity, (company) => company.questions)
+  @ManyToOne(() => CompanyEntity, (company) => company.questions, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompanyEntity>;
 

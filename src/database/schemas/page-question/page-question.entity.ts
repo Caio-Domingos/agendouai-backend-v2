@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -14,6 +15,9 @@ import { QuestionEntity } from '../questions/questions.entity';
 import { PageQuestion } from './page-question.model';
 
 @Entity('page_questions')
+@Index('idx_page_question_page', ['pageId'])
+@Index('idx_page_question_question', ['questionId'])
+@Index('idx_page_question_both', ['pageId', 'questionId'])
 export class PageQuestionEntity extends BaseEntity implements PageQuestion {
   @Column({ name: 'page_id' })
   pageId: number;
@@ -51,6 +55,8 @@ export class PageQuestionEntity extends BaseEntity implements PageQuestion {
   @JoinColumn({ name: 'question_id' })
   question: Relation<QuestionEntity>;
 
-  @OneToMany(() => AnswerEntity, (answer) => answer.pageQuestion)
+  @OneToMany(() => AnswerEntity, (answer) => answer.pageQuestion, {
+    cascade: true,
+  })
   answers: Relation<AnswerEntity[]>;
 }

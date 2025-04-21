@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  Relation,
+} from 'typeorm';
 
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { AlertEntity } from '../alerts/alerts.entity';
@@ -7,6 +15,9 @@ import { SubmissionEntity } from '../submissions/submissions.entity';
 import { Answer } from './answers.model';
 
 @Entity('answers')
+@Index('idx_answer_submission', ['submissionId'])
+@Index('idx_answer_page_question', ['pageQuestionId'])
+@Index('idx_answer_sub_pq', ['submissionId', 'pageQuestionId'])
 export class AnswerEntity extends BaseEntity implements Answer {
   @Column({ name: 'submission_id' })
   submissionId: number;
@@ -25,7 +36,9 @@ export class AnswerEntity extends BaseEntity implements Answer {
   @JoinColumn({ name: 'submission_id' })
   submission: Relation<SubmissionEntity>;
 
-  @ManyToOne(() => PageQuestionEntity, (pageQuestion) => pageQuestion.answers)
+  @ManyToOne(() => PageQuestionEntity, (pageQuestion) => pageQuestion.answers, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'page_question_id' })
   pageQuestion: Relation<PageQuestionEntity>;
 

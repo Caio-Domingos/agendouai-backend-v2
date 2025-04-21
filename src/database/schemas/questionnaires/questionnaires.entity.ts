@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -21,6 +22,9 @@ import { Questionnaire, QuestionnaireStatus } from './questionnaires.model';
  * necessários para o armazenamento de questionários no sistema.
  */
 @Entity('questionnaires')
+@Index('idx_questionnaire_company', ['companyId'])
+@Index('idx_questionnaire_status', ['status'])
+@Index('idx_questionnaire_company_status', ['companyId', 'status'])
 export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
   // Propriedades principais
   @Column()
@@ -43,11 +47,15 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
   companyId?: number;
 
   // Relacionamentos
-  @ManyToOne(() => CompanyEntity, (company) => company.questionnaires)
+  @ManyToOne(() => CompanyEntity, (company) => company.questionnaires, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompanyEntity>;
 
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'created_by' })
   creator: Relation<UserEntity>;
 
@@ -56,6 +64,8 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
   })
   pages: Relation<PageEntity[]>;
 
-  @OneToMany(() => SubmissionEntity, (submission) => submission.questionnaire)
+  @OneToMany(() => SubmissionEntity, (submission) => submission.questionnaire, {
+    cascade: true,
+  })
   submissions: Relation<SubmissionEntity[]>;
 }

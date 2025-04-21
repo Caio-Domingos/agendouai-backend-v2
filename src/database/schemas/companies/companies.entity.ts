@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, Relation } from 'typeorm';
+import { Column, Entity, Index, OneToMany, Relation } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { AlertEntity } from '../alerts/alerts.entity';
@@ -9,11 +9,13 @@ import { UserEntity } from '../user/user.entity';
 import { Company, CompanyStatus } from './companies.model';
 
 @Entity('companies')
+@Index('idx_company_name', ['name'])
 export class CompanyEntity extends BaseEntity implements Company {
   @Column()
   name: string;
 
   @Column({ unique: true })
+  @Index('idx_company_cnpj')
   cnpj: string;
 
   @Column({ nullable: true, name: 'trading_name' })
@@ -29,17 +31,37 @@ export class CompanyEntity extends BaseEntity implements Company {
   })
   status: CompanyStatus;
 
-  @OneToMany(() => UserEntity, (user) => user.company)
+  @OneToMany(() => UserEntity, (user) => user.company, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   users: Relation<UserEntity[]>;
+
   @OneToMany(
     () => QuestionnaireEntity,
     (questionnaire) => questionnaire.company,
+    {
+      cascade: true,
+      onDelete: 'CASCADE',
+    },
   )
   questionnaires: Relation<QuestionnaireEntity[]>;
-  @OneToMany(() => QuestionEntity, (question) => question.company)
+
+  @OneToMany(() => QuestionEntity, (question) => question.company, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   questions: Relation<QuestionEntity[]>;
-  @OneToMany(() => SubmissionEntity, (submission) => submission.company)
+
+  @OneToMany(() => SubmissionEntity, (submission) => submission.company, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   submissions: Relation<SubmissionEntity[]>;
-  @OneToMany(() => AlertEntity, (alert) => alert.company)
+
+  @OneToMany(() => AlertEntity, (alert) => alert.company, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   alerts: Relation<AlertEntity[]>;
 }
