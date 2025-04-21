@@ -91,9 +91,9 @@ export class SeedsService {
 
     // 1. Create company
     const companyData = {
-      name: 'Example Company',
+      name: 'Empresa Exemplo',
       cnpj: '12.345.678/0001-90',
-      tradingName: 'ExCo',
+      tradingName: 'EmpEx',
       phone: '(11) 1234-5678',
       status: CompanyStatus.ACTIVE,
     };
@@ -105,12 +105,12 @@ export class SeedsService {
       'auth.security.bcryptSaltRounds',
       10,
     );
-    const hashedPassword = await bcrypt.hash('Password@123', saltRounds);
+    const hashedPassword = await bcrypt.hash('Senha@123', saltRounds);
 
     // Admin user (no company association)
     const adminUser = await this.userRepository.save({
-      name: 'Admin User',
-      email: 'admin@example.com',
+      name: 'Usuário Administrador',
+      email: 'admin@exemplo.com',
       password: hashedPassword,
       status: UserStatus.ACTIVE,
       role: UserRole.ADMIN,
@@ -119,8 +119,8 @@ export class SeedsService {
 
     // Company user (with company association)
     const companyUser = await this.userRepository.save({
-      name: 'Company Manager',
-      email: 'manager@example.com',
+      name: 'Gerente da Empresa',
+      email: 'gerente@exemplo.com',
       password: hashedPassword,
       status: UserStatus.ACTIVE,
       role: UserRole.COMPANY,
@@ -130,8 +130,8 @@ export class SeedsService {
 
     // Unit user
     const unitUser = await this.userRepository.save({
-      name: 'Unit Manager',
-      email: 'unit@example.com',
+      name: 'Gerente de Unidade',
+      email: 'unidade@exemplo.com',
       password: hashedPassword,
       status: UserStatus.ACTIVE,
       role: UserRole.UNIT,
@@ -141,8 +141,8 @@ export class SeedsService {
 
     // Employee user
     const employeeUser = await this.userRepository.save({
-      name: 'Employee',
-      email: 'employee@example.com',
+      name: 'Funcionário',
+      email: 'funcionario@exemplo.com',
       password: hashedPassword,
       status: UserStatus.ACTIVE,
       role: UserRole.EMPLOYEE,
@@ -153,14 +153,14 @@ export class SeedsService {
     // 3. Create questions for each type (excluding FILE)
     // TEXT question
     const textQuestion = await this.questionRepository.save({
-      slug: 'feedback-text',
-      title: 'Please provide your feedback',
-      description: 'Tell us what you think about our service',
+      slug: 'feedback-texto',
+      title: 'Por favor, forneça seu feedback',
+      description: 'Conte-nos o que você achou do nosso serviço',
       type: QuestionType.TEXT,
       configuration: {
         minLength: 10,
         maxLength: 500,
-        placeholder: 'Enter your feedback here...',
+        placeholder: 'Digite seu feedback aqui...',
       },
       companyId: company.id,
     });
@@ -168,9 +168,9 @@ export class SeedsService {
 
     // NUMBER question
     const numberQuestion = await this.questionRepository.save({
-      slug: 'service-rating',
-      title: 'How would you rate our service?',
-      description: 'Rate from 1 to 10',
+      slug: 'avaliacao-servico',
+      title: 'Como você avalia nosso serviço?',
+      description: 'Avalie de 1 a 10',
       type: QuestionType.NUMBER,
       configuration: {
         min: 1,
@@ -183,14 +183,14 @@ export class SeedsService {
 
     // DATE question
     const dateQuestion = await this.questionRepository.save({
-      slug: 'visit-date',
-      title: 'When did you visit our store?',
-      description: 'Select the date of your last visit',
+      slug: 'data-visita',
+      title: 'Quando você visitou nossa loja?',
+      description: 'Selecione a data da sua última visita',
       type: QuestionType.DATE,
       configuration: {
         minDate: '2023-01-01',
         maxDate: '2023-12-31',
-        format: 'YYYY-MM-DD',
+        format: 'DD/MM/YYYY',
       },
       companyId: company.id,
     });
@@ -198,17 +198,17 @@ export class SeedsService {
 
     // CHOICE question
     const choiceQuestion = await this.questionRepository.save({
-      slug: 'satisfaction-level',
-      title: 'How satisfied are you with our products?',
-      description: 'Select the option that best represents your opinion',
+      slug: 'nivel-satisfacao',
+      title: 'Qual seu nível de satisfação com nossos produtos?',
+      description: 'Selecione a opção que melhor representa sua opinião',
       type: QuestionType.CHOICE,
       configuration: {
         options: [
-          { value: 'very_satisfied', label: 'Very Satisfied' },
-          { value: 'satisfied', label: 'Satisfied' },
-          { value: 'neutral', label: 'Neutral' },
-          { value: 'dissatisfied', label: 'Dissatisfied' },
-          { value: 'very_dissatisfied', label: 'Very Dissatisfied' },
+          { value: 'muito_satisfeito', label: 'Muito Satisfeito' },
+          { value: 'satisfeito', label: 'Satisfeito' },
+          { value: 'neutro', label: 'Neutro' },
+          { value: 'insatisfeito', label: 'Insatisfeito' },
+          { value: 'muito_insatisfeito', label: 'Muito Insatisfeito' },
         ],
         multiple: false,
       },
@@ -218,8 +218,9 @@ export class SeedsService {
 
     // 4. Create a questionnaire with all questions
     const questionnaire = await this.questionnaireRepository.save({
-      title: 'Customer Feedback Survey',
-      description: 'Please help us improve by answering these questions',
+      title: 'Pesquisa de Satisfação do Cliente',
+      description:
+        'Por favor, ajude-nos a melhorar respondendo a estas perguntas',
       status: QuestionnaireStatus.PUBLISHED,
       createdBy: adminUser.id,
       companyId: company.id,
@@ -228,7 +229,7 @@ export class SeedsService {
 
     // Create a page for the questionnaire
     const page = await this.pageRepository.save({
-      title: 'Feedback Form',
+      title: 'Formulário de Feedback',
       questionnaireId: questionnaire.id,
       sequenceNumber: 1,
       isIdentificationPage: false,
@@ -275,7 +276,7 @@ export class SeedsService {
       submissionId: submission.id,
       pageQuestionId: pageQuestions[0].id,
       value: {
-        text: 'The service was excellent. Staff was very helpful and friendly.',
+        text: 'O serviço foi excelente. A equipe foi muito prestativa e amigável.',
       },
     });
 
@@ -290,14 +291,14 @@ export class SeedsService {
     await this.answerRepository.save({
       submissionId: submission.id,
       pageQuestionId: pageQuestions[2].id,
-      value: { date: '2023-06-15' },
+      value: { date: '15/06/2023' },
     });
 
     // CHOICE answer
     await this.answerRepository.save({
       submissionId: submission.id,
       pageQuestionId: pageQuestions[3].id,
-      value: { selected: 'very_satisfied' },
+      value: { selected: 'muito_satisfeito' },
     });
 
     this.logger.log('Respostas criadas para todas as questões');
