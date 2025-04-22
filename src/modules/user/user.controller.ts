@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CrudQueryController } from '../../shared/crud/controllers/crud-query.controller';
@@ -29,5 +29,13 @@ export class UserController extends UserControllerBase {
   constructor(readonly userService: UserService) {
     // Passamos o serviço para o construtor da classe base
     super(userService);
+  }
+
+  @Post()
+  async create(@Body() createUserDto: CreateUserDTO): Promise<UserDto> {
+    // Implementação específica para criar um usuário
+    throw new BadRequestException(
+      'Este endpoint não deve ser usado diretamente. Use o endpoint de registro.',
+    );
   }
 }
