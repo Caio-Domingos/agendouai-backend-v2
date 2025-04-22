@@ -6,9 +6,11 @@ import {
   Matches,
   IsOptional,
   IsEnum,
+  IsNumber,
+  ValidateIf,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from 'src/database/schemas/user/user.model';
+import { UserRole, UserStatus } from 'src/database/schemas/user/user.model';
 import { Transform } from 'class-transformer';
 
 export class RegisterDto {
@@ -55,4 +57,20 @@ export class RegisterDto {
   })
   @Transform(({ value }) => (value !== undefined ? value : UserRole.EMPLOYEE))
   role: UserRole;
+
+  @ValidateIf((o) => o.role !== UserRole.ADMIN)
+  @IsNumber(
+    {},
+    {
+      message: 'ID da empresa é obrigatório para usuários não-administradores',
+    },
+  )
+  companyId?: number;
+
+  @IsOptional()
+  @IsEnum(UserStatus, {
+    message: `Status deve ser um dos valores: ${Object.values(UserStatus).join(', ')}`,
+  })
+  @Transform(({ value }) => (value !== undefined ? value : UserStatus.ACTIVE))
+  status?: UserStatus;
 }
