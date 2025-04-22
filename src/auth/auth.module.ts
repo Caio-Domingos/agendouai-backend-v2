@@ -7,11 +7,13 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UserModule } from 'src/modules/user/user.module';
+import { CompanyModule } from 'src/modules/companies/companies.module';
 
 @Module({
   imports: [
     // Importa o módulo de usuários (será criado posteriormente)
     UserModule,
+    CompanyModule,
 
     // Configura o Passport com base nas configurações
     PassportModule.registerAsync({

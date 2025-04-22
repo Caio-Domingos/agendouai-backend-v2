@@ -52,7 +52,7 @@ export class AuthController {
   })
   @ApiCommonResponses()
   async register(@Body() registerDto: RegisterDto, @User() user) {
-    return this.authService.register(registerDto);
+    return this.authService.register(registerDto, user);
   }
 
   /**
