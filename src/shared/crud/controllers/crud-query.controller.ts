@@ -25,6 +25,7 @@ import {
   ApiBody,
   ApiResponse,
 } from '@nestjs/swagger';
+import { QueryOptionsPipe } from '../pipes/query-options.pipe';
 
 /**
  * Cria um controlador que combina funcionalidades CRUD e de consulta avançada
@@ -70,7 +71,7 @@ export function CrudQueryController<
       description: 'Filtros em formato JSON',
     })
     async findWithOptions(
-      @Query() options: QueryOptions = {},
+      @Query(QueryOptionsPipe) options: QueryOptions = {},
     ): Promise<PaginatedResult<T>> {
       return this.crudQueryService.findWithOptions(options);
     }
