@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -14,6 +15,8 @@ import { User, UserStatus } from 'src/database/schemas/user/user.model';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private usersService: UserService,
     private jwtService: JwtService,
@@ -24,17 +27,21 @@ export class AuthService {
    * Valida um usuário pelas credenciais (usado pela estratégia local)
    */
   async validateUser(email: string, password: string): Promise<any> {
+    this.logger.debug(`Tentativa de validação de usuário: ${email}`);
+
     // Busca o usuário pelo email, incluindo o campo de senha
     const user = await this.usersService.findByEmailWithPassword(email);
 
     if (!user) {
+      this.logger.debug(`Usuário não encontrado: ${email}`);
       return null;
     }
 
-    console.log('user', user);
+    this.logger.debug(`Usuário encontrado: ${email}`);
 
     // Verifica se o usuário está ativo
     if (user.status !== UserStatus.ACTIVE) {
+      this.logger.debug(`Usuário inativo: ${email}`);
       throw new UnauthorizedException('Usuário inativo');
     }
 
@@ -42,8 +49,11 @@ export class AuthService {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
+      this.logger.debug(`Senha inválida para usuário: ${email}`);
       return null;
     }
+
+    this.logger.debug(`Usuário autenticado com sucesso: ${email}`);
 
     // Retorna o usuário sem a senha
     const { password: _, ...result } = user;
