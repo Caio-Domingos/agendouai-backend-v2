@@ -179,10 +179,10 @@ export class AuthService {
       name: user.name,
       role: user.role,
       companyId: user.companyId,
-      exp:
-        Math.floor(Date.now() / 1000) +
-        (this.configService.get<number>('auth.jwt.expirationTime') || 60),
-      iat: Math.floor(Date.now() / 1000),
+      // exp:
+      //   Math.floor(Date.now() / 1000) +
+      //   (this.configService.get<number>('auth.jwt.expirationTime') || 60),
+      // iat: Math.floor(Date.now() / 1000),
     };
 
     // Gera o token de acesso
