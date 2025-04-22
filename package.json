@@ -26,7 +26,8 @@
     "migration:revert": "npm run typeorm -- migration:revert",
     "migration:show": "npm run typeorm -- migration:show",
     "seed:run": "ts-node -r tsconfig-paths/register src/database/seeds/run-seeds.ts",
-    "db:clear": "ts-node -r tsconfig-paths/register src/database/clean/run-clean.ts"
+    "db:clear": "ts-node -r tsconfig-paths/register src/database/clean/run-clean.ts",
+    "pm2:start": "pm2 start dist/main.js -i 2 --name nps-backend --max-memory-restart 512M"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
