@@ -15,6 +15,7 @@ import { SubmissionModule } from './modules/submissions/submissions.module';
 import { AnswerModule } from './modules/answers/answers.module';
 import { AlertModule } from './modules/alerts/alerts.module';
 import { CompanyModule } from './modules/companies/companies.module';
+import { HelloController } from './hello.controller';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { CompanyModule } from './modules/companies/companies.module';
     AlertModule,
     CompanyModule,
   ],
-  controllers: [],
+  controllers: [HelloController],
   providers: [
     // Aplica o JwtAuthGuard globalmente - todas as rotas precisam de autenticação por padrão
     {
