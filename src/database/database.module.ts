@@ -19,6 +19,7 @@ import { SeedsModule } from './seeds/seeds.module';
           password: configService.get('database.password'),
           database: configService.get('database.name'),
           entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+          schema: configService.get('database.schema') || 'public',
 
           synchronize: nodeEnv === 'development',
           logging: nodeEnv === 'development',
