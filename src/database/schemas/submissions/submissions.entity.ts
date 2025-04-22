@@ -14,6 +14,7 @@ import { AnswerEntity } from '../answers/answers.entity';
 import { CompanyEntity } from '../companies/companies.entity';
 import { QuestionnaireEntity } from '../questionnaires/questionnaires.entity';
 import { Submission, SubmissionStatus } from './submissions.model';
+import { UserEntity } from '../user/user.entity';
 
 /**
  * Entidade de submissão para persistência no banco de dados.
@@ -23,6 +24,7 @@ import { Submission, SubmissionStatus } from './submissions.model';
  */
 @Entity('submissions')
 @Index('idx_submission_questionnaire', ['questionnaireId'])
+@Index('idx_submission_creator', ['createdBy'])
 @Index('idx_submission_company', ['companyId'])
 @Index('idx_submission_status', ['status'])
 @Index('idx_submission_quest_status', ['questionnaireId', 'status'])
@@ -54,8 +56,16 @@ export class SubmissionEntity extends BaseEntity implements Submission {
 
   @Column({ nullable: true, name: 'company_id' })
   companyId?: number;
+  @Column({ nullable: true, name: 'created_by' })
+  createdBy?: number;
 
   // Relacionamentos
+  @ManyToOne(() => UserEntity, (user) => user.submissions, {
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'created_by' })
+  creator: Relation<UserEntity>;
+
   @ManyToOne(() => CompanyEntity, (company) => company.submissions, {
     onDelete: 'CASCADE',
   })

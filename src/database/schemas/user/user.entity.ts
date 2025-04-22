@@ -1,8 +1,17 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  Relation,
+} from 'typeorm';
 
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { CompanyEntity } from '../companies/companies.entity';
 import { User, UserRole, UserStatus } from './user.model';
+import { SubmissionEntity } from '../submissions/submissions.entity';
 
 /**
  * Entidade de usuário para persistência no banco de dados.
@@ -42,5 +51,10 @@ export class UserEntity extends BaseEntity implements User {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'company_id' })
-  company: CompanyEntity;
+  company: Relation<CompanyEntity>;
+
+  @OneToMany(() => SubmissionEntity, (submission) => submission.creator, {
+    cascade: true,
+  })
+  submissions: Relation<SubmissionEntity[]>;
 }

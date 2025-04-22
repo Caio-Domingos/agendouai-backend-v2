@@ -34,6 +34,7 @@ import { CompanyEntity } from '../schemas/companies/companies.entity';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
+      schema: process.env.DATABASE_SCHEMA || 'public',
       entities: [
         UserEntity,
         QuestionEntity,

@@ -19,7 +19,6 @@ export enum QuestionnaireStatus {
  * @property {string} title - Título do questionário
  * @property {string} description - Descrição detalhada do questionário (opcional)
  * @property {QuestionnaireStatus} status - Status atual do questionário (rascunho ou publicado)
- * @property {number} createdBy - ID do usuário que criou o questionário
  * @property {Date} createdAt - Data e hora de criação do questionário
  * @property {number} companyId - ID da empresa à qual este questionário pertence (opcional)
  *
@@ -33,7 +32,6 @@ export interface Questionnaire extends IEntity {
   title: string;
   description?: string;
   status: QuestionnaireStatus;
-  createdBy: number;
   createdAt: Date;
   companyId?: number;
 

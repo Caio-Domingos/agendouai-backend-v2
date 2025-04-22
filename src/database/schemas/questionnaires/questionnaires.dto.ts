@@ -26,9 +26,6 @@ export class QuestionnaireDto {
   })
   status: QuestionnaireStatus;
 
-  @IsNumber({}, { message: 'ID do criador deve ser um número inteiro' })
-  createdBy: number;
-
   @IsOptional()
   @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
   companyId?: number;

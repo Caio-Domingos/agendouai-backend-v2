@@ -18,6 +18,10 @@ export class SubmissionDto {
   @IsDate({ message: 'Data de conclusão deve ser uma data válida' })
   completedAt?: Date;
 
+  @IsOptional()
+  @IsNumber({}, { message: 'ID do criador deve ser um número inteiro' })
+  createdBy?: number;
+
   @IsEnum(SubmissionStatus, {
     message: `Status deve ser um dos valores: ${Object.values(SubmissionStatus).join(', ')}`,
   })
@@ -41,6 +45,10 @@ export class CreateSubmissionDTO {
   @Type(() => Date)
   @IsDate({ message: 'Data de conclusão deve ser uma data válida' })
   completedAt?: Date;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID do criador deve ser um número inteiro' })
+  createdBy?: number;
 
   @IsOptional()
   @IsEnum(SubmissionStatus, {

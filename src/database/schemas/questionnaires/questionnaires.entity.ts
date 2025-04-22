@@ -12,7 +12,6 @@ import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { CompanyEntity } from '../companies/companies.entity';
 import { PageEntity } from '../pages/pages.entity';
 import { SubmissionEntity } from '../submissions/submissions.entity';
-import { UserEntity } from '../user/user.entity';
 import { Questionnaire, QuestionnaireStatus } from './questionnaires.model';
 
 /**
@@ -40,9 +39,6 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
   })
   status: QuestionnaireStatus;
 
-  @Column({ name: 'created_by' })
-  createdBy: number;
-
   @Column({ nullable: true, name: 'company_id' })
   companyId?: number;
 
@@ -52,12 +48,6 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
   })
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompanyEntity>;
-
-  @ManyToOne(() => UserEntity, {
-    onDelete: 'SET NULL',
-  })
-  @JoinColumn({ name: 'created_by' })
-  creator: Relation<UserEntity>;
 
   @OneToMany(() => PageEntity, (page) => page.questionnaire, {
     cascade: true,

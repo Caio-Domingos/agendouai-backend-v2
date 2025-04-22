@@ -223,7 +223,6 @@ export class SeedsService {
       description:
         'Por favor, ajude-nos a melhorar respondendo a estas perguntas',
       status: QuestionnaireStatus.PUBLISHED,
-      createdBy: adminUser.id,
       companyId: company.id,
     });
     this.logger.log(`Questionário criado: ${questionnaire.title}`);
@@ -261,6 +260,7 @@ export class SeedsService {
       questionnaireId: questionnaire.id,
       startedAt: new Date(),
       completedAt: new Date(),
+      createdBy: adminUser.id,
       status: SubmissionStatus.COMPLETE,
       companyId: company.id,
     });
