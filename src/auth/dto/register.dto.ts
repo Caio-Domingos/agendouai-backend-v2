@@ -37,7 +37,7 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'A senha é obrigatória' })
   @IsString({ message: 'A senha deve ser uma string' })
   @MinLength(8, { message: 'A senha deve ter pelo menos 8 caracteres' })
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, {
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\w\W]{8,}$/, {
     message:
       'A senha deve conter pelo menos uma letra maiúscula, uma minúscula e um número',
   })
