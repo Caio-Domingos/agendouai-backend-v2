@@ -14,6 +14,7 @@ import { PageQuestionModule } from './modules/page-question/page-question.module
 import { SubmissionModule } from './modules/submissions/submissions.module';
 import { AnswerModule } from './modules/answers/answers.module';
 import { AlertModule } from './modules/alerts/alerts.module';
+import { CompanyModule } from './modules/companies/companies.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AlertModule } from './modules/alerts/alerts.module';
     SubmissionModule,
     AnswerModule,
     AlertModule,
+    CompanyModule,
   ],
   controllers: [],
   providers: [
