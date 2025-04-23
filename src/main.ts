@@ -39,7 +39,7 @@ async function bootstrap() {
   // Configuração de CORS
   app.enableCors({
     origin: appConfig.corsAllowedOrigins,
-    credentials: true,
+    credentials: false,
   });
 
   await app.listen(port);
