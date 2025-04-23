@@ -27,18 +27,26 @@ import { SeedsModule } from './seeds/seeds.module';
 
           migrationsRun: false,
 
-          poolSize: 10,
+          // Configuração otimizada com melhor gerenciamento de conexões
+          poolSize: 15, // Reduzido para evitar muitas conexões simultâneas
           connectTimeoutMS: 30000,
+          retryAttempts: 3, // Equilibrado
+          retryDelay: 1000,
           extra: {
-            max: 10,
-            min: 2,
-            idleTimeoutMillis: 30000,
-            connectionTimeoutMillis: 30000,
+            max: 15, // Reduzido para evitar muitas conexões
+            min: 1, // Menor número de conexões mínimas
+            idleTimeoutMillis: 30000, // 1 minuto para fechar conexões ociosas
+            connectionTimeoutMillis: 30000, // Tempo menor para timeout
             query_timeout: 30000,
-            maxUses: 5000,
+            maxUses: 1500, // Número máximo de queries por conexão
             keepAlive: true,
-            keepAliveInitialDelayMillis: 10000,
-            statement_timeout: 30000,
+            keepAliveInitialDelayMillis: 30000,
+            application_name: 'botflex-prod-rd',
+            allowExitOnIdle: true, // Importante: sinalizar para fechar conexões idle em caso de shutdown
+            log: (msg, err) => {
+              if (err) console.error('Database pool error:', err);
+              // Logging detalhado para todas as conexões
+            },
           },
         };
       },
