@@ -53,9 +53,11 @@ export class SeedsService {
     this.logger.log('Executando todas as seeds...');
 
     // Truncate tables to ensure clean seed
+    console.log('Truncando tabelas...');
     await this.truncateTables();
 
     // Execute seed with related entities
+    console.log('Iniciando seed da estrutura completa...');
     await this.seedCompleteStructure();
 
     this.logger.log('Seeds executadas com sucesso.');
@@ -68,17 +70,39 @@ export class SeedsService {
   async truncateTables() {
     this.logger.log('Truncando tabelas...');
 
-    // Using transaction to ensure all truncates are performed
+    // Usando o schema "nps" explicitamente e resetando as sequences
     await this.dataSource.transaction(async (manager) => {
-      // Order matters due to foreign key constraints
-      await manager.query('TRUNCATE TABLE submissions CASCADE');
-      await manager.query('TRUNCATE TABLE answers CASCADE');
-      await manager.query('TRUNCATE TABLE page_questions CASCADE');
-      await manager.query('TRUNCATE TABLE pages CASCADE');
-      await manager.query('TRUNCATE TABLE questionnaires CASCADE');
-      await manager.query('TRUNCATE TABLE questions CASCADE');
-      await manager.query('TRUNCATE TABLE users CASCADE');
-      await manager.query('TRUNCATE TABLE companies CASCADE');
+      // Desabilita constraints de FK temporariamente (Postgres)
+      await manager.query('SET session_replication_role = replica;');
+
+      // Ordem: filhos antes dos pais
+      await manager.query(
+        'TRUNCATE TABLE "nps"."answers" RESTART IDENTITY CASCADE;',
+      );
+      await manager.query(
+        'TRUNCATE TABLE "nps"."submissions" RESTART IDENTITY CASCADE;',
+      );
+      await manager.query(
+        'TRUNCATE TABLE "nps"."page_questions" RESTART IDENTITY CASCADE;',
+      );
+      await manager.query(
+        'TRUNCATE TABLE "nps"."pages" RESTART IDENTITY CASCADE;',
+      );
+      await manager.query(
+        'TRUNCATE TABLE "nps"."questionnaires" RESTART IDENTITY CASCADE;',
+      );
+      await manager.query(
+        'TRUNCATE TABLE "nps"."questions" RESTART IDENTITY CASCADE;',
+      );
+      await manager.query(
+        'TRUNCATE TABLE "nps"."users" RESTART IDENTITY CASCADE;',
+      );
+      await manager.query(
+        'TRUNCATE TABLE "nps"."companies" RESTART IDENTITY CASCADE;',
+      );
+
+      // Reabilita constraints de FK
+      await manager.query('SET session_replication_role = DEFAULT;');
     });
 
     this.logger.log('Tabelas truncadas com sucesso.');

@@ -30,6 +30,7 @@ export class SeedsController {
   })
   @ApiCommonResponses()
   async runAllSeeds() {
+    console.log('Executando todas as seeds...');
     return this.seedsService.runAllSeeds();
   }
 
