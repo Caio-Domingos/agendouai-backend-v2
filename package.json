@@ -27,6 +27,7 @@
     "migration:show": "npm run typeorm -- migration:show",
     "seed:run": "ts-node -r tsconfig-paths/register src/database/seeds/run-seeds.ts",
     "db:clear": "ts-node -r tsconfig-paths/register src/database/clean/run-clean.ts",
+    "pm2:delete": "pm2 delete nps-backend",
     "pm2:start": "pm2 start dist/main.js -i 2 --name nps-backend --max-memory-restart 512M"
   },
   "dependencies": {
