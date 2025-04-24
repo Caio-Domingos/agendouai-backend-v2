@@ -78,7 +78,8 @@ export class CreateUserDTO {
   )
   companyId?: number;
 
-  @ValidateIf((o) => o.role !== UserRole.ADMIN && o.role !== UserRole.COMPANY)
+  // @ValidateIf((o) => o.role !== UserRole.ADMIN && o.role !== UserRole.COMPANY)
+  @IsOptional()
   @IsNumber(
     {},
     {
