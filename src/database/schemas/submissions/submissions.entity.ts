@@ -15,6 +15,7 @@ import { CompanyEntity } from '../companies/companies.entity';
 import { QuestionnaireEntity } from '../questionnaires/questionnaires.entity';
 import { Submission, SubmissionStatus } from './submissions.model';
 import { UserEntity } from '../user/user.entity';
+import { UnitEntity } from '../units/units.entity';
 
 /**
  * Entidade de submissão para persistência no banco de dados.
@@ -56,6 +57,8 @@ export class SubmissionEntity extends BaseEntity implements Submission {
 
   @Column({ nullable: true, name: 'company_id' })
   companyId?: number;
+  @Column({ nullable: true, name: 'unit_id' })
+  unitId?: number;
   @Column({ nullable: true, name: 'created_by' })
   createdBy?: number;
 
@@ -71,6 +74,12 @@ export class SubmissionEntity extends BaseEntity implements Submission {
   })
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompanyEntity>;
+
+  @ManyToOne(() => UnitEntity, (unit) => unit.submissions, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'unit_id' })
+  unit: Relation<UnitEntity>;
 
   @ManyToOne(
     () => QuestionnaireEntity,

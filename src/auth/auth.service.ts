@@ -180,6 +180,7 @@ export class AuthService {
       name: user.name,
       role: user.role,
       companyId: user.companyId,
+      unitId: user.unitId,
       // exp:
       //   Math.floor(Date.now() / 1000) +
       //   (this.configService.get<number>('auth.jwt.expirationTime') || 60),
@@ -204,6 +205,7 @@ export class AuthService {
         name: user.name,
         role: user.role,
         companyId: user.companyId,
+        unitId: user.unitId,
       },
     };
   }

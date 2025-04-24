@@ -30,6 +30,10 @@ export class SubmissionDto {
   @IsOptional()
   @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
   companyId?: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da unidade deve ser um número inteiro' })
+  unitId?: number;
 }
 
 export class CreateSubmissionDTO {
@@ -59,6 +63,10 @@ export class CreateSubmissionDTO {
   @IsOptional()
   @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
   companyId?: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da unidade deve ser um número inteiro' })
+  unitId?: number;
 }
 
 export class UpdateSubmissionDTO extends PartialType(CreateSubmissionDTO) {}

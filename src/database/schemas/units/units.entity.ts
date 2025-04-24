@@ -11,6 +11,7 @@ import { Unit, UnitStatus } from './units.model';
 import { CompanyEntity } from '../companies/companies.entity';
 import { UserEntity } from '../user/user.entity';
 import { QuestionnaireEntity } from '../questionnaires/questionnaires.entity';
+import { SubmissionEntity } from '../submissions/submissions.entity';
 
 @Entity('units')
 export class UnitEntity extends BaseEntity implements Unit {
@@ -42,4 +43,9 @@ export class UnitEntity extends BaseEntity implements Unit {
     cascade: true,
   })
   questionnaires: Relation<QuestionnaireEntity[]>;
+
+  @OneToMany(() => SubmissionEntity, (submissions) => submissions.unit, {
+    cascade: true,
+  })
+  submissions: Relation<SubmissionEntity[]>;
 }

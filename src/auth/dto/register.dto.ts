@@ -67,6 +67,17 @@ export class RegisterDto {
   )
   companyId?: number;
 
+  // @ValidateIf((o) => o.role !== UserRole.ADMIN && o.role !== UserRole.COMPANY)
+  @IsOptional()
+  @IsNumber(
+    {},
+    {
+      message:
+        'ID da empresa é obrigatório para usuários não-administradores e não-empresas',
+    },
+  )
+  unitId?: number;
+
   @IsOptional()
   @IsEnum(UserStatus, {
     message: `Status deve ser um dos valores: ${Object.values(UserStatus).join(', ')}`,

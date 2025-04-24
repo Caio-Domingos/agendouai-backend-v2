@@ -265,6 +265,7 @@ export class SeedsService {
         'Por favor, ajude-nos a melhorar respondendo a estas perguntas',
       status: QuestionnaireStatus.PUBLISHED,
       companyId: company.id,
+      unitId: unit.id,
     });
     this.logger.log(`Questionário criado: ${questionnaire.title}`);
 

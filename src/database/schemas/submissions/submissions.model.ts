@@ -5,6 +5,7 @@ import { Answer } from '../answers/answers.model';
 import { Company } from '../companies/companies.model';
 import { Questionnaire } from '../questionnaires/questionnaires.model';
 import { User } from '../user/user.model';
+import { Unit } from '../units/units.model';
 
 /**
  * Enum que define os status possíveis de uma submissão no sistema.
@@ -41,10 +42,12 @@ export interface Submission extends IEntity {
   createdBy?: number;
   status: SubmissionStatus;
   companyId?: number;
+  unitId?: number;
 
   // Relacionamentos
   creator?: User;
   company?: Company;
+  unit?: Unit;
   questionnaire?: Questionnaire;
   answers?: Answer[];
   alerts?: Alert[];
