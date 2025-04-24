@@ -107,6 +107,7 @@ export class AuthService {
       const creatorRole = loggedUser.role;
       const targetRole = registerDto.role;
       // TODO: Checar se isso bate com o que está no banco
+      // TODO: Bater o Unit tambem nos casos <= Unit
       const creatorCompanyId = loggedUser.companyId;
       const targetCompanyId = registerDto.companyId;
 
