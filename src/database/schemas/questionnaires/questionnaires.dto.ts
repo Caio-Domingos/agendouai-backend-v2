@@ -29,6 +29,9 @@ export class QuestionnaireDto {
   @IsOptional()
   @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
   companyId?: number;
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da unidade deve ser um número inteiro' })
+  unitId?: number;
 }
 
 export class CreateQuestionnaireDTO {
@@ -49,6 +52,9 @@ export class CreateQuestionnaireDTO {
   @IsOptional()
   @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
   companyId?: number;
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da unidade deve ser um número inteiro' })
+  unitId?: number;
 }
 
 export class UpdateQuestionnaireDTO extends PartialType(

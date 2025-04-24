@@ -1,6 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { Company } from '../companies/companies.model';
 import { User } from '../user/user.model';
+import { Questionnaire } from '../questionnaires/questionnaires.model';
 
 /**
  * Status possíveis para uma unidade.
@@ -25,4 +26,5 @@ export interface Unit extends IEntity {
   // Relacionamentos
   company?: Company;
   users?: User[];
+  questionnaires?: Questionnaire[];
 }

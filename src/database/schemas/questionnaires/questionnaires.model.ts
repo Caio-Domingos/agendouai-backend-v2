@@ -3,6 +3,7 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { Company } from '../companies/companies.model';
 import { Page } from '../pages/pages.model';
 import { Submission } from '../submissions/submissions.model';
+import { Unit } from '../units/units.model';
 
 export enum QuestionnaireStatus {
   DRAFT = 'draft',
@@ -34,9 +35,11 @@ export interface Questionnaire extends IEntity {
   status: QuestionnaireStatus;
   createdAt: Date;
   companyId?: number;
+  unitId?: number;
 
   // Relacionamentos
   company?: Company;
+  unit?: Unit;
   pages?: Page[];
   submissions?: Submission[];
 }

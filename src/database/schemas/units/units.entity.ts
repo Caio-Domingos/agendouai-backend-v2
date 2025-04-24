@@ -10,6 +10,7 @@ import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Unit, UnitStatus } from './units.model';
 import { CompanyEntity } from '../companies/companies.entity';
 import { UserEntity } from '../user/user.entity';
+import { QuestionnaireEntity } from '../questionnaires/questionnaires.entity';
 
 @Entity('units')
 export class UnitEntity extends BaseEntity implements Unit {
@@ -36,4 +37,9 @@ export class UnitEntity extends BaseEntity implements Unit {
     cascade: true,
   })
   users: Relation<UserEntity[]>;
+
+  @OneToMany(() => QuestionnaireEntity, (questionnaire) => questionnaire.unit, {
+    cascade: true,
+  })
+  questionnaires: Relation<QuestionnaireEntity[]>;
 }

@@ -13,6 +13,7 @@ import { CompanyEntity } from '../companies/companies.entity';
 import { PageEntity } from '../pages/pages.entity';
 import { SubmissionEntity } from '../submissions/submissions.entity';
 import { Questionnaire, QuestionnaireStatus } from './questionnaires.model';
+import { UnitEntity } from '../units/units.entity';
 
 /**
  * Entidade de questionário para persistência no banco de dados.
@@ -41,6 +42,8 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
 
   @Column({ nullable: true, name: 'company_id' })
   companyId?: number;
+  @Column({ nullable: true, name: 'unit_id' })
+  unitId?: number;
 
   // Relacionamentos
   @ManyToOne(() => CompanyEntity, (company) => company.questionnaires, {
@@ -48,6 +51,11 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
   })
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompanyEntity>;
+  @ManyToOne(() => UnitEntity, (unit) => unit.questionnaires, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'unit_id' })
+  unit: Relation<UnitEntity>;
 
   @OneToMany(() => PageEntity, (page) => page.questionnaire, {
     cascade: true,
