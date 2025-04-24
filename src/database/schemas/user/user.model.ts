@@ -1,6 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 
 import { Company } from '../companies/companies.model';
+import { Unit } from '../units/units.model';
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
@@ -41,7 +42,9 @@ export interface User extends IEntity {
   status: UserStatus;
   role: UserRole;
   companyId?: number;
+  unitId?: number;
 
   // Relacionamentos
   company?: Company;
+  unit?: Unit;
 }

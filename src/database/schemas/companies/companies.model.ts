@@ -5,6 +5,7 @@ import { Questionnaire } from '../questionnaires/questionnaires.model';
 import { Question } from '../questions/questions.model';
 import { Submission } from '../submissions/submissions.model';
 import { User } from '../user/user.model';
+import { Unit } from '../units/units.model';
 
 export enum CompanyStatus {
   ACTIVE = 'ACTIVE',
@@ -32,6 +33,7 @@ export interface Company extends IEntity {
   status: CompanyStatus;
 
   users?: User[];
+  units?: Unit[];
   questionnaires?: Questionnaire[];
   questions: Question[];
   submissions?: Submission[];

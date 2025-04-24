@@ -20,6 +20,9 @@ import { CompanyStatus } from '../schemas/companies/companies.model';
 import { SubmissionEntity } from '../schemas/submissions/submissions.entity';
 import { SubmissionStatus } from '../schemas/submissions/submissions.model';
 import { AnswerEntity } from '../schemas/answers/answers.entity';
+import { UnitEntity } from '../schemas/units/units.entity';
+import { CreateUnitDTO } from '../schemas/units/units.dto';
+import { UnitStatus } from '../schemas/units/units.model';
 
 @Injectable()
 export class SeedsService {
@@ -42,6 +45,8 @@ export class SeedsService {
     private submissionRepository: Repository<SubmissionEntity>,
     @InjectRepository(AnswerEntity)
     private answerRepository: Repository<AnswerEntity>,
+    @InjectRepository(UnitEntity)
+    private unitRepository: Repository<UnitEntity>,
     private configService: ConfigService,
     private dataSource: DataSource,
   ) {}
@@ -69,6 +74,7 @@ export class SeedsService {
    */
   async truncateTables() {
     this.logger.log('Truncando tabelas...');
+    const schema = this.configService.get<string>('database.schema', 'public');
 
     // Usando o schema "nps" explicitamente e resetando as sequences
     await this.dataSource.transaction(async (manager) => {
@@ -77,28 +83,28 @@ export class SeedsService {
 
       // Ordem: filhos antes dos pais
       await manager.query(
-        'TRUNCATE TABLE "nps"."answers" RESTART IDENTITY CASCADE;',
+        `TRUNCATE TABLE "${schema}"."answers" RESTART IDENTITY CASCADE;`,
       );
       await manager.query(
-        'TRUNCATE TABLE "nps"."submissions" RESTART IDENTITY CASCADE;',
+        `TRUNCATE TABLE "${schema}"."submissions" RESTART IDENTITY CASCADE;`,
       );
       await manager.query(
-        'TRUNCATE TABLE "nps"."page_questions" RESTART IDENTITY CASCADE;',
+        `TRUNCATE TABLE "${schema}"."page_questions" RESTART IDENTITY CASCADE;`,
       );
       await manager.query(
-        'TRUNCATE TABLE "nps"."pages" RESTART IDENTITY CASCADE;',
+        `TRUNCATE TABLE "${schema}"."pages" RESTART IDENTITY CASCADE;`,
       );
       await manager.query(
-        'TRUNCATE TABLE "nps"."questionnaires" RESTART IDENTITY CASCADE;',
+        `TRUNCATE TABLE "${schema}"."questionnaires" RESTART IDENTITY CASCADE;`,
       );
       await manager.query(
-        'TRUNCATE TABLE "nps"."questions" RESTART IDENTITY CASCADE;',
+        `TRUNCATE TABLE "${schema}"."questions" RESTART IDENTITY CASCADE;`,
       );
       await manager.query(
-        'TRUNCATE TABLE "nps"."users" RESTART IDENTITY CASCADE;',
+        `TRUNCATE TABLE "${schema}"."users" RESTART IDENTITY CASCADE;`,
       );
       await manager.query(
-        'TRUNCATE TABLE "nps"."companies" RESTART IDENTITY CASCADE;',
+        `TRUNCATE TABLE "${schema}"."companies" RESTART IDENTITY CASCADE;`,
       );
 
       // Reabilita constraints de FK
@@ -124,6 +130,15 @@ export class SeedsService {
     };
     const company = await this.companyRepository.save(companyData);
     this.logger.log(`Empresa criada: ${company.name}`);
+
+    // 1.1. Create a unit for the company
+    const unitData: CreateUnitDTO = {
+      name: 'Unidade Central',
+      status: UnitStatus.ACTIVE,
+      companyId: company.id,
+    };
+    const unit = await this.unitRepository.save(unitData);
+    this.logger.log(`Unidade criada: ${unit.name}`);
 
     // 2. Create users with different roles
     const saltRounds = this.configService.get<number>(
@@ -153,7 +168,7 @@ export class SeedsService {
     });
     this.logger.log(`Usuário COMPANY criado: ${companyUser.email}`);
 
-    // Unit user
+    // Unit user (with company and unit association)
     const unitUser = await this.userRepository.save({
       name: 'Gerente de Unidade',
       email: 'unidade@exemplo.com',
@@ -161,10 +176,11 @@ export class SeedsService {
       status: UserStatus.ACTIVE,
       role: UserRole.UNIT,
       companyId: company.id,
+      unitId: unit.id,
     });
     this.logger.log(`Usuário UNIT criado: ${unitUser.email}`);
 
-    // Employee user
+    // Employee user (with company and unit association)
     const employeeUser = await this.userRepository.save({
       name: 'Funcionário',
       email: 'funcionario@exemplo.com',
@@ -172,6 +188,7 @@ export class SeedsService {
       status: UserStatus.ACTIVE,
       role: UserRole.EMPLOYEE,
       companyId: company.id,
+      unitId: unit.id,
     });
     this.logger.log(`Usuário EMPLOYEE criado: ${employeeUser.email}`);
 

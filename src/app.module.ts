@@ -16,6 +16,7 @@ import { AnswerModule } from './modules/answers/answers.module';
 import { AlertModule } from './modules/alerts/alerts.module';
 import { CompanyModule } from './modules/companies/companies.module';
 import { HelloController } from './hello.controller';
+import { UnitModule } from './modules/units/units.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { HelloController } from './hello.controller';
     AnswerModule,
     AlertModule,
     CompanyModule,
+    UnitModule,
   ],
   controllers: [HelloController],
   providers: [

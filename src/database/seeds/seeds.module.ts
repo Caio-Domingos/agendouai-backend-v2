@@ -14,6 +14,7 @@ import { SubmissionEntity } from '../schemas/submissions/submissions.entity';
 import { AnswerEntity } from '../schemas/answers/answers.entity';
 import { AlertEntity } from '../schemas/alerts/alerts.entity';
 import { CompanyEntity } from '../schemas/companies/companies.entity';
+import { UnitEntity } from '../schemas/units/units.entity';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CompanyEntity } from '../schemas/companies/companies.entity';
       AnswerEntity,
       AlertEntity,
       CompanyEntity,
+      UnitEntity,
     ]),
     ConfigModule,
   ],

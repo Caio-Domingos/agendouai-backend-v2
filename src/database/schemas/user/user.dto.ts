@@ -34,6 +34,16 @@ export class UserDto {
   @IsOptional()
   @IsNumber({}, { message: 'ID da empresa deve ser um número inteiro' })
   companyId?: number;
+
+  @IsOptional()
+  @IsNumber(
+    {},
+    {
+      message:
+        'ID da unidade é obrigatório para usuários não-administradores e não-empresas',
+    },
+  )
+  unitId?: number;
 }
 
 export class CreateUserDTO {
@@ -67,6 +77,16 @@ export class CreateUserDTO {
     },
   )
   companyId?: number;
+
+  @ValidateIf((o) => o.role !== UserRole.ADMIN && o.role !== UserRole.COMPANY)
+  @IsNumber(
+    {},
+    {
+      message:
+        'ID da unidade é obrigatório para usuários não-administradores e não-empresas',
+    },
+  )
+  unitId?: number;
 }
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO) {

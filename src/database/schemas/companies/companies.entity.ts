@@ -6,6 +6,7 @@ import { QuestionnaireEntity } from '../questionnaires/questionnaires.entity';
 import { QuestionEntity } from '../questions/questions.entity';
 import { SubmissionEntity } from '../submissions/submissions.entity';
 import { UserEntity } from '../user/user.entity';
+import { UnitEntity } from '../units/units.entity';
 import { Company, CompanyStatus } from './companies.model';
 
 @Entity('companies')
@@ -64,4 +65,9 @@ export class CompanyEntity extends BaseEntity implements Company {
     onDelete: 'CASCADE',
   })
   alerts: Relation<AlertEntity[]>;
+
+  @OneToMany(() => UnitEntity, (unit) => unit.company, {
+    cascade: true,
+  })
+  units: Relation<UnitEntity[]>;
 }
