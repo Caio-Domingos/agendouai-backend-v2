@@ -305,6 +305,7 @@ export class SeedsService {
       createdBy: adminUser.id,
       status: SubmissionStatus.COMPLETE,
       companyId: company.id,
+      unitId: unit.id,
     });
     this.logger.log(`Submissão criada para o questionário: ${submission.id}`);
 
