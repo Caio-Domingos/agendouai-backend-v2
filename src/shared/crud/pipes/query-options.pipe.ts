@@ -75,7 +75,7 @@ export class QueryOptionsPipe implements PipeTransform {
    *
    * @example
    * // Parâmetros da requisição:
-   * // ?page=1&size=10&orderBy=price:DESC&filters=[{"field":"stock","operator":"gt","value":0}]&relations=creator
+   * // ?page=1&size=10&orderBy=price:DESC&filters=[{"field":"stock","operator":"gt","value":0}]&relations=creator,submission:submissionref,submission.questionnaire:questionnaireref,answer:answerref
    *
    * // Retorna:
    * // {

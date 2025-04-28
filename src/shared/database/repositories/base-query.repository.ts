@@ -296,10 +296,30 @@ export abstract class BaseQueryRepository<T extends IEntity>
     queryBuilder: SelectQueryBuilder<T>,
     relations: Relation[] = [],
   ): SelectQueryBuilder<T> {
+    const aliasMap: Record<string, string> = {};
+    aliasMap[this.tableName] = this.tableName;
+
     relations.forEach((relation) => {
       const { path, alias } = relation;
-      const fullPath = path.includes('.') ? path : `${this.tableName}.${path}`;
-      queryBuilder.leftJoinAndSelect(fullPath, alias);
+      const parts = path.split('.');
+      let parentAlias = this.tableName;
+
+      // Para cada nível, monta o caminho correto e registra o alias
+      for (let i = 0; i < parts.length; i++) {
+        const currentPath = parts.slice(0, i + 1).join('.');
+        const currentAlias = parts[i];
+
+        // Só faz join se ainda não foi feito
+        if (!aliasMap[currentPath]) {
+          const joinPath =
+            i === 0
+              ? `${parentAlias}.${currentAlias}`
+              : `${parentAlias}.${currentAlias}`;
+          queryBuilder.leftJoinAndSelect(joinPath, currentAlias);
+          aliasMap[currentPath] = currentAlias;
+        }
+        parentAlias = currentAlias;
+      }
     });
 
     return queryBuilder;
