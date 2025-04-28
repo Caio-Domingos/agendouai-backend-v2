@@ -1,11 +1,26 @@
 import {
   IsArray,
   IsBoolean,
+  IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
+  IsString,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 import { PartialType } from 'src/shared/validation/dto-helpers';
+import { AlertCompType } from './page-question.model';
+import { Expose, Transform, Type } from 'class-transformer';
+
+export class AlertDto {
+  @IsEnum(AlertCompType, { message: 'Comparador inválido' })
+  comp: AlertCompType;
+
+  @Expose()
+  valueExpected: string | number | boolean | Date | null;
+}
 
 export class PageQuestionDto {
   @IsNumber({}, { message: 'ID deve ser um número inteiro' })
@@ -27,7 +42,9 @@ export class PageQuestionDto {
   configuration: Record<string, any>;
 
   @IsArray({ message: 'Alertas deve ser um array' })
-  alerts: Array<any>;
+  @ValidateNested({ each: true })
+  @Type(() => AlertDto)
+  alerts: AlertDto[];
 }
 
 export class CreatePageQuestionDTO {
@@ -50,7 +67,21 @@ export class CreatePageQuestionDTO {
 
   @IsOptional()
   @IsArray({ message: 'Alertas deve ser um array' })
-  alerts?: Array<any>;
+  @ValidateNested({ each: true })
+  @Type(() => AlertDto)
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) {
+      return [];
+    }
+    return value;
+  })
+  alerts?: AlertDto[];
 }
 
-export class UpdatePageQuestionDTO extends PartialType(CreatePageQuestionDTO) {}
+export class UpdatePageQuestionDTO extends PartialType(CreatePageQuestionDTO) {
+  @IsOptional()
+  @IsArray({ message: 'Alertas deve ser um array' })
+  @ValidateNested({ each: true })
+  @Type(() => AlertDto)
+  alerts?: AlertDto[];
+}

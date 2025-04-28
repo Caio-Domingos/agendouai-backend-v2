@@ -4,6 +4,19 @@ import { Answer } from '../answers/answers.model';
 import { Page } from '../pages/pages.model';
 import { Question } from '../questions/questions.model';
 
+export enum AlertCompType {
+  EQUALS = 'equals',
+  NOT_EQUALS = 'notEquals',
+  GREATER_THAN = 'greaterThan',
+  LESS_THAN = 'lessThan',
+  CONTAINS = 'contains',
+}
+
+export interface QuestionAlert {
+  comp: AlertCompType;
+  valueExpected: string | number | boolean | Date | null;
+}
+
 /**
  * Representa a relação entre uma página e uma questão no sistema.
  *
@@ -25,7 +38,7 @@ export interface PageQuestion extends IEntity {
   priority: number;
   required: boolean;
   configuration: Record<string, any>;
-  alerts: Array<any>;
+  alerts: Array<QuestionAlert>;
 
   page?: Page;
   question?: Question;

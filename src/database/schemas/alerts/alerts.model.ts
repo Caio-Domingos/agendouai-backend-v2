@@ -3,6 +3,7 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { Answer } from '../answers/answers.model';
 import { Company } from '../companies/companies.model';
 import { Submission } from '../submissions/submissions.model';
+import { QuestionAlert } from '../page-question/page-question.model';
 
 /**
  * Enum que define os status possíveis de um alerta no sistema.
@@ -11,6 +12,12 @@ export enum AlertStatus {
   NEW = 'new',
   VIEWED = 'viewed',
   RESOLVED = 'resolved',
+}
+
+export interface AlertConfig {
+  [key: string]: any;
+  firedBy: QuestionAlert;
+  firedAt: string; // ISO String, funciona num new Date()
 }
 
 /**
@@ -36,7 +43,7 @@ export interface Alert extends IEntity {
   // Propriedades principais
   submissionId: number;
   answerId: number;
-  alertConfig: Record<string, any>;
+  alertConfig: AlertConfig;
   status: AlertStatus;
   companyId?: number;
 

@@ -23,6 +23,10 @@ import { AnswerEntity } from '../schemas/answers/answers.entity';
 import { UnitEntity } from '../schemas/units/units.entity';
 import { CreateUnitDTO } from '../schemas/units/units.dto';
 import { UnitStatus } from '../schemas/units/units.model';
+import {
+  AlertCompType,
+  QuestionAlert,
+} from '../schemas/page-question/page-question.model';
 
 @Injectable()
 export class SeedsService {
@@ -105,6 +109,9 @@ export class SeedsService {
       );
       await manager.query(
         `TRUNCATE TABLE "${schema}"."companies" RESTART IDENTITY CASCADE;`,
+      );
+      await manager.query(
+        `TRUNCATE TABLE "${schema}"."alerts" RESTART IDENTITY CASCADE;`,
       );
 
       // Reabilita constraints de FK
@@ -286,13 +293,22 @@ export class SeedsService {
       choiceQuestion,
     ];
     for (let i = 0; i < questions.length; i++) {
+      let alerts: QuestionAlert[] = [];
+      if (questions[i].type === QuestionType.NUMBER) {
+        alerts = [
+          {
+            comp: AlertCompType.LESS_THAN,
+            valueExpected: 5,
+          },
+        ];
+      }
       await this.pageQuestionRepository.save({
         pageId: page.id,
         questionId: questions[i].id,
         priority: i + 1,
         required: true,
         configuration: {},
-        alerts: [],
+        alerts,
       });
     }
     this.logger.log('Questões associadas à página');
@@ -328,7 +344,7 @@ export class SeedsService {
     await this.answerRepository.save({
       submissionId: submission.id,
       pageQuestionId: pageQuestions[1].id,
-      value: { number: 9 },
+      value: { number: 3 }, // Vai disparar alerta
     });
 
     // DATE answer

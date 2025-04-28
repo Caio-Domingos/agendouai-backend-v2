@@ -11,7 +11,7 @@ import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { AnswerEntity } from '../answers/answers.entity';
 import { CompanyEntity } from '../companies/companies.entity';
 import { SubmissionEntity } from '../submissions/submissions.entity';
-import { Alert, AlertStatus } from './alerts.model';
+import { Alert, AlertConfig, AlertStatus } from './alerts.model';
 
 /**
  * Entidade de alerta para persistência no banco de dados.
@@ -38,7 +38,7 @@ export class AlertEntity extends BaseEntity implements Alert {
     type: 'jsonb',
     default: {},
   })
-  alertConfig: Record<string, any>;
+  alertConfig: AlertConfig;
 
   @Column({
     type: 'enum',
