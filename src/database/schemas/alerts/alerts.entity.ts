@@ -26,6 +26,7 @@ import { UserEntity } from '../user/user.entity';
 @Index('idx_alert_company', ['companyId'])
 @Index('idx_alert_status', ['status'])
 @Index('idx_alert_company_status', ['companyId', 'status'])
+@Index('idx_alert_resolved_questionnaire', ['status', 'responseSubmissionId'])
 export class AlertEntity extends BaseEntity implements Alert {
   // Propriedades principais
   @Column({ name: 'submission_id' })
