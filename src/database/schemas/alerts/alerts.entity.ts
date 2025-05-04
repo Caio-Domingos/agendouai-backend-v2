@@ -12,6 +12,7 @@ import { AnswerEntity } from '../answers/answers.entity';
 import { CompanyEntity } from '../companies/companies.entity';
 import { SubmissionEntity } from '../submissions/submissions.entity';
 import { Alert, AlertConfig, AlertStatus } from './alerts.model';
+import { UserEntity } from '../user/user.entity';
 
 /**
  * Entidade de alerta para persistência no banco de dados.
@@ -50,6 +51,22 @@ export class AlertEntity extends BaseEntity implements Alert {
   @Column({ nullable: true, name: 'company_id' })
   companyId?: number;
 
+  @Column({ nullable: true, type: 'text', name: 'observation' })
+  observation?: string;
+
+  @Column({ nullable: true, name: 'response_submission_id' })
+  responseSubmissionId?: number;
+
+  @Column({
+    nullable: true,
+    type: 'timestamp with time zone',
+    name: 'responded_at',
+  })
+  respondedAt?: Date;
+
+  @Column({ nullable: true, name: 'responded_by' })
+  respondedBy?: number;
+
   // Relacionamentos
   @ManyToOne(() => CompanyEntity, (company) => company.alerts, {
     onDelete: 'CASCADE',
@@ -68,4 +85,20 @@ export class AlertEntity extends BaseEntity implements Alert {
   })
   @JoinColumn({ name: 'answer_id' })
   answer: Relation<AnswerEntity>;
+
+  @ManyToOne(
+    () => SubmissionEntity,
+    (submission) => submission.alertsResponse,
+    {
+      onDelete: 'SET NULL',
+    },
+  )
+  @JoinColumn({ name: 'response_submission_id' })
+  responseSubmission: Relation<SubmissionEntity>;
+
+  @ManyToOne(() => UserEntity, (user) => user.alertsResponse, {
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'responded_by' })
+  respondedByUser: Relation<UserEntity>;
 }

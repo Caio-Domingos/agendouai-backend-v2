@@ -44,6 +44,8 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
   companyId?: number;
   @Column({ nullable: true, name: 'unit_id' })
   unitId?: number;
+  @Column({ nullable: true, name: 'resolve_alerts_questionnaire_id' })
+  resolveAlertsQuestionnaireId?: number;
 
   // Relacionamentos
   @ManyToOne(() => CompanyEntity, (company) => company.questionnaires, {
@@ -56,6 +58,9 @@ export class QuestionnaireEntity extends BaseEntity implements Questionnaire {
   })
   @JoinColumn({ name: 'unit_id' })
   unit: Relation<UnitEntity>;
+  @ManyToOne(() => QuestionnaireEntity, { nullable: true })
+  @JoinColumn({ name: 'resolve_alerts_questionnaire_id' })
+  resolveAlertsQuestionnaire?: Relation<QuestionnaireEntity>;
 
   @OneToMany(() => PageEntity, (page) => page.questionnaire, {
     cascade: true,

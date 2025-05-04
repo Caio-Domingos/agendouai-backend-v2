@@ -4,20 +4,23 @@ import { Answer } from '../answers/answers.model';
 import { Company } from '../companies/companies.model';
 import { Submission } from '../submissions/submissions.model';
 import { QuestionAlert } from '../page-question/page-question.model';
+import { User } from '../user/user.model';
 
 /**
  * Enum que define os status possíveis de um alerta no sistema.
  */
 export enum AlertStatus {
   NEW = 'new',
-  VIEWED = 'viewed',
-  RESOLVED = 'resolved',
+  IGNORED = 'ignored',
+  RESPONDED = 'responded',
 }
 
 export interface AlertConfig {
   [key: string]: any;
   firedBy: QuestionAlert;
   firedAt: string; // ISO String, funciona num new Date()
+  responseWay: 'questionnaire' | 'observation';
+  responseQuestionnaireId?: number;
 }
 
 /**
@@ -47,8 +50,16 @@ export interface Alert extends IEntity {
   status: AlertStatus;
   companyId?: number;
 
+  // Propriedades de resposta de alerta
+  observation?: string;
+  responseSubmissionId?: number;
+  respondedAt?: Date;
+  respondedBy?: number;
+
   // Relacionamentos
   company?: Company;
   submission?: Submission;
   answer?: Answer;
+  responseSubmission?: Submission;
+  respondedByUser?: User;
 }

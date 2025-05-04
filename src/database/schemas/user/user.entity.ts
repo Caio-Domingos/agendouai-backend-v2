@@ -13,6 +13,7 @@ import { CompanyEntity } from '../companies/companies.entity';
 import { User, UserRole, UserStatus } from './user.model';
 import { SubmissionEntity } from '../submissions/submissions.entity';
 import { UnitEntity } from '../units/units.entity';
+import { AlertEntity } from '../alerts/alerts.entity';
 
 /**
  * Entidade de usuário para persistência no banco de dados.
@@ -67,4 +68,8 @@ export class UserEntity extends BaseEntity implements User {
     cascade: true,
   })
   submissions: Relation<SubmissionEntity[]>;
+  @OneToMany(() => AlertEntity, (alert) => alert.responseSubmission, {
+    cascade: true,
+  })
+  alertsResponse: Relation<AlertEntity[]>;
 }

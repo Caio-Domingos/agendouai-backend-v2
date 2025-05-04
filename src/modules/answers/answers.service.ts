@@ -38,6 +38,7 @@ export class AnswerService extends CrudQueryService<
     try {
       // check if needs alert
       // TODO: Pass this to event emitter later
+      // TODO: Pass relations page and questionnaire to after alerts tratatives
       const pageQuestion = await this.pageQuestionService.findById(
         entity.pageQuestionId,
         {
@@ -45,6 +46,14 @@ export class AnswerService extends CrudQueryService<
             {
               path: 'question',
               alias: 'question',
+            },
+            {
+              path: 'page',
+              alias: 'page',
+            },
+            {
+              path: 'page.questionnaire',
+              alias: 'questionnaire',
             },
           ],
         },
@@ -83,6 +92,28 @@ export class AnswerService extends CrudQueryService<
           `Alerta ${JSON.stringify(alerts)} acionado para a pergunta ${pageQuestion.questionId} na pág. com ID: ${pageQuestion.id} com a resposta ${JSON.stringify(entity.value)}`,
         );
 
+        const responseWay: 'questionnaire' | 'observation' = pageQuestion.page
+          ?.questionnaire?.resolveAlertsQuestionnaireId
+          ? 'questionnaire'
+          : this.getTriggerAlert(
+                alerts,
+                pageQuestion.question.type,
+                answerValue,
+              )?.resolveAlertQuestionnaireId
+            ? 'questionnaire'
+            : 'observation';
+
+        let responseQuestionnaireId: number | undefined;
+        if (responseWay === 'questionnaire') {
+          responseQuestionnaireId =
+            this.getTriggerAlert(
+              alerts,
+              pageQuestion.question.type,
+              answerValue,
+            )?.resolveAlertQuestionnaireId ||
+            pageQuestion.page?.questionnaire?.resolveAlertsQuestionnaireId;
+        }
+
         // Criar novo alerta
         const alertDTO: CreateAlertDTO = {
           submissionId: entity.submissionId,
@@ -92,8 +123,10 @@ export class AnswerService extends CrudQueryService<
               alerts,
               pageQuestion.question.type,
               answerValue,
-            ),
-            firedAt: new Date(),
+            )!,
+            firedAt: new Date().toISOString(),
+            responseWay,
+            responseQuestionnaireId,
           },
           status: AlertStatus.NEW,
           // TODO: Passar companyId de algum lugar

@@ -51,4 +51,5 @@ export interface Submission extends IEntity {
   questionnaire?: Questionnaire;
   answers?: Answer[];
   alerts?: Alert[];
+  alertsResponse?: Alert[];
 }

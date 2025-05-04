@@ -363,6 +363,105 @@ export class SeedsService {
 
     this.logger.log('Respostas criadas para todas as questões');
 
+    // === SEED QUESTIONÁRIOS DE ALERTA E RESOLUÇÃO ===
+    // Cria questionário 2 (resolução padrão)
+    const resolveQuestionnaire = await this.questionnaireRepository.save({
+      title: 'Questionário de Resolução Padrão',
+      description: 'Questionário usado para resolução padrão de alertas.',
+      status: QuestionnaireStatus.PUBLISHED,
+      companyId: company.id,
+      unitId: unit.id,
+    });
+    this.logger.log(
+      `Questionário de resolução padrão criado: ${resolveQuestionnaire.title}`,
+    );
+
+    // Cria questionário 3 (resolução específica)
+    const resolveQuestionnaireSpecific =
+      await this.questionnaireRepository.save({
+        title: 'Questionário de Resolução Específico',
+        description:
+          'Questionário usado para resolução de um alerta específico.',
+        status: QuestionnaireStatus.PUBLISHED,
+        companyId: company.id,
+        unitId: unit.id,
+      });
+    this.logger.log(
+      `Questionário de resolução específico criado: ${resolveQuestionnaireSpecific.title}`,
+    );
+
+    // Cria questionário 1 (principal, com alertas)
+    const mainQuestionnaire = await this.questionnaireRepository.save({
+      title: 'Questionário Principal com Alertas',
+      description: 'Questionário principal que gera alertas.',
+      status: QuestionnaireStatus.PUBLISHED,
+      companyId: company.id,
+      unitId: unit.id,
+      resolveAlertsQuestionnaireId: resolveQuestionnaire.id, // resolve padrão
+    });
+    this.logger.log(
+      `Questionário principal criado: ${mainQuestionnaire.title}`,
+    );
+
+    // Cria página para o questionário principal
+    const mainPage = await this.pageRepository.save({
+      title: 'Página Principal',
+      questionnaireId: mainQuestionnaire.id,
+      sequenceNumber: 1,
+      isIdentificationPage: false,
+    });
+
+    // Cria perguntas
+    const qAlertaPadrao = await this.questionRepository.save({
+      slug: 'pergunta-alerta-padrao',
+      title: 'Pergunta com alerta padrão',
+      description: 'Dispara alerta que será resolvido pelo questionário 2',
+      type: QuestionType.TEXT,
+      configuration: {},
+      companyId: company.id,
+    });
+    const qAlertaEspecifico = await this.questionRepository.save({
+      slug: 'pergunta-alerta-especifico',
+      title: 'Pergunta com alerta específico',
+      description: 'Dispara alerta que será resolvido pelo questionário 3',
+      type: QuestionType.TEXT,
+      configuration: {},
+      companyId: company.id,
+    });
+
+    // Associa perguntas à página com alertas
+    await this.pageQuestionRepository.save({
+      pageId: mainPage.id,
+      questionId: qAlertaPadrao.id,
+      priority: 1,
+      required: true,
+      configuration: {},
+      alerts: [
+        {
+          comp: AlertCompType.EQUALS,
+          valueExpected: 'ALERTA',
+          // Não define resolveAlertQuestionnaireId, usa o padrão do questionnaire
+        },
+      ],
+    });
+    await this.pageQuestionRepository.save({
+      pageId: mainPage.id,
+      questionId: qAlertaEspecifico.id,
+      priority: 2,
+      required: true,
+      configuration: {},
+      alerts: [
+        {
+          comp: AlertCompType.EQUALS,
+          valueExpected: 'ALERTA',
+          resolveAlertQuestionnaireId: resolveQuestionnaireSpecific.id, // override específico
+        },
+      ],
+    });
+    this.logger.log(
+      'Perguntas e alertas configurados nos questionários de teste de alertas.',
+    );
+
     this.logger.log('Seed da estrutura completa finalizada com sucesso.');
     return { success: true };
   }

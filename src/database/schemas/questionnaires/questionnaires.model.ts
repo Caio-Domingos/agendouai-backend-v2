@@ -37,6 +37,8 @@ export interface Questionnaire extends IEntity {
   companyId?: number;
   unitId?: number;
 
+  resolveAlertsQuestionnaireId?: number;
+
   // Relacionamentos
   company?: Company;
   unit?: Unit;

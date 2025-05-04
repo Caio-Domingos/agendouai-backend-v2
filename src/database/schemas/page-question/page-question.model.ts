@@ -15,6 +15,7 @@ export enum AlertCompType {
 export interface QuestionAlert {
   comp: AlertCompType;
   valueExpected: string | number | boolean | Date | null;
+  resolveAlertQuestionnaireId?: number;
 }
 
 /**

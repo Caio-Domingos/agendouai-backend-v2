@@ -32,6 +32,15 @@ export class QuestionnaireDto {
   @IsOptional()
   @IsNumber({}, { message: 'ID da unidade deve ser um número inteiro' })
   unitId?: number;
+  @IsOptional()
+  @IsNumber(
+    {},
+    {
+      message:
+        'ID do questionário de resolução de alertas deve ser um número inteiro',
+    },
+  )
+  resolveAlertsQuestionnaireId?: number;
 }
 
 export class CreateQuestionnaireDTO {
@@ -55,6 +64,15 @@ export class CreateQuestionnaireDTO {
   @IsOptional()
   @IsNumber({}, { message: 'ID da unidade deve ser um número inteiro' })
   unitId?: number;
+  @IsOptional()
+  @IsNumber(
+    {},
+    {
+      message:
+        'ID do questionário de resolução de alertas deve ser um número inteiro',
+    },
+  )
+  resolveAlertsQuestionnaireId?: number;
 }
 
 export class UpdateQuestionnaireDTO extends PartialType(

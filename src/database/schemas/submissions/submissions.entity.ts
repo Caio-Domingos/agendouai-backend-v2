@@ -100,4 +100,8 @@ export class SubmissionEntity extends BaseEntity implements Submission {
     cascade: true,
   })
   alerts: Relation<AlertEntity[]>;
+  @OneToMany(() => AlertEntity, (alert) => alert.responseSubmission, {
+    cascade: true,
+  })
+  alertsResponse: Relation<AlertEntity[]>;
 }
