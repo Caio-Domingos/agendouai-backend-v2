@@ -1,9 +1,5 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 
-import { Company } from '../companies/companies.model';
-import { Unit } from '../units/units.model';
-import { Alert } from '../alerts/alerts.model';
-
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
@@ -13,8 +9,6 @@ export enum UserStatus {
 export enum UserRole {
   ADMIN = 'ADMIN',
   COMPANY = 'COMPANY',
-  UNIT = 'UNIT',
-  EMPLOYEE = 'EMPLOYEE',
 }
 
 /**
@@ -44,9 +38,4 @@ export interface User extends IEntity {
   role: UserRole;
   companyId?: number;
   unitId?: number;
-
-  // Relacionamentos
-  company?: Company;
-  unit?: Unit;
-  alertsResponse?: Alert[];
 }

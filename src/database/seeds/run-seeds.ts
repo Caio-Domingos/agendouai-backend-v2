@@ -8,15 +8,6 @@ import appConfig from '../../config/app.config';
 import databaseConfig from '../../config/database.config';
 import authConfig from '../../config/auth.config';
 import { UserEntity } from '../schemas/user/user.entity';
-import { PageQuestionEntity } from '../schemas/page-question/page-question.entity';
-import { PageEntity } from '../schemas/pages/pages.entity';
-import { QuestionnaireEntity } from '../schemas/questionnaires/questionnaires.entity';
-import { QuestionEntity } from '../schemas/questions/questions.entity';
-import { AlertEntity } from '../schemas/alerts/alerts.entity';
-import { AnswerEntity } from '../schemas/answers/answers.entity';
-import { SubmissionEntity } from '../schemas/submissions/submissions.entity';
-import { CompanyEntity } from '../schemas/companies/companies.entity';
-import { UnitEntity } from '../schemas/units/units.entity';
 
 // Criar um módulo especial apenas para executar as seeds
 @Module({
@@ -36,33 +27,11 @@ import { UnitEntity } from '../schemas/units/units.entity';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       schema: process.env.DATABASE_SCHEMA || 'public',
-      entities: [
-        UserEntity,
-        QuestionEntity,
-        PageEntity,
-        PageQuestionEntity,
-        QuestionnaireEntity,
-        SubmissionEntity,
-        AnswerEntity,
-        AlertEntity,
-        CompanyEntity,
-        UnitEntity,
-      ], // Especificar diretamente as entidades
+      entities: [UserEntity], // Especificar diretamente as entidades
       synchronize: false,
     }),
     // Importar as entidades necessárias
-    TypeOrmModule.forFeature([
-      UserEntity,
-      QuestionEntity,
-      PageEntity,
-      PageQuestionEntity,
-      QuestionnaireEntity,
-      SubmissionEntity,
-      AnswerEntity,
-      AlertEntity,
-      CompanyEntity,
-      UnitEntity,
-    ]),
+    TypeOrmModule.forFeature([UserEntity]),
   ],
   providers: [SeedsService],
 })
