@@ -7,7 +7,7 @@ import appConfig from '../../config/app.config';
 import databaseConfig from '../../config/database.config';
 import authConfig from '../../config/auth.config';
 import { DatabaseCleanService } from './database-clean.service';
-import { User } from '../../shared/database/entities/user.entity';
+import { UserEntity } from '../schemas/user/user.entity';
 
 // Criar um módulo especial apenas para executar a limpeza
 @Module({
@@ -26,7 +26,7 @@ import { User } from '../../shared/database/entities/user.entity';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User], // Especificar diretamente as entidades
+      entities: [UserEntity], // Especificar diretamente as entidades
       synchronize: false,
     }),
   ],

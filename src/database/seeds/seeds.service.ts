@@ -1,18 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../../shared/database/entities/user.entity';
+import { Repository, DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { UserEntity } from '../schemas/user/user.entity';
+import { UserRole, UserStatus } from '../schemas/user/user.model';
 
 @Injectable()
 export class SeedsService {
   private readonly logger = new Logger(SeedsService.name);
 
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
     private configService: ConfigService,
+    private dataSource: DataSource,
   ) {}
 
   /**
@@ -21,7 +23,10 @@ export class SeedsService {
   async runAllSeeds() {
     this.logger.log('Executando todas as seeds...');
 
-    // Executa seeds na ordem correta
+    // Truncate tables to ensure clean seed
+    await this.truncateTables();
+
+    // Execute seed with user creation only
     await this.seedUsers();
 
     this.logger.log('Seeds executadas com sucesso.');
@@ -29,63 +34,43 @@ export class SeedsService {
   }
 
   /**
-   * Seed para criar usuários iniciais
+   * Truncate all tables to ensure clean seed
+   */
+  async truncateTables() {
+    this.logger.log('Truncando tabelas...');
+    const schema = this.configService.get<string>('database.schema', 'public');
+
+    await this.dataSource.transaction(async (manager) => {
+      await manager.query('SET session_replication_role = replica;');
+      await manager.query(
+        `TRUNCATE TABLE "${schema}"."users" RESTART IDENTITY CASCADE;`,
+      );
+      await manager.query('SET session_replication_role = DEFAULT;');
+    });
+
+    this.logger.log('Tabelas truncadas com sucesso.');
+  }
+
+  /**
+   * Seed only users
    */
   async seedUsers() {
-    this.logger.log('Iniciando seed de usuários...');
+    this.logger.log('Criando usuários seed...');
 
-    // Verifica se já existe um usuário admin
-    const adminExists = await this.userRepository.findOneBy({
-      email: 'admin@example.com',
+    const saltRounds = this.configService.get<number>(
+      'auth.security.bcryptSaltRounds',
+      10,
+    );
+    const hashedPassword = await bcrypt.hash('Senha@123', saltRounds);
+
+    await this.userRepository.save({
+      name: 'Usuário Administrador',
+      email: 'admin@exemplo.com',
+      password: hashedPassword,
+      status: UserStatus.ACTIVE,
+      role: UserRole.ADMIN,
     });
 
-    if (!adminExists) {
-      this.logger.log('Criando usuário admin...');
-
-      const saltRounds = this.configService.get<number>(
-        'auth.security.bcryptSaltRounds',
-      );
-      const hashedPassword = await bcrypt.hash('Admin123456', saltRounds || 10);
-
-      await this.userRepository.save({
-        firstName: 'Admin',
-        lastName: 'User',
-        email: 'admin@example.com',
-        password: hashedPassword,
-        isActive: true,
-      });
-
-      this.logger.log('Usuário admin criado com sucesso.');
-    } else {
-      this.logger.log('Usuário admin já existe, pulando...');
-    }
-
-    // Verifica se já existe um usuário normal
-    const userExists = await this.userRepository.findOneBy({
-      email: 'user@example.com',
-    });
-
-    if (!userExists) {
-      this.logger.log('Criando usuário comum...');
-
-      const saltRounds = this.configService.get<number>(
-        'auth.security.bcryptSaltRounds',
-      );
-      const hashedPassword = await bcrypt.hash('User123456', saltRounds || 10);
-
-      await this.userRepository.save({
-        firstName: 'Regular',
-        lastName: 'User',
-        email: 'user@example.com',
-        password: hashedPassword,
-        isActive: true,
-      });
-
-      this.logger.log('Usuário comum criado com sucesso.');
-    } else {
-      this.logger.log('Usuário comum já existe, pulando...');
-    }
-
-    return { success: true };
+    this.logger.log('Usuário ADMIN criado.');
   }
 }

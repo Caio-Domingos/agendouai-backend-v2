@@ -5,8 +5,10 @@ import { ApiEndpoint } from '../../shared/swagger/response-decorators';
 import { ApiCommonResponses } from '../../shared/swagger/error-responses.decorator';
 import { SeedSuccessDto } from './dto/seed-response.dto';
 import { DatabaseCleanService } from '../clean/database-clean.service';
+import { Public } from 'src/auth/decorators/public.decorator';
 
-@ApiTags('admin')
+@Public()
+@ApiTags('_DB')
 @Controller('admin/seeds')
 @ApiBearerAuth('JWT')
 export class SeedsController {
@@ -28,22 +30,23 @@ export class SeedsController {
   })
   @ApiCommonResponses()
   async runAllSeeds() {
+    console.log('Executando todas as seeds...');
     return this.seedsService.runAllSeeds();
   }
 
   /**
-   * Executa seed de usuários apenas
+   * Executa seed completa de estrutura
    * Acessível para usuários autenticados
    */
-  @Post('users')
+  @Post('structure')
   @ApiEndpoint({
-    summary: 'Executar seed de usuários',
-    description: 'Cria usuários de exemplo no banco de dados',
+    summary: 'Executar seed completa',
+    description: 'Cria usuários, perguntas, questionários e páginas',
     responseType: SeedSuccessDto,
   })
   @ApiCommonResponses()
-  async seedUsers() {
-    return this.seedsService.seedUsers();
+  async seedStructure() {
+    return this.seedsService.seedCompleteStructure();
   }
 
   /**

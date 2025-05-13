@@ -7,8 +7,12 @@ import { ConfigService } from '@nestjs/config';
  * Interface para o payload do JWT
  */
 export interface JwtPayload {
-  sub: string;
+  sub: number;
   email: string;
+  name?: string;
+  role?: string;
+  companyId?: number;
+  unitId?: number;
   iat?: number;
   exp?: number;
 }
@@ -36,6 +40,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return {
       id: payload.sub,
       email: payload.email,
+      name: payload.name,
+      role: payload.role,
     };
   }
 }

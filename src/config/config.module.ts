@@ -10,7 +10,14 @@ import { validationSchema } from './validation.schema';
     NestConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, databaseConfig, authConfig],
-      envFilePath: ['.env.local', '.env'],
+      envFilePath: [
+        '.env.local',
+        '.env.local.development',
+        '.env.local.production',
+        '.env.development',
+        '.env.production',
+        '.env',
+      ],
       validationSchema,
       validationOptions: {
         allowUnknown: true,

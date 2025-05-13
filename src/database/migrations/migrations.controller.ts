@@ -10,7 +10,7 @@ import {
   MigrationHistoryDto,
 } from './dto/migration-response.dto';
 
-@ApiTags('admin')
+@ApiTags('_DB')
 @Controller('admin/migrations')
 @ApiBearerAuth('JWT')
 export class MigrationsController {

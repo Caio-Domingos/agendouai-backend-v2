@@ -38,8 +38,10 @@ async function bootstrap() {
 
   // Configuração de CORS
   app.enableCors({
-    origin: appConfig.corsAllowedOrigins,
-    credentials: true,
+    origin: true, // Isso permite todas as origens
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: false,
+    allowedHeaders: 'Authorization,Content-Type',
   });
 
   await app.listen(port);

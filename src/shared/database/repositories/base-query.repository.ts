@@ -18,6 +18,8 @@ import {
   FilterGroup,
   LogicalOperator,
 } from '../../crud/interfaces/crud.types';
+import { IEntity } from '../interfaces/entity.interface';
+import { IQueryRepository } from '../interfaces/repository.interface';
 
 /**
  * Repositório base que implementa operações de consulta avançadas
@@ -25,9 +27,10 @@ import {
  *
  * @template T - Tipo da entidade
  */
-export abstract class BaseQueryRepository<
-  T extends object,
-> extends BaseRepository<T> {
+export abstract class BaseQueryRepository<T extends IEntity>
+  extends BaseRepository<T>
+  implements IQueryRepository<T>
+{
   protected readonly entityClass: new () => T;
   protected readonly tableName: string;
 
@@ -293,10 +296,30 @@ export abstract class BaseQueryRepository<
     queryBuilder: SelectQueryBuilder<T>,
     relations: Relation[] = [],
   ): SelectQueryBuilder<T> {
+    const aliasMap: Record<string, string> = {};
+    aliasMap[this.tableName] = this.tableName;
+
     relations.forEach((relation) => {
       const { path, alias } = relation;
-      const fullPath = path.includes('.') ? path : `${this.tableName}.${path}`;
-      queryBuilder.leftJoinAndSelect(fullPath, alias);
+      const parts = path.split('.');
+      let parentAlias = this.tableName;
+
+      // Para cada nível, monta o caminho correto e registra o alias
+      for (let i = 0; i < parts.length; i++) {
+        const currentPath = parts.slice(0, i + 1).join('.');
+        const currentAlias = parts[i];
+
+        // Só faz join se ainda não foi feito
+        if (!aliasMap[currentPath]) {
+          const joinPath =
+            i === 0
+              ? `${parentAlias}.${currentAlias}`
+              : `${parentAlias}.${currentAlias}`;
+          queryBuilder.leftJoinAndSelect(joinPath, currentAlias);
+          aliasMap[currentPath] = currentAlias;
+        }
+        parentAlias = currentAlias;
+      }
     });
 
     return queryBuilder;
@@ -381,7 +404,7 @@ export abstract class BaseQueryRepository<
   /**
    * Encontrar uma entidade com opções de relações e seleção
    */
-  async findOneWithOptions(id: string, options: QueryOptions = {}): Promise<T> {
+  async findOneWithOptions(id: number, options: QueryOptions = {}): Promise<T> {
     const { relations, select } = options;
 
     const queryBuilder = this.getRepository(

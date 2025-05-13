@@ -19,8 +19,9 @@ import {
   RefreshTokenDto,
   UserResponseDto,
 } from './dto/response.dto';
+import { User } from './decorators/user.decorator';
 
-@ApiTags('auth')
+@ApiTags('_Autenticação')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -43,7 +44,6 @@ export class AuthController {
   /**
    * Endpoint de registro - cria um novo usuário e retorna tokens
    */
-  @Public()
   @Post('register')
   @ApiEndpoint({
     summary: 'Registrar novo usuário',
@@ -51,8 +51,8 @@ export class AuthController {
     status: 201,
   })
   @ApiCommonResponses()
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto, @User() user) {
+    return this.authService.register(registerDto, user);
   }
 
   /**

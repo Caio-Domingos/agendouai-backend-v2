@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Type,
   HttpCode,
+  Get,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { QueryController } from './query.controller';
@@ -37,6 +38,32 @@ export function CrudController<
       super(crudService);
     }
 
+    @Get()
+    @ApiOperation({ summary: `Listar ${entityName}` })
+    @ApiResponse({
+      status: 200,
+      description: `Lista de ${entityName}`,
+      type: [returnDto],
+    })
+    async findAll() {
+      return this.crudService.findAll();
+    }
+
+    @Get(':id')
+    @ApiOperation({ summary: `Buscar ${entityName} pelo ID` })
+    @ApiParam({ name: 'id', type: Number, description: `ID do ${entityName}` })
+    @ApiResponse({
+      status: 200,
+      description: `${entityName} encontrado`,
+      type: returnDto,
+    })
+    @ApiResponse({ status: 404, description: `${entityName} não encontrado` })
+    async findById(@Param('id') id: number) {
+      console.log('findById 2');
+
+      return this.crudService.findById(id);
+    }
+
     @Post()
     @ApiOperation({ summary: `Criar novo ${entityName}` })
     @ApiBody({ type: createDto })
@@ -51,7 +78,7 @@ export function CrudController<
 
     @Put(':id')
     @ApiOperation({ summary: `Atualizar ${entityName}` })
-    @ApiParam({ name: 'id', type: String, description: `ID do ${entityName}` })
+    @ApiParam({ name: 'id', type: Number, description: `ID do ${entityName}` })
     @ApiBody({ type: updateDto })
     @ApiResponse({
       status: 200,
@@ -60,7 +87,7 @@ export function CrudController<
     })
     @ApiResponse({ status: 404, description: `${entityName} não encontrado` })
     async update(
-      @Param('id') id: string,
+      @Param('id') id: number,
       @Body() dto: InstanceType<UpdateDto>,
     ) {
       return this.crudService.update(id, dto);
@@ -69,10 +96,10 @@ export function CrudController<
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: `Remover ${entityName}` })
-    @ApiParam({ name: 'id', type: String, description: `ID do ${entityName}` })
+    @ApiParam({ name: 'id', type: Number, description: `ID do ${entityName}` })
     @ApiResponse({ status: 204, description: `${entityName} removido` })
     @ApiResponse({ status: 404, description: `${entityName} não encontrado` })
-    async remove(@Param('id') id: string) {
+    async remove(@Param('id') id: number) {
       await this.crudService.remove(id);
     }
   }

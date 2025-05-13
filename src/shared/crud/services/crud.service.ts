@@ -1,16 +1,17 @@
 import { BadRequestException } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { QueryService } from './query.service';
 import { Entity } from '../interfaces/crud.types';
+import { ICrudRepository } from '../../database/interfaces/repository.interface';
 
 export class CrudService<
   T extends Entity,
   CreateDto extends object,
   UpdateDto extends object,
-> extends QueryService<T> {
-  constructor(protected readonly repository: Repository<T>) {
-    super(repository);
-  }
+> implements ICrudRepository<T, CreateDto, UpdateDto>
+{
+  constructor(
+    protected readonly repository: ICrudRepository<T, CreateDto, UpdateDto>,
+  ) {}
 
   /**
    * Hook executado antes de create
@@ -32,10 +33,7 @@ export class CrudService<
    * Hook executado antes de update
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async beforeUpdate(
-    id: string | number,
-    dto: UpdateDto,
-  ): Promise<UpdateDto> {
+  protected async beforeUpdate(id: number, dto: UpdateDto): Promise<UpdateDto> {
     return dto;
   }
 
@@ -51,7 +49,7 @@ export class CrudService<
    * Hook executado antes de remove
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async beforeRemove(id: string | number): Promise<void> {
+  protected async beforeRemove(id: number): Promise<void> {
     // Hook para ser sobrescrito
   }
 
@@ -59,8 +57,16 @@ export class CrudService<
    * Hook executado após remove
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async afterRemove(id: string | number): Promise<void> {
+  protected async afterRemove(id: number): Promise<void> {
     // Hook para ser sobrescrito
+  }
+
+  async findAll() {
+    return this.repository.findAll();
+  }
+
+  async findById(id: number): Promise<T> {
+    return this.repository.findById(id);
   }
 
   /**
@@ -70,9 +76,8 @@ export class CrudService<
     const processedDto = await this.beforeCreate(createDto);
 
     try {
-      const entity = this.repository.create(processedDto as any);
-      const savedEntity = await this.repository.save(entity);
-      return await this.afterCreate(savedEntity as unknown as T);
+      const savedEntity = await this.repository.create(processedDto);
+      return await this.afterCreate(savedEntity);
     } catch (error) {
       this.handleDatabaseError(error);
       throw error; // Nunca deve chegar aqui
@@ -82,16 +87,14 @@ export class CrudService<
   /**
    * Atualiza uma entidade existente
    */
-  async update(id: string | number, updateDto: UpdateDto): Promise<T> {
+  async update(id: number, updateDto: UpdateDto): Promise<T> {
     // Verificar se a entidade existe
-    const existingEntity = await this.findOne(id);
+    await this.findById(id);
 
     const processedDto = await this.beforeUpdate(id, updateDto);
 
     try {
-      // Mesclar DTO com entidade existente
-      const entity = this.repository.merge(existingEntity, processedDto as any);
-      const updatedEntity = await this.repository.save(entity);
+      const updatedEntity = await this.repository.update(id, processedDto);
       return await this.afterUpdate(updatedEntity);
     } catch (error) {
       this.handleDatabaseError(error);
@@ -102,13 +105,13 @@ export class CrudService<
   /**
    * Remove uma entidade pelo ID
    */
-  async remove(id: string | number): Promise<void> {
+  async remove(id: number): Promise<void> {
     // Verificar se a entidade existe
-    await this.findOne(id);
+    await this.findById(id);
     await this.beforeRemove(id);
 
     try {
-      await this.repository.delete(id);
+      await this.repository.remove(id);
       await this.afterRemove(id);
     } catch (error) {
       this.handleDatabaseError(error);
