@@ -13,7 +13,6 @@ import { CompaniesEntity } from '../companies/companies.entity';
 import { UserEntity } from '../users/users.entity';
 
 @Entity('people')
-@Index('IDX_PEOPLE_COMPANY', ['companyId'])
 @Index('IDX_PEOPLE_CPF', ['cpf'], { unique: true })
 @Index('IDX_PEOPLE_PHONE', ['phoneNumber'])
 @Index('IDX_PEOPLE_CREATED_BY', ['createdBy'])
@@ -28,9 +27,6 @@ export class PeopleEntity extends BaseEntity implements People {
 
   @Column({ name: 'updated_by', type: 'integer', nullable: true })
   updatedBy?: number;
-
-  @Column({ name: 'company_id', type: 'integer', nullable: true })
-  companyId?: number;
 
   // Nullable columns
   @Column({ type: 'varchar', length: 20, nullable: true })
@@ -72,12 +68,6 @@ export class PeopleEntity extends BaseEntity implements People {
   // (companyId já está acima)
 
   // Relationships
-  @ManyToOne(() => CompaniesEntity, (company) => company.people, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'company_id' })
-  company: Relation<CompaniesEntity>;
-
   @OneToMany(() => UserEntity, (user) => user.people)
   users: Relation<UserEntity[]>;
 }

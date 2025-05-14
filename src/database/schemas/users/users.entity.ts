@@ -16,7 +16,7 @@ import { SpaceManagersEntity } from '../space-managers/space-managers.entity';
 @Entity('users')
 @Index('IDX_USERS_USERNAME', ['username'], { unique: true })
 @Index('IDX_USERS_COMPANY', ['companyId'])
-@Index('IDX_USERS_PERSON', ['personId'])
+@Index('IDX_USERS_PEOPLE', ['peopleId'])
 @Index('IDX_USERS_PERMISSION', ['permission'])
 @Index('IDX_USERS_STATUS', ['status'])
 @Index('IDX_USERS_CREATED_BY', ['createdBy'])

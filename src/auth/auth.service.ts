@@ -199,10 +199,10 @@ export class AuthService {
     const user = await this.usersService.create({
       username: email,
       password: hashedPassword,
-      permission: permission ?? undefined,
+      permission: permission ?? UserPermission.USER,
       status: status ?? undefined,
       companyId,
-      personId: person.id,
+      peopleId: person.id,
       createdBy: loggedUser?.id ?? null,
       updatedBy: loggedUser?.id ?? null,
     });

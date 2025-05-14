@@ -25,7 +25,6 @@ export interface People extends IEntity {
   phoneNumber: string;
   createdBy?: number;
   updatedBy?: number;
-  companyId?: number;
 
   // Nullable
   cpf?: string;
@@ -43,6 +42,5 @@ export interface People extends IEntity {
   // companyId já está acima
 
   // Relationships
-  company?: Company;
   users?: User[];
 }
