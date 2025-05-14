@@ -29,7 +29,6 @@ export type WeekDayName = (typeof WEEKDAY_NAMES)[number];
 /**
  * Representa a disponibilidade de um espaço para reservas.
  *
- * @property {boolean} active - Indica se a disponibilidade está ativa.
  * @property {number} minDaysCancel - Dias mínimos para cancelamento.
  * @property {number} weekdayIndex - Índice do dia da semana (0=Domingo, 6=Sábado).
  * @property {number} intervalMinutes - Intervalo em minutos para reservas.

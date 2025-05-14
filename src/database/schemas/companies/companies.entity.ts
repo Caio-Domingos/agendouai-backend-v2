@@ -52,9 +52,6 @@ export class CompaniesEntity extends BaseEntity implements Company {
   @Column({ name: 'logo_url', type: 'text', nullable: true })
   logoUrl?: string;
 
-  @Column({ type: 'integer', nullable: true })
-  provider?: number;
-
   @Column({ name: 'current_plan_id', type: 'integer', nullable: true })
   currentPlanId?: number;
 

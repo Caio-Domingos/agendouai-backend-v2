@@ -7,11 +7,11 @@ import { Company } from '../companies/companies.model';
  * Enum para os possíveis status de uma reserva.
  */
 export enum BookingStatus {
-  ATIVO = 'ativo',
-  INATIVO = 'inativo',
-  PENDENTE = 'pendente',
-  CANCELADO = 'cancelado',
-  CONCLUIDO = 'concluido',
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  PENDING = 'pending',
+  CANCELED = 'canceled',
+  COMPLETED = 'completed',
 }
 
 /**
@@ -30,20 +30,21 @@ export enum BookingStatus {
  */
 export interface Booking extends IEntity {
   // Not null
+  weekdayIndex: number;
   bookingDate: Date;
-  spaceId: number;
-  userId: number;
-  companyId: number;
   startTime: number;
   endTime: number;
+
   status: BookingStatus;
   statusUpdatedAt: Date;
 
   // Nullable
-  weekdayIndex?: number;
   notes?: string;
 
   // FK
+  spaceId: number;
+  userId: number;
+  companyId: number;
   // spaceId, userId, companyId já estão acima
 
   // Relationships

@@ -42,7 +42,7 @@ export class BookingEntity extends BaseEntity implements Booking {
   @Column({
     type: 'enum',
     enum: BookingStatus,
-    default: BookingStatus.PENDENTE,
+    default: BookingStatus.PENDING,
   })
   status: BookingStatus;
 
@@ -55,7 +55,7 @@ export class BookingEntity extends BaseEntity implements Booking {
 
   // Nullable columns
   @Column({ name: 'weekday_index', nullable: true })
-  weekdayIndex?: number;
+  weekdayIndex: number;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
   notes?: string;

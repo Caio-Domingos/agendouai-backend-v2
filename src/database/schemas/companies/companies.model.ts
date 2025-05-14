@@ -58,7 +58,6 @@ export interface Company extends IEntity {
   // Nullable
   cep?: string;
   logoUrl?: string;
-  provider?: number;
   name?: string;
   phone?: string;
   city?: string;
