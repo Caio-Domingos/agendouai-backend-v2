@@ -9,12 +9,13 @@ import {
 } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Company, CompanyStatus, PaymentStatus } from './companies.model';
-import { PeopleEntity } from '../people/people.entity';
 import { SpacesEntity } from '../spaces/spaces.entity';
 import { AvailabilitiesEntity } from '../availabilities/availabilities.entity';
 import { BookingEntity } from '../bookings/bookings.entity';
 import { CompanySubscriptionHistoryEntity } from '../company-subscription-history/company-subscription-history.entity';
 import { CompanyCategoriesEntity } from '../company-categories/company-categories.entity';
+import { UserEntity } from '../users/users.entity';
+import { SpaceManagersEntity } from '../space-managers/space-managers.entity';
 
 @Entity('companies')
 @Index('IDX_COMPANIES_CPFCNPJ', ['cpfCnpj'], { unique: true })
@@ -37,7 +38,7 @@ export class CompaniesEntity extends BaseEntity implements Company {
   @Column({
     type: 'enum',
     enum: CompanyStatus,
-    default: CompanyStatus.ATIVO,
+    default: CompanyStatus.ACTIVE,
   })
   status: CompanyStatus;
 
@@ -45,8 +46,8 @@ export class CompaniesEntity extends BaseEntity implements Company {
   @Column({ type: 'varchar', length: 10, nullable: true })
   cep?: string;
 
-  @Column({ name: 'category_id', type: 'integer', nullable: true })
-  categoryId?: number;
+  @Column({ name: 'category_id', type: 'integer' })
+  categoryId: number;
 
   @Column({ name: 'logo_url', type: 'text', nullable: true })
   logoUrl?: string;
@@ -111,8 +112,8 @@ export class CompaniesEntity extends BaseEntity implements Company {
   // (categoryId, currentPlanId já estão acima como nullable)
 
   // Relationships
-  @OneToMany(() => PeopleEntity, (person) => person.company, { cascade: true })
-  people: Relation<PeopleEntity[]>;
+  @OneToMany(() => UserEntity, (user) => user.company, { cascade: true })
+  users: Relation<UserEntity[]>;
 
   @OneToMany(() => SpacesEntity, (space) => space.company, { cascade: true })
   spaces: Relation<SpacesEntity[]>;
@@ -133,6 +134,9 @@ export class CompaniesEntity extends BaseEntity implements Company {
     cascade: true,
   })
   subscriptionHistory: Relation<CompanySubscriptionHistoryEntity[]>;
+
+  @OneToMany(() => SpaceManagersEntity, (spaceManger) => spaceManger.company)
+  spaceManagers: Relation<SpaceManagersEntity[]>;
 
   @ManyToOne(() => CompanyCategoriesEntity, {
     nullable: true,

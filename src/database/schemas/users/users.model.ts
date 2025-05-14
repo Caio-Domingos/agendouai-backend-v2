@@ -1,6 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { People } from '../people/people.model';
 import { Company } from '../companies/companies.model';
+import { SpaceManager } from '../space-managers/space-managers.model';
 
 /**
  * User status enum.
@@ -59,4 +60,5 @@ export interface User extends IEntity {
   // Relationships
   company?: Company;
   people?: People;
+  spaceManagers?: SpaceManager[];
 }

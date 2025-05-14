@@ -1,4 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Space } from '../spaces/spaces.model';
+import { User } from '../users/users.model';
+import { Company } from '../companies/companies.model';
 
 /**
  * Representa o vínculo de um usuário como responsável por um espaço.
@@ -13,6 +16,9 @@ export interface SpaceManager extends IEntity {
   spaceId: number;
   userId: number;
   companyId: number;
-  createdAt: Date;
-  updatedAt: Date;
+
+  // Relationships
+  space?: Space;
+  user?: User;
+  company?: Company;
 }

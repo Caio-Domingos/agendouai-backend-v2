@@ -2,6 +2,30 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { Space } from '../spaces/spaces.model';
 import { Company } from '../companies/companies.model';
 
+export enum WeekDayIndex {
+  SUNDAY = 0,
+  MONDAY = 1,
+  TUESDAY = 2,
+  WEDNESDAY = 3,
+  THURSDAY = 4,
+  FRIDAY = 5,
+  SATURDAY = 6,
+}
+
+// Array com os nomes dos dias, na ordem do enum
+export const WEEKDAY_NAMES = [
+  'SUNDAY',
+  'MONDAY',
+  'TUESDAY',
+  'WEDNESDAY',
+  'THURSDAY',
+  'FRIDAY',
+  'SATURDAY',
+] as const;
+
+// Type que representa os nomes dos dias, sempre sincronizado com o enum
+export type WeekDayName = (typeof WEEKDAY_NAMES)[number];
+
 /**
  * Representa a disponibilidade de um espaço para reservas.
  *
@@ -19,17 +43,17 @@ export interface Availability extends IEntity {
   // Not null
   openingTime: number;
   closingTime: number;
-  weekday: string;
-  companyId: number;
+  weekday: WeekDayName;
+  weekdayIndex: WeekDayIndex;
+  minDaysCancel: number;
+  intervalMinutes: number;
+  configuration: Record<string, any>;
 
   // Nullable
-  active?: boolean;
-  minDaysCancel?: number;
-  weekdayIndex?: number;
-  intervalMinutes?: number;
-  spaceId?: number;
 
   // FK
+  companyId: number;
+  spaceId?: number;
   // companyId, spaceId já estão acima
 
   // Relationships

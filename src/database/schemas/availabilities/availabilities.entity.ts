@@ -7,7 +7,7 @@ import {
   Index,
 } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
-import { Availability } from './availabilities.model';
+import { Availability, WeekDayName } from './availabilities.model';
 import { SpacesEntity } from '../spaces/spaces.entity';
 import { CompaniesEntity } from '../companies/companies.entity';
 
@@ -15,7 +15,6 @@ import { CompaniesEntity } from '../companies/companies.entity';
 @Index('IDX_AVAILABILITIES_COMPANY', ['companyId'])
 @Index('IDX_AVAILABILITIES_SPACE', ['spaceId'])
 @Index('IDX_AVAILABILITIES_WEEKDAY', ['weekday'])
-@Index('IDX_AVAILABILITIES_ACTIVE', ['active'])
 export class AvailabilitiesEntity extends BaseEntity implements Availability {
   // Not null columns
   @Column({ name: 'opening_time', type: 'integer' })
@@ -25,29 +24,32 @@ export class AvailabilitiesEntity extends BaseEntity implements Availability {
   closingTime: number;
 
   @Column({ type: 'varchar', length: 20 })
-  weekday: string;
+  weekday: WeekDayName;
 
+  @Column({ name: 'min_days_cancel', type: 'integer', default: 0 })
+  minDaysCancel: number;
+
+  @Column({ name: 'weekday_index', type: 'integer' })
+  weekdayIndex: number;
+
+  @Column({ name: 'interval_minutes', type: 'integer', default: 30 })
+  intervalMinutes: number;
+
+  @Column({
+    name: 'configuration',
+    type: 'jsonb',
+    default: () => "'{}'",
+  })
+  configuration: Record<string, any>;
+
+  // Nullable columns
+
+  // FK columns
   @Column({ name: 'company_id', type: 'integer' })
   companyId: number;
 
-  // Nullable columns
-  @Column({ type: 'boolean', default: true })
-  active?: boolean;
-
-  @Column({ name: 'min_days_cancel', type: 'integer', nullable: true })
-  minDaysCancel?: number;
-
-  @Column({ name: 'weekday_index', type: 'integer', nullable: true })
-  weekdayIndex?: number;
-
-  @Column({ name: 'interval_minutes', type: 'integer', nullable: true })
-  intervalMinutes?: number;
-
   @Column({ name: 'space_id', type: 'integer', nullable: true })
   spaceId?: number;
-
-  // FK columns
-  // (companyId, spaceId já estão acima)
 
   // Relationships
   @ManyToOne(() => SpacesEntity, (space) => space.availabilities, {

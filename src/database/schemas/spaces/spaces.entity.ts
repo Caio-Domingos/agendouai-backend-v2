@@ -12,6 +12,7 @@ import { Space, SpaceStatus } from './spaces.model';
 import { CompaniesEntity } from '../companies/companies.entity';
 import { AvailabilitiesEntity } from '../availabilities/availabilities.entity';
 import { BookingEntity } from '../bookings/bookings.entity';
+import { SpaceManagersEntity } from '../space-managers/space-managers.entity';
 
 @Entity('spaces')
 @Index('IDX_SPACES_COMPANY', ['companyId'])
@@ -33,16 +34,17 @@ export class SpacesEntity extends BaseEntity implements Space {
   @Column({ name: 'updated_by', type: 'integer' })
   updatedBy: number;
 
-  // Nullable columns
   @Column({
     type: 'enum',
     enum: SpaceStatus,
-    default: SpaceStatus.ATIVO,
+    default: SpaceStatus.ACTIVE,
   })
-  status?: SpaceStatus;
+  status: SpaceStatus;
 
   @Column({ name: 'multiple_bookings', type: 'boolean', default: false })
-  multipleBookings?: boolean;
+  multipleBookings: boolean;
+
+  // Nullable columns
 
   @Column({ name: 'photo_url', type: 'text', nullable: true })
   photoUrl?: string;
@@ -62,4 +64,7 @@ export class SpacesEntity extends BaseEntity implements Space {
 
   @OneToMany(() => BookingEntity, (booking) => booking.space)
   bookings: Relation<BookingEntity[]>;
+
+  @OneToMany(() => SpaceManagersEntity, (spaceManger) => spaceManger.space)
+  spaceManagers: Relation<SpaceManagersEntity[]>;
 }

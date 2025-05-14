@@ -13,15 +13,13 @@ export class SpacesDto {
   @IsNumber({}, { message: 'ID deve ser um número inteiro' })
   id: number;
 
-  @IsOptional()
   @IsEnum(SpaceStatus, {
     message: `Status deve ser um dos valores: ${Object.values(SpaceStatus).join(', ')}`,
   })
-  status?: SpaceStatus;
+  status: SpaceStatus;
 
-  @IsOptional()
   @IsBoolean({ message: 'Múltiplas reservas deve ser um valor booleano' })
-  multipleBookings?: boolean;
+  multipleBookings: boolean;
 
   @IsOptional()
   @IsString({ message: 'URL da foto deve ser uma string' })
@@ -46,7 +44,7 @@ export class CreateSpacesDTO {
   @IsEnum(SpaceStatus, {
     message: `Status deve ser um dos valores: ${Object.values(SpaceStatus).join(', ')}`,
   })
-  status?: SpaceStatus;
+  status: SpaceStatus;
 
   @IsOptional()
   @IsBoolean({ message: 'Múltiplas reservas deve ser um valor booleano' })

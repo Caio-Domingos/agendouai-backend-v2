@@ -20,21 +20,21 @@ export class SpaceManagersEntity extends BaseEntity implements SpaceManager {
   @Column({ name: 'space_id', type: 'integer' })
   spaceId: number;
 
-  @ManyToOne(() => SpacesEntity)
+  @ManyToOne(() => SpacesEntity, (space) => space.spaceManagers)
   @JoinColumn({ name: 'space_id' })
-  space: Relation<SpacesEntity>;
+  space?: Relation<SpacesEntity>;
 
   @Column({ name: 'user_id', type: 'integer' })
   userId: number;
 
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, (user) => user.spaceManagers)
   @JoinColumn({ name: 'user_id' })
-  user: Relation<UserEntity>;
+  user?: Relation<UserEntity>;
 
   @Column({ name: 'company_id', type: 'integer' })
   companyId: number;
 
-  @ManyToOne(() => CompaniesEntity)
+  @ManyToOne(() => CompaniesEntity, (company) => company.spaceManagers)
   @JoinColumn({ name: 'company_id' })
-  company: Relation<CompaniesEntity>;
+  company?: Relation<CompaniesEntity>;
 }

@@ -22,9 +22,8 @@ export class CompaniesDto {
   @MaxLength(10, { message: 'CEP deve ter no máximo 10 caracteres' })
   cep?: string;
 
-  @IsOptional()
   @IsNumber({}, { message: 'ID da categoria deve ser um número' })
-  categoryId?: number;
+  categoryId: number;
 
   @IsNumber({}, { message: 'ID do criador deve ser um número' })
   createdBy: number;
@@ -114,9 +113,8 @@ export class CreateCompaniesDTO {
   @MaxLength(10, { message: 'CEP deve ter no máximo 10 caracteres' })
   cep?: string;
 
-  @IsOptional()
   @IsNumber({}, { message: 'ID da categoria deve ser um número' })
-  categoryId?: number;
+  categoryId: number;
 
   @IsNumber({}, { message: 'ID do criador deve ser um número' })
   createdBy: number;

@@ -2,16 +2,14 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
 import { Company } from '../companies/companies.model';
 import { Availability } from '../availabilities/availabilities.model';
 import { Booking } from '../bookings/bookings.model';
+import { SpaceManager } from '../space-managers/space-managers.model';
 
 /**
  * Enum de status do espaço.
  */
 export enum SpaceStatus {
-  ATIVO = 'ativo',
-  INATIVO = 'inativo',
-  PENDENTE = 'pendente',
-  CANCELADO = 'cancelado',
-  CONCLUIDO = 'concluido',
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
 }
 
 /**
@@ -27,21 +25,21 @@ export enum SpaceStatus {
  */
 export interface Space extends IEntity {
   // Not null
-  companyId: number;
   name: string;
   createdBy: number;
   updatedBy: number;
+  status: SpaceStatus;
+  multipleBookings: boolean;
 
   // Nullable
-  status?: SpaceStatus;
-  multipleBookings?: boolean;
   photoUrl?: string;
 
   // FK
-  // companyId já está acima
+  companyId: number;
 
   // Relationships
   company?: Company;
   availabilities?: Availability[];
   bookings?: Booking[];
+  spaceManagers?: SpaceManager[];
 }

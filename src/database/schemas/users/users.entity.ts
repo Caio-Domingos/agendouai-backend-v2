@@ -5,11 +5,13 @@ import {
   JoinColumn,
   Relation,
   Index,
+  OneToMany,
 } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { User, UserStatus, UserPermission } from './users.model';
 import { CompaniesEntity } from '../companies/companies.entity';
 import { PeopleEntity } from '../people/people.entity';
+import { SpaceManagersEntity } from '../space-managers/space-managers.entity';
 
 @Entity('users')
 @Index('IDX_USERS_USERNAME', ['username'], { unique: true })
@@ -64,7 +66,7 @@ export class UserEntity extends BaseEntity implements User {
   // (companyId, personId já estão acima)
 
   // Relationships
-  @ManyToOne(() => CompaniesEntity, (company) => company.people, {
+  @ManyToOne(() => CompaniesEntity, (company) => company.users, {
     onDelete: 'SET NULL',
     nullable: true,
   })
@@ -77,4 +79,7 @@ export class UserEntity extends BaseEntity implements User {
   })
   @JoinColumn({ name: 'people_id' })
   people: Relation<PeopleEntity>;
+
+  @OneToMany(() => SpaceManagersEntity, (spaceManger) => spaceManger.user)
+  spaceManagers: Relation<SpaceManagersEntity[]>;
 }

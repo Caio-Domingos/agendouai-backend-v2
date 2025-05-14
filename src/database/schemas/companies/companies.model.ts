@@ -5,6 +5,8 @@ import { Availability } from '../availabilities/availabilities.model';
 import { Booking } from '../bookings/bookings.model';
 import { CompanySubscriptionHistory } from '../company-subscription-history/company-subscription-history.model';
 import { CompanyCategory } from '../company-categories/company-categories.model';
+import { User } from '../users/users.model';
+import { SpaceManager } from '../space-managers/space-managers.model';
 
 /**
  * Representa uma empresa cadastrada no sistema.
@@ -30,20 +32,20 @@ import { CompanyCategory } from '../company-categories/company-categories.model'
  * @property {object} defaultAvailability - Disponibilidade padrão (JSON).
  */
 export enum CompanyStatus {
-  ATIVO = 'ativo',
-  INATIVO = 'inativo',
-  PENDENTE = 'pendente',
-  CANCELADO = 'cancelado',
-  CONCLUIDO = 'concluido',
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  PENDING = 'pending',
+  CANCELED = 'canceled',
+  COMPLETED = 'completed',
 }
 
 export enum PaymentStatus {
-  ATIVO = 'ativo',
-  CANCELADO = 'cancelado',
-  PENDENTE = 'pendente',
-  FALHA = 'falha',
+  ACTIVE = 'active',
+  CANCELED = 'canceled',
+  PENDING = 'pending',
+  FAILED = 'failed',
   TRIAL = 'trial',
-  EXPIRADO = 'expirado',
+  EXPIRED = 'expired',
 }
 
 export interface Company extends IEntity {
@@ -67,16 +69,17 @@ export interface Company extends IEntity {
   defaultAvailability?: object;
 
   // FK
-  categoryId?: number;
+  categoryId: number;
   currentPlanId?: number;
   currentPaymentStatus?: PaymentStatus;
   stripeCustomerId?: string;
 
   // Relationships
-  people?: People[];
+  users?: User[];
   spaces?: Space[];
   availabilities?: Availability[];
   bookings?: Booking[];
   subscriptionHistory?: CompanySubscriptionHistory[];
+  spaceManagers?: SpaceManager[];
   category?: CompanyCategory;
 }
