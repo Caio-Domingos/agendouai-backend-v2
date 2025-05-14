@@ -41,8 +41,8 @@ export enum UserPermission {
  */
 export interface User extends IEntity {
   // Not null
-  createdBy: number;
-  updatedBy: number;
+  createdBy?: number;
+  updatedBy?: number;
   permission: UserPermission;
   username: string;
   password: string;

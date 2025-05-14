@@ -23,9 +23,9 @@ import { User } from '../users/users.model';
 export interface Person extends IEntity {
   // Not null
   phoneNumber: string;
-  createdBy: number;
-  updatedBy: number;
-  companyId: number;
+  createdBy?: number;
+  updatedBy?: number;
+  companyId?: number;
 
   // Nullable
   cpf?: string;

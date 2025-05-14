@@ -84,7 +84,7 @@ async function bootstrap() {
     // Obtém o serviço de seeds
     const seedsService = app.get(SeedsService);
 
-    await seedsService.runAllSeeds();
+    await seedsService.seedInitialAdmin();
 
     logger.log('Seeds executadas com sucesso!');
 

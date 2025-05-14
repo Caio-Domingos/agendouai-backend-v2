@@ -21,11 +21,11 @@ import { PeopleEntity } from '../people/people.entity';
 @Index('IDX_USERS_UPDATED_BY', ['updatedBy'])
 export class UserEntity extends BaseEntity implements User {
   // Not null columns
-  @Column({ name: 'created_by', type: 'integer' })
-  createdBy: number;
+  @Column({ name: 'created_by', type: 'integer', nullable: true })
+  createdBy?: number;
 
-  @Column({ name: 'updated_by', type: 'integer' })
-  updatedBy: number;
+  @Column({ name: 'updated_by', type: 'integer', nullable: true })
+  updatedBy?: number;
 
   @Column({
     type: 'enum',

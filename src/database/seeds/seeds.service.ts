@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, DeepPartial } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from '../schemas/users/users.entity';
 import { PeopleEntity } from '../schemas/people/people.entity';
 import { CompaniesEntity } from '../schemas/companies/companies.entity';
+import { UserStatus, UserPermission } from '../schemas/users/users.model';
 
 @Injectable()
 export class SeedsService {
@@ -18,8 +19,6 @@ export class SeedsService {
     private userRepository: Repository<UserEntity>,
     @InjectRepository(PeopleEntity)
     private peopleRepository: Repository<PeopleEntity>,
-    @InjectRepository(CompaniesEntity)
-    private companiesRepository: Repository<CompaniesEntity>,
     // Adicione outros repositórios conforme necessário
   ) {}
 
@@ -32,8 +31,8 @@ export class SeedsService {
     // Truncate tables to ensure clean seed
     await this.truncateTables();
 
-    // Execute seed with user creation only
-    await this.seedUsers();
+    // Seed inicial do sistema: cria admin
+    await this.seedInitialAdmin();
 
     this.logger.log('Seeds executadas com sucesso.');
     return { success: true };
@@ -58,22 +57,47 @@ export class SeedsService {
   }
 
   /**
-   * Seed only users
+   * Seed inicial: cria um usuário admin com pessoa completa
    */
-  async seedUsers() {
-    // this.logger.log('Criando usuários seed...');
-    // const saltRounds = this.configService.get<number>(
-    //   'auth.security.bcryptSaltRounds',
-    //   10,
-    // );
-    // const hashedPassword = await bcrypt.hash('Senha@123', saltRounds);
-    // await this.userRepository.save({
-    //   name: 'Usuário Administrador',
-    //   email: 'admin@exemplo.com',
-    //   password: hashedPassword,
-    //   status: UserStatus.ACTIVE,
-    //   role: UserRole.ADMIN,
-    // });
-    // this.logger.log('Usuário ADMIN criado.');
+  async seedInitialAdmin() {
+    this.logger.log('Criando usuário admin inicial...');
+
+    // Dados do admin
+    const adminEmail = 'admin@agendouai.com';
+    const adminPassword = 'Senha@123';
+    const saltRounds = this.configService.get<number>(
+      'auth.security.bcryptSaltRounds',
+      10,
+    );
+
+    const hashedPassword = await bcrypt.hash(adminPassword, saltRounds);
+    const peoplePartial: DeepPartial<PeopleEntity> = {
+      cpf: '12345678901',
+      phoneNumber: '+5511999999999',
+      cep: '01001-000',
+      photoUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+      name: 'Administrador do Sistema',
+      city: 'São Paulo',
+      state: 'SP',
+      country: 'Brasil',
+      address: 'Rua Exemplo',
+      addressNumber: '100',
+      birthDate: new Date('1990-01-01'),
+    };
+
+    // Cria pessoa
+    const person = await this.peopleRepository.save(peoplePartial);
+
+    // Cria usuário admin
+    const user: DeepPartial<UserEntity> = {
+      username: adminEmail,
+      password: hashedPassword,
+      permission: UserPermission.ADMIN,
+      status: UserStatus.ACTIVE,
+      personId: person.id,
+    };
+    await this.userRepository.save(user);
+
+    this.logger.log('Usuário admin criado com sucesso!');
   }
 }

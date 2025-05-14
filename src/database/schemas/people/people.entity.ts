@@ -23,14 +23,14 @@ export class PeopleEntity extends BaseEntity implements Person {
   @Column({ name: 'phone_number', type: 'varchar', length: 20 })
   phoneNumber: string;
 
-  @Column({ name: 'created_by', type: 'integer' })
-  createdBy: number;
+  @Column({ name: 'created_by', type: 'integer', nullable: true })
+  createdBy?: number;
 
-  @Column({ name: 'updated_by', type: 'integer' })
-  updatedBy: number;
+  @Column({ name: 'updated_by', type: 'integer', nullable: true })
+  updatedBy?: number;
 
-  @Column({ name: 'company_id', type: 'integer' })
-  companyId: number;
+  @Column({ name: 'company_id', type: 'integer', nullable: true })
+  companyId?: number;
 
   // Nullable columns
   @Column({ type: 'varchar', length: 20, nullable: true })

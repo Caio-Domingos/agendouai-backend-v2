@@ -38,15 +38,16 @@ export class SeedsController {
    * Executa seed completa de estrutura
    * Acessível para usuários autenticados
    */
-  @Post('structure')
+  @Post('initial')
   @ApiEndpoint({
-    summary: 'Executar seed completa',
-    description: 'Cria usuários, perguntas, questionários e páginas',
+    summary: 'Executar seed completa de estrutura',
+    description:
+      'Executa seed completa de estrutura para popular o banco com dados iniciais',
     responseType: SeedSuccessDto,
   })
   @ApiCommonResponses()
   async seedStructure() {
-    return this.seedsService.runAllSeeds();
+    return this.seedsService.seedInitialAdmin();
   }
 
   /**
