@@ -1,4 +1,4 @@
-# NPS Backend
+# Agendou Ai? Backend
 
 Um backend moderno e robusto para aplicações de NPS (Net Promoter Score) usando tecnologias de ponta.
 
@@ -23,7 +23,7 @@ Um backend moderno e robusto para aplicações de NPS (Net Promoter Score) usand
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/nps-backend.git
+git clone https://github.com/seu-usuario/agendouai-backend.git
 cd nps-backend
 ```
 
