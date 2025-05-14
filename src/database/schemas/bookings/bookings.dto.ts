@@ -9,12 +9,11 @@ export class BookingDto {
   @IsString({ message: 'Data da reserva deve ser uma string ISO' })
   bookingDate: string;
 
-  @IsOptional()
   @IsNumber(
     {},
     { message: 'Índice do dia da semana deve ser um número inteiro' },
   )
-  weekdayIndex?: number;
+  weekdayIndex: number;
 
   @IsNumber({}, { message: 'ID do espaço deve ser um número inteiro' })
   spaceId: number;
@@ -50,12 +49,11 @@ export class CreateBookingDTO {
   @IsString({ message: 'Data da reserva deve ser uma string ISO' })
   bookingDate: string;
 
-  @IsOptional()
   @IsNumber(
     {},
     { message: 'Índice do dia da semana deve ser um número inteiro' },
   )
-  weekdayIndex?: number;
+  weekdayIndex: number;
 
   @IsNumber({}, { message: 'ID do espaço deve ser um número inteiro' })
   spaceId: number;

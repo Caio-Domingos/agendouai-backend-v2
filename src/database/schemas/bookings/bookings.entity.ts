@@ -21,7 +21,7 @@ import { CompaniesEntity } from '../companies/companies.entity';
 @Index('IDX_BOOKINGS_STATUS_UPDATED_AT', ['statusUpdatedAt'])
 export class BookingEntity extends BaseEntity implements Booking {
   // Not null columns
-  @Column({ name: 'booking_date', type: 'timestamptz' })
+  @Column({ name: 'booking_date', type: 'timestamp with time zone' })
   bookingDate: Date;
 
   @Column({ name: 'space_id' })
@@ -48,14 +48,15 @@ export class BookingEntity extends BaseEntity implements Booking {
 
   @Column({
     name: 'status_updated_at',
-    type: 'timestamptz',
+    type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
   statusUpdatedAt: Date;
 
-  // Nullable columns
-  @Column({ name: 'weekday_index', nullable: true })
+  @Column({ name: 'weekday_index' })
   weekdayIndex: number;
+
+  // Nullable columns
 
   @Column({ name: 'notes', type: 'text', nullable: true })
   notes?: string;
