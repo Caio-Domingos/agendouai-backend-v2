@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
-import { Person } from './people.model';
+import { People as People } from './people.model';
 import { CompaniesEntity } from '../companies/companies.entity';
 import { UserEntity } from '../users/users.entity';
 
@@ -18,7 +18,7 @@ import { UserEntity } from '../users/users.entity';
 @Index('IDX_PEOPLE_PHONE', ['phoneNumber'])
 @Index('IDX_PEOPLE_CREATED_BY', ['createdBy'])
 @Index('IDX_PEOPLE_UPDATED_BY', ['updatedBy'])
-export class PeopleEntity extends BaseEntity implements Person {
+export class PeopleEntity extends BaseEntity implements People {
   // Not null columns
   @Column({ name: 'phone_number', type: 'varchar', length: 20 })
   phoneNumber: string;
@@ -78,6 +78,6 @@ export class PeopleEntity extends BaseEntity implements Person {
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompaniesEntity>;
 
-  @OneToMany(() => UserEntity, (user) => user.person)
+  @OneToMany(() => UserEntity, (user) => user.people)
   users: Relation<UserEntity[]>;
 }

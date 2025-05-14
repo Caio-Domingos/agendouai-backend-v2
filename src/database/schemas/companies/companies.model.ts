@@ -1,5 +1,5 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
-import { Person } from '../people/people.model';
+import { People } from '../people/people.model';
 import { Space } from '../spaces/spaces.model';
 import { Availability } from '../availabilities/availabilities.model';
 import { Booking } from '../bookings/bookings.model';
@@ -73,7 +73,7 @@ export interface Company extends IEntity {
   stripeCustomerId?: string;
 
   // Relationships
-  people?: Person[];
+  people?: People[];
   spaces?: Space[];
   availabilities?: Availability[];
   bookings?: Booking[];

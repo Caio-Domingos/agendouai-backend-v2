@@ -46,7 +46,7 @@ export class UserEntity extends BaseEntity implements User {
     enum: UserStatus,
     default: UserStatus.ACTIVE,
   })
-  status?: UserStatus;
+  status: UserStatus;
 
   @Column({ name: 'reset_code', type: 'varchar', length: 100, nullable: true })
   resetCode?: string;
@@ -54,8 +54,8 @@ export class UserEntity extends BaseEntity implements User {
   @Column({ name: 'company_id', type: 'integer', nullable: true })
   companyId?: number;
 
-  @Column({ name: 'person_id', type: 'integer', nullable: true })
-  personId?: number;
+  @Column({ name: 'people_id', type: 'integer', nullable: true })
+  peopleId?: number;
 
   @Column({ name: 'push_token', type: 'varchar', length: 255, nullable: true })
   pushToken?: string;
@@ -75,6 +75,6 @@ export class UserEntity extends BaseEntity implements User {
     onDelete: 'SET NULL',
     nullable: true,
   })
-  @JoinColumn({ name: 'person_id' })
-  person: Relation<PeopleEntity>;
+  @JoinColumn({ name: 'people_id' })
+  people: Relation<PeopleEntity>;
 }

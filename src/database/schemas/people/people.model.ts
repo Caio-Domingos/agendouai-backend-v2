@@ -20,7 +20,7 @@ import { User } from '../users/users.model';
  * @property {string} addressNumber - Número do endereço.
  * @property {Date} birthDate - Data de nascimento.
  */
-export interface Person extends IEntity {
+export interface People extends IEntity {
   // Not null
   phoneNumber: string;
   createdBy?: number;

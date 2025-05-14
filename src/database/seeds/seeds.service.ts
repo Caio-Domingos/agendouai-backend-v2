@@ -86,7 +86,7 @@ export class SeedsService {
     };
 
     // Cria pessoa
-    const person = await this.peopleRepository.save(peoplePartial);
+    const people = await this.peopleRepository.save(peoplePartial);
 
     // Cria usuário admin
     const user: DeepPartial<UserEntity> = {
@@ -94,7 +94,7 @@ export class SeedsService {
       password: hashedPassword,
       permission: UserPermission.ADMIN,
       status: UserStatus.ACTIVE,
-      personId: person.id,
+      peopleId: people.id,
     };
     await this.userRepository.save(user);
 

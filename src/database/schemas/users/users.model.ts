@@ -1,5 +1,5 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
-import { Person } from '../people/people.model';
+import { People } from '../people/people.model';
 import { Company } from '../companies/companies.model';
 
 /**
@@ -48,15 +48,15 @@ export interface User extends IEntity {
   password: string;
 
   // Nullable
-  status?: UserStatus;
+  status: UserStatus;
   resetCode?: string;
   pushToken?: string;
 
   // FK
   companyId?: number;
-  personId?: number;
+  peopleId?: number;
 
   // Relationships
   company?: Company;
-  person?: Person;
+  people?: People;
 }

@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { PartialType } from 'src/shared/validation/dto-helpers';
 import { UserStatus, UserPermission } from './users.model';
+import { Transform } from 'class-transformer';
 
 export class UserDto {
   @IsNumber({}, { message: 'ID deve ser um número inteiro' })
@@ -42,7 +43,7 @@ export class UserDto {
 
   @IsOptional()
   @IsNumber({}, { message: 'ID da pessoa deve ser um número' })
-  personId?: number;
+  peopleId?: number;
 
   @IsString({ message: 'Nome de usuário deve ser uma string' })
   @MaxLength(100, {
@@ -65,6 +66,12 @@ export class CreateUserDTO {
   @IsEnum(UserStatus, {
     message: `Status deve ser um dos valores: ${Object.values(UserStatus).join(', ')}`,
   })
+  @Transform(({ value }) => {
+    if (value === undefined) {
+      return UserStatus.ACTIVE;
+    }
+    return value;
+  })
   status?: UserStatus;
 
   @IsOptional()
@@ -80,11 +87,10 @@ export class CreateUserDTO {
   @IsNumber({}, { message: 'ID do atualizador deve ser um número' })
   updatedBy: number;
 
-  @IsOptional()
   @IsEnum(UserPermission, {
     message: `Permissão deve ser um dos valores: ${Object.values(UserPermission).join(', ')}`,
   })
-  permission?: UserPermission;
+  permission: UserPermission;
 
   @IsOptional()
   @IsNumber({}, { message: 'ID da empresa deve ser um número' })
@@ -92,7 +98,7 @@ export class CreateUserDTO {
 
   @IsOptional()
   @IsNumber({}, { message: 'ID da pessoa deve ser um número' })
-  personId?: number;
+  peopleId?: number;
 
   @IsString({ message: 'Nome de usuário deve ser uma string' })
   @MaxLength(100, {

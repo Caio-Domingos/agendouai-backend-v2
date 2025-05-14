@@ -210,7 +210,7 @@ export class AuthService {
     // Retorna os tokens de acesso
     return this.generateTokens({
       ...user,
-      person,
+      people: person,
     });
   }
 
@@ -221,7 +221,7 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.username,
-      name: user.person?.name,
+      name: user.people?.name,
       role: user.permission,
       companyId: user.companyId,
       // unitId: user.unitId, // adicione se necessário
@@ -242,10 +242,10 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.username,
-        name: user.person?.name,
+        name: user.people?.name,
         role: user.permission,
         companyId: user.companyId,
-        person: user.person,
+        person: user.people,
       },
     };
   }
