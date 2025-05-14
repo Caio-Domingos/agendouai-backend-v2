@@ -7,7 +7,7 @@ export const appValidationSchema = Joi.object({
   PORT: Joi.number().default(3000),
   API_PREFIX: Joi.string().default('api'),
   API_VERSION: Joi.string().default('v1'),
-  APP_NAME: Joi.string().default('Base Backend 2025'),
+  APP_NAME: Joi.string().default('Agendou Ai?'),
   APP_URL: Joi.string().default('http://localhost:3000'),
   CORS_ALLOWED_ORIGINS: Joi.string().default('http://localhost:3000'),
 });

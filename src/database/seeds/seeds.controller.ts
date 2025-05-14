@@ -46,7 +46,7 @@ export class SeedsController {
   })
   @ApiCommonResponses()
   async seedStructure() {
-    return this.seedsService.seedCompleteStructure();
+    return this.seedsService.runAllSeeds();
   }
 
   /**
