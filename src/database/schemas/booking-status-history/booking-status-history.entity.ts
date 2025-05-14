@@ -4,10 +4,9 @@ import {
   BookingStatusHistory,
   BookingStatus,
 } from './booking-status-history.model';
-import { UserEntity } from '../user/user.entity';
-// Se BookingEntity já existir, descomente a linha abaixo
-// import { BookingEntity } from '../booking/booking.entity';
-import { CompanyEntity } from '../companies/company.entity';
+import { BookingEntity } from '../bookings/bookings.entity';
+import { UserEntity } from '../users/users.entity';
+import { CompaniesEntity } from '../companies/companies.entity';
 
 @Entity('booking_status_history')
 export class BookingStatusHistoryEntity
@@ -38,15 +37,15 @@ export class BookingStatusHistoryEntity
   changedBy: number;
 
   // Relacionamentos (descomente se as entidades existirem)
-  // @ManyToOne(() => BookingEntity)
-  // @JoinColumn({ name: 'booking_id' })
-  // booking: Relation<BookingEntity>;
+  @ManyToOne(() => BookingEntity)
+  @JoinColumn({ name: 'booking_id' })
+  booking: Relation<BookingEntity>;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'changed_by' })
   changedByUser: Relation<UserEntity>;
 
-  @ManyToOne(() => CompanyEntity)
+  @ManyToOne(() => CompaniesEntity)
   @JoinColumn({ name: 'company_id' })
-  company: Relation<CompanyEntity>;
+  company: Relation<CompaniesEntity>;
 }

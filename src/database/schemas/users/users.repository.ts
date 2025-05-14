@@ -1,18 +1,34 @@
 import { CrudQueryRepository } from 'src/shared/database/repositories/crud-query.repository';
 import { DataSource } from 'typeorm';
-import { UsersEntity } from './users.entity';
+import { UserEntity } from './users.entity';
 import { Request } from 'express';
 import { REQUEST } from '@nestjs/core';
-import { CreateUsersDTO, UpdateUsersDTO } from './users.dto';
+import { CreateUserDTO, UpdateUserDTO } from './users.dto';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UsersRepository extends CrudQueryRepository<
-  UsersEntity,
-  CreateUsersDTO,
-  UpdateUsersDTO
+  UserEntity,
+  CreateUserDTO,
+  UpdateUserDTO
 > {
   constructor(dataSource: DataSource, @Inject(REQUEST) request: Request) {
-    super(dataSource, request, UsersEntity);
+    super(dataSource, request, UserEntity);
+  }
+
+  findByEmailWithPassword(email: string) {
+    return this.getRepository(UserEntity)
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.person', 'person')
+      .where('user.email = :email', { email })
+      .getOne();
+  }
+
+  findByEmail(email: string) {
+    return this.getRepository(UserEntity)
+      .createQueryBuilder('user')
+      .where('user.email = :email', { email })
+      .select(['user.id', 'user.email'])
+      .getOne();
   }
 }

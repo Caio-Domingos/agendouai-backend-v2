@@ -1,4 +1,6 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Space } from '../spaces/spaces.model';
+import { Company } from '../companies/companies.model';
 
 /**
  * Representa a disponibilidade de um espaço para reservas.
@@ -14,13 +16,23 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
  * @property {number} companyId - ID da empresa.
  */
 export interface Availability extends IEntity {
+  // Not null
+  openingTime: number;
+  closingTime: number;
+  weekday: string;
+  companyId: number;
+
+  // Nullable
   active?: boolean;
   minDaysCancel?: number;
   weekdayIndex?: number;
   intervalMinutes?: number;
   spaceId?: number;
-  openingTime: number;
-  closingTime: number;
-  weekday: string;
-  companyId: number;
+
+  // FK
+  // companyId, spaceId já estão acima
+
+  // Relationships
+  space?: Space;
+  company?: Company;
 }

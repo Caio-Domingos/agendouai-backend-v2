@@ -12,19 +12,12 @@ export class CompanySubscriptionHistoryEntity
   extends BaseEntity
   implements CompanySubscriptionHistory
 {
+  // Not null columns
   @Column({ name: 'company_id', type: 'integer' })
   companyId: number;
 
-  @ManyToOne(() => CompaniesEntity)
-  @JoinColumn({ name: 'company_id' })
-  company: Relation<CompaniesEntity>;
-
   @Column({ name: 'plan_id', type: 'integer' })
   planId: number;
-
-  @ManyToOne(() => PlansEntity)
-  @JoinColumn({ name: 'plan_id' })
-  plan: Relation<PlansEntity>;
 
   @Column({
     name: 'payment_status',
@@ -36,6 +29,7 @@ export class CompanySubscriptionHistoryEntity
   @Column({ name: 'started_at', type: 'timestamp with time zone' })
   startedAt: Date;
 
+  // Nullable columns
   @Column({
     name: 'ended_at',
     type: 'timestamp with time zone',
@@ -71,10 +65,19 @@ export class CompanySubscriptionHistoryEntity
   @Column({ type: 'jsonb', nullable: true, default: () => "'{}'" })
   metadata?: object;
 
-  @Column({
-    name: 'created_at',
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
+  // FK columns
+  // (companyId, planId já estão acima)
+
+  // Relationships
+  @ManyToOne(() => CompaniesEntity, (company) => company.subscriptionHistory, {
+    onDelete: 'CASCADE',
   })
-  createdAt: Date;
+  @JoinColumn({ name: 'company_id' })
+  company: Relation<CompaniesEntity>;
+
+  @ManyToOne(() => PlansEntity, (plan) => plan.subscriptionHistory, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'plan_id' })
+  plan: Relation<PlansEntity>;
 }

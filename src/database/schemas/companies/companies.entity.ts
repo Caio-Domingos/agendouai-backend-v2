@@ -1,17 +1,25 @@
-import { Entity, Column } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Company, CompanyStatus, PaymentStatus } from './companies.model';
+import { PeopleEntity } from '../people/people.entity';
+import { SpacesEntity } from '../spaces/spaces.entity';
+import { AvailabilitiesEntity } from '../availabilities/availabilities.entity';
+import { BookingEntity } from '../bookings/bookings.entity';
+import { CompanySubscriptionHistoryEntity } from '../company-subscription-history/company-subscription-history.entity';
+import { CompanyCategoriesEntity } from '../company-categories/company-categories.entity';
 
 @Entity('companies')
 export class CompaniesEntity extends BaseEntity implements Company {
+  // Not null columns
   @Column({ name: 'cpf_cnpj', type: 'varchar', length: 20 })
   cpfCnpj: string;
-
-  @Column({ type: 'varchar', length: 10, nullable: true })
-  cep?: string;
-
-  @Column({ name: 'category_id', type: 'integer', nullable: true })
-  categoryId?: number;
 
   @Column({ name: 'created_by', type: 'integer' })
   createdBy: number;
@@ -19,18 +27,25 @@ export class CompaniesEntity extends BaseEntity implements Company {
   @Column({ name: 'updated_by', type: 'integer' })
   updatedBy: number;
 
-  @Column({ name: 'logo_url', type: 'text', nullable: true })
-  logoUrl?: string;
-
-  @Column({ type: 'integer', nullable: true })
-  provider?: number;
-
   @Column({
     type: 'enum',
     enum: CompanyStatus,
     default: CompanyStatus.ATIVO,
   })
   status: CompanyStatus;
+
+  // Nullable columns
+  @Column({ type: 'varchar', length: 10, nullable: true })
+  cep?: string;
+
+  @Column({ name: 'category_id', type: 'integer', nullable: true })
+  categoryId?: number;
+
+  @Column({ name: 'logo_url', type: 'text', nullable: true })
+  logoUrl?: string;
+
+  @Column({ type: 'integer', nullable: true })
+  provider?: number;
 
   @Column({ name: 'current_plan_id', type: 'integer', nullable: true })
   currentPlanId?: number;
@@ -84,4 +99,38 @@ export class CompaniesEntity extends BaseEntity implements Company {
     default: () => "'{}'",
   })
   defaultAvailability?: object;
+
+  // FK columns
+  // (categoryId, currentPlanId já estão acima como nullable)
+
+  // Relationships
+  @OneToMany(() => PeopleEntity, (person) => person.company, { cascade: true })
+  people: Relation<PeopleEntity[]>;
+
+  @OneToMany(() => SpacesEntity, (space) => space.company, { cascade: true })
+  spaces: Relation<SpacesEntity[]>;
+
+  @OneToMany(
+    () => AvailabilitiesEntity,
+    (availability) => availability.company,
+    { cascade: true },
+  )
+  availabilities: Relation<AvailabilitiesEntity[]>;
+
+  @OneToMany(() => BookingEntity, (booking) => booking.company, {
+    cascade: true,
+  })
+  bookings: Relation<BookingEntity[]>;
+
+  @OneToMany(() => CompanySubscriptionHistoryEntity, (csh) => csh.company, {
+    cascade: true,
+  })
+  subscriptionHistory: Relation<CompanySubscriptionHistoryEntity[]>;
+
+  @ManyToOne(() => CompanyCategoriesEntity, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'category_id' })
+  category: Relation<CompanyCategoriesEntity>;
 }

@@ -7,7 +7,6 @@ import { Module } from '@nestjs/common';
 import appConfig from '../../config/app.config';
 import databaseConfig from '../../config/database.config';
 import authConfig from '../../config/auth.config';
-import { UserEntity } from '../schemas/user/user.entity';
 
 // Criar um módulo especial apenas para executar as seeds
 @Module({
@@ -27,7 +26,7 @@ import { UserEntity } from '../schemas/user/user.entity';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       schema: process.env.DATABASE_SCHEMA || 'public',
-      entities: [UserEntity], // Especificar diretamente as entidades
+      entities: [], // Especificar diretamente as entidades
       synchronize: false,
     }),
     // Importar as entidades necessárias

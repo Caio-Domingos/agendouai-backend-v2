@@ -3,16 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import { UserEntity } from '../schemas/user/user.entity';
-import { UserRole, UserStatus } from '../schemas/user/user.model';
 
 @Injectable()
 export class SeedsService {
   private readonly logger = new Logger(SeedsService.name);
 
   constructor(
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
     private configService: ConfigService,
     private dataSource: DataSource,
   ) {}
@@ -55,22 +51,19 @@ export class SeedsService {
    * Seed only users
    */
   async seedUsers() {
-    this.logger.log('Criando usuários seed...');
-
-    const saltRounds = this.configService.get<number>(
-      'auth.security.bcryptSaltRounds',
-      10,
-    );
-    const hashedPassword = await bcrypt.hash('Senha@123', saltRounds);
-
-    await this.userRepository.save({
-      name: 'Usuário Administrador',
-      email: 'admin@exemplo.com',
-      password: hashedPassword,
-      status: UserStatus.ACTIVE,
-      role: UserRole.ADMIN,
-    });
-
-    this.logger.log('Usuário ADMIN criado.');
+    // this.logger.log('Criando usuários seed...');
+    // const saltRounds = this.configService.get<number>(
+    //   'auth.security.bcryptSaltRounds',
+    //   10,
+    // );
+    // const hashedPassword = await bcrypt.hash('Senha@123', saltRounds);
+    // await this.userRepository.save({
+    //   name: 'Usuário Administrador',
+    //   email: 'admin@exemplo.com',
+    //   password: hashedPassword,
+    //   status: UserStatus.ACTIVE,
+    //   role: UserRole.ADMIN,
+    // });
+    // this.logger.log('Usuário ADMIN criado.');
   }
 }

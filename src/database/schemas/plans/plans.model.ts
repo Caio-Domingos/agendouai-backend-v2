@@ -1,4 +1,5 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { CompanySubscriptionHistory } from '../company-subscription-history/company-subscription-history.model';
 
 /**
  * Representa um plano de assinatura do sistema.
@@ -14,13 +15,22 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
  * @property {Date} updatedAt - Data da última atualização do plano.
  */
 export interface Plan extends IEntity {
+  // Not null
   name: string;
-  description?: string;
   price: number;
   interval: string;
+
+  // Nullable
+  description?: string;
   features?: object;
   active?: boolean;
   stripePlanId?: string;
   createdAt: Date;
   updatedAt: Date;
+
+  // FK
+  // (none)
+
+  // Relationships
+  subscriptionHistory?: CompanySubscriptionHistory[];
 }

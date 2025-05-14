@@ -1,4 +1,10 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Person } from '../people/people.model';
+import { Space } from '../spaces/spaces.model';
+import { Availability } from '../availabilities/availabilities.model';
+import { Booking } from '../bookings/bookings.model';
+import { CompanySubscriptionHistory } from '../company-subscription-history/company-subscription-history.model';
+import { CompanyCategory } from '../company-categories/company-categories.model';
 
 /**
  * Representa uma empresa cadastrada no sistema.
@@ -41,17 +47,16 @@ export enum PaymentStatus {
 }
 
 export interface Company extends IEntity {
+  // Not null
   cpfCnpj: string;
-  cep?: string;
-  categoryId?: number;
   createdBy: number;
   updatedBy: number;
+  status: CompanyStatus;
+
+  // Nullable
+  cep?: string;
   logoUrl?: string;
   provider?: number;
-  status: CompanyStatus;
-  currentPlanId?: number;
-  currentPaymentStatus?: PaymentStatus;
-  stripeCustomerId?: string;
   name?: string;
   phone?: string;
   city?: string;
@@ -60,4 +65,18 @@ export interface Company extends IEntity {
   address?: string;
   addressNumber?: string;
   defaultAvailability?: object;
+
+  // FK
+  categoryId?: number;
+  currentPlanId?: number;
+  currentPaymentStatus?: PaymentStatus;
+  stripeCustomerId?: string;
+
+  // Relationships
+  people?: Person[];
+  spaces?: Space[];
+  availabilities?: Availability[];
+  bookings?: Booking[];
+  subscriptionHistory?: CompanySubscriptionHistory[];
+  category?: CompanyCategory;
 }

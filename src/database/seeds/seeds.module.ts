@@ -5,7 +5,7 @@ import { SeedsController } from './seeds.controller';
 import { SeedsService } from './seeds.service';
 
 import { DatabaseCleanService } from '../clean/database-clean.service';
-import { UserEntity } from '../schemas/user/user.entity';
+import { UserEntity } from '../schemas/users/users.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity]), ConfigModule],

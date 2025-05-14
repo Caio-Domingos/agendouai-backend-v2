@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CrudQueryService } from '../../shared/crud/services/crud-query.service';
-import { UserEntity } from 'src/database/schemas/user/user.entity';
+import { UserEntity } from 'src/database/schemas/users/users.entity';
 import {
   CreateUserDTO,
   UpdateUserDTO,
-} from 'src/database/schemas/user/user.dto';
-import { UserRepository } from 'src/database/schemas/user/user.repository';
+} from 'src/database/schemas/users/users.dto';
+import { UsersRepository } from 'src/database/schemas/users/users.repository';
 
 @Injectable()
 export class UserService extends CrudQueryService<
@@ -13,7 +13,7 @@ export class UserService extends CrudQueryService<
   CreateUserDTO,
   UpdateUserDTO
 > {
-  constructor(private userRepository: UserRepository) {
+  constructor(private userRepository: UsersRepository) {
     super(userRepository);
   }
 

@@ -7,23 +7,20 @@ import {
   IsOptional,
   IsEnum,
   IsNumber,
-  ValidateIf,
+  MaxLength,
+  IsDateString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole, UserStatus } from 'src/database/schemas/user/user.model';
 import { Transform } from 'class-transformer';
+import {
+  UserStatus,
+  UserPermission,
+} from 'src/database/schemas/users/users.model';
 
 export class RegisterDto {
+  // USER FIELDS
   @ApiProperty({
-    description: 'Nome do usuário',
-    example: 'João',
-  })
-  @IsNotEmpty({ message: 'O Nome é obrigatório' })
-  @IsString({ message: 'O Nome deve ser uma string' })
-  name: string;
-
-  @ApiProperty({
-    description: 'Email do usuário',
+    description: 'Email do usuário (também será o username)',
     example: 'joao.silva@exemplo.com',
   })
   @IsNotEmpty({ message: 'O email é obrigatório' })
@@ -46,42 +43,100 @@ export class RegisterDto {
   password: string;
 
   @ApiProperty({
-    description: 'Papel do usuário',
-    example: 'ADMIN',
-    enum: UserRole,
-    enumName: 'UserRole',
+    description: 'Permissão do usuário',
+    enum: UserPermission,
+    required: false,
   })
   @IsOptional()
-  @IsEnum(UserRole, {
-    message: `Papel deve ser um dos valores: ${Object.values(UserRole).join(', ')}`,
+  @IsEnum(UserPermission, {
+    message: `Permissão deve ser um dos valores: ${Object.values(UserPermission).join(', ')}`,
   })
-  @Transform(({ value }) => (value !== undefined ? value : UserRole.EMPLOYEE))
-  role: UserRole;
+  permission?: UserPermission;
 
-  @ValidateIf((o) => o.role !== UserRole.ADMIN)
-  @IsNumber(
-    {},
-    {
-      message: 'ID da empresa é obrigatório para usuários não-administradores',
-    },
-  )
-  companyId?: number;
-
-  // @ValidateIf((o) => o.role !== UserRole.ADMIN && o.role !== UserRole.COMPANY)
-  @IsOptional()
-  @IsNumber(
-    {},
-    {
-      message:
-        'ID da empresa é obrigatório para usuários não-administradores e não-empresas',
-    },
-  )
-  unitId?: number;
-
+  @ApiProperty({
+    description: 'Status do usuário',
+    enum: UserStatus,
+    required: false,
+  })
   @IsOptional()
   @IsEnum(UserStatus, {
     message: `Status deve ser um dos valores: ${Object.values(UserStatus).join(', ')}`,
   })
   @Transform(({ value }) => (value !== undefined ? value : UserStatus.ACTIVE))
   status?: UserStatus;
+
+  @ApiProperty({ description: 'ID da empresa', required: false })
+  @IsOptional()
+  @IsNumber({}, { message: 'ID da empresa deve ser um número' })
+  companyId?: number;
+
+  // PERSON FIELDS
+  @ApiProperty({ description: 'Nome da pessoa', example: 'João' })
+  @IsNotEmpty({ message: 'O Nome é obrigatório' })
+  @IsString({ message: 'O Nome deve ser uma string' })
+  @MaxLength(200)
+  name: string;
+
+  @ApiProperty({ description: 'CPF', required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  cpf?: string;
+
+  @ApiProperty({ description: 'Telefone', example: '+5511999999999' })
+  @IsNotEmpty({ message: 'O telefone é obrigatório' })
+  @IsString()
+  @MaxLength(20)
+  phoneNumber: string;
+
+  @ApiProperty({ description: 'CEP', required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  cep?: string;
+
+  @ApiProperty({ description: 'URL da foto', required: false })
+  @IsOptional()
+  @IsString()
+  photoUrl?: string;
+
+  @ApiProperty({ description: 'Cidade', required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  city?: string;
+
+  @ApiProperty({ description: 'Estado', required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  state?: string;
+
+  @ApiProperty({ description: 'País', required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  country?: string;
+
+  @ApiProperty({ description: 'Endereço', required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  address?: string;
+
+  @ApiProperty({ description: 'Número do endereço', required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  addressNumber?: string;
+
+  @ApiProperty({
+    description: 'Data de nascimento',
+    required: false,
+    type: String,
+    format: 'date',
+  })
+  @IsOptional()
+  @IsDateString()
+  birthDate?: Date;
 }

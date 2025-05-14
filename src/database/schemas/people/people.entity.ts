@@ -1,18 +1,21 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Person } from './people.model';
 import { CompaniesEntity } from '../companies/companies.entity';
+import { UserEntity } from '../users/users.entity';
 
 @Entity('people')
 export class PeopleEntity extends BaseEntity implements Person {
-  @Column({ type: 'varchar', length: 20, nullable: true })
-  cpf?: string;
-
+  // Not null columns
   @Column({ name: 'phone_number', type: 'varchar', length: 20 })
   phoneNumber: string;
-
-  @Column({ type: 'varchar', length: 10, nullable: true })
-  cep?: string;
 
   @Column({ name: 'created_by', type: 'integer' })
   createdBy: number;
@@ -23,18 +26,18 @@ export class PeopleEntity extends BaseEntity implements Person {
   @Column({ name: 'company_id', type: 'integer' })
   companyId: number;
 
-  @ManyToOne(() => CompaniesEntity)
-  @JoinColumn({ name: 'company_id' })
-  company: Relation<CompaniesEntity>;
+  // Nullable columns
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  cpf?: string;
+
+  @Column({ type: 'varchar', length: 10, nullable: true })
+  cep?: string;
 
   @Column({ name: 'photo_url', type: 'text', nullable: true })
   photoUrl?: string;
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   name?: string;
-
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  role?: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   city?: string;
@@ -58,4 +61,17 @@ export class PeopleEntity extends BaseEntity implements Person {
 
   @Column({ name: 'birth_date', type: 'date', nullable: true })
   birthDate?: Date;
+
+  // FK columns
+  // (companyId já está acima)
+
+  // Relationships
+  @ManyToOne(() => CompaniesEntity, (company) => company.people, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'company_id' })
+  company: Relation<CompaniesEntity>;
+
+  @OneToMany(() => UserEntity, (user) => user.person)
+  users: Relation<UserEntity[]>;
 }

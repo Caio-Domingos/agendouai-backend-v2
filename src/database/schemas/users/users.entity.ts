@@ -5,17 +5,8 @@ import { CompaniesEntity } from '../companies/companies.entity';
 import { PeopleEntity } from '../people/people.entity';
 
 @Entity('users')
-export class UsersEntity extends BaseEntity implements User {
-  @Column({
-    type: 'enum',
-    enum: UserStatus,
-    default: UserStatus.ATIVO,
-  })
-  status?: UserStatus;
-
-  @Column({ name: 'reset_code', type: 'varchar', length: 100, nullable: true })
-  resetCode?: string;
-
+export class UserEntity extends BaseEntity implements User {
+  // Not null columns
   @Column({ name: 'created_by', type: 'integer' })
   createdBy: number;
 
@@ -25,23 +16,9 @@ export class UsersEntity extends BaseEntity implements User {
   @Column({
     type: 'enum',
     enum: UserPermission,
-    default: UserPermission.USUARIO,
+    default: UserPermission.USER,
   })
   permission: UserPermission;
-
-  @Column({ name: 'company_id', type: 'integer', nullable: true })
-  companyId?: number;
-
-  @ManyToOne(() => CompaniesEntity, { nullable: true })
-  @JoinColumn({ name: 'company_id' })
-  company: Relation<CompaniesEntity>;
-
-  @Column({ name: 'person_id', type: 'integer', nullable: true })
-  personId?: number;
-
-  @ManyToOne(() => PeopleEntity, { nullable: true })
-  @JoinColumn({ name: 'person_id' })
-  person: Relation<PeopleEntity>;
 
   @Column({ type: 'varchar', length: 100 })
   username: string;
@@ -49,6 +26,41 @@ export class UsersEntity extends BaseEntity implements User {
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
+  // Nullable columns
+  @Column({
+    type: 'enum',
+    enum: UserStatus,
+    default: UserStatus.ACTIVE,
+  })
+  status?: UserStatus;
+
+  @Column({ name: 'reset_code', type: 'varchar', length: 100, nullable: true })
+  resetCode?: string;
+
+  @Column({ name: 'company_id', type: 'integer', nullable: true })
+  companyId?: number;
+
+  @Column({ name: 'person_id', type: 'integer', nullable: true })
+  personId?: number;
+
   @Column({ name: 'push_token', type: 'varchar', length: 255, nullable: true })
   pushToken?: string;
+
+  // FK columns
+  // (companyId, personId já estão acima)
+
+  // Relationships
+  @ManyToOne(() => CompaniesEntity, (company) => company.people, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'company_id' })
+  company: Relation<CompaniesEntity>;
+
+  @ManyToOne(() => PeopleEntity, (person) => person.users, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'person_id' })
+  person: Relation<PeopleEntity>;
 }

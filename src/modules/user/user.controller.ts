@@ -2,12 +2,12 @@ import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CrudQueryController } from '../../shared/crud/controllers/crud-query.controller';
-import { UserEntity } from 'src/database/schemas/user/user.entity';
+import { UserEntity } from 'src/database/schemas/users/users.entity';
 import {
   CreateUserDTO,
   UpdateUserDTO,
   UserDto,
-} from 'src/database/schemas/user/user.dto';
+} from 'src/database/schemas/users/users.dto';
 
 // Criamos o controlador base usando a função factory
 const UserControllerBase = CrudQueryController<

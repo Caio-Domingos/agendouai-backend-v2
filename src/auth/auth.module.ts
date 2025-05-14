@@ -6,14 +6,16 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
-import { UserModule } from 'src/modules/user/user.module';
-import { CompanyModule } from 'src/modules/companies/companies.module';
+import { UsersModule } from 'src/modules/users/users.module';
+import { CompaniesModule } from 'src/modules/companies/companies.module';
+import { PeopleModule } from 'src/modules/people/people.module';
 
 @Module({
   imports: [
     // Importa o módulo de usuários (será criado posteriormente)
-    UserModule,
-    CompanyModule,
+    UsersModule,
+    CompaniesModule,
+    PeopleModule,
 
     // Configura o Passport com base nas configurações
     PassportModule.registerAsync({

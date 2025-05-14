@@ -1,4 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Space } from '../spaces/spaces.model';
+import { User } from '../users/users.model';
+import { Company } from '../companies/companies.model';
 
 /**
  * Enum para os possíveis status de uma reserva.
@@ -26,14 +29,25 @@ export enum BookingStatus {
  * @property {Date} statusUpdatedAt - Data/hora da última atualização de status
  */
 export interface Booking extends IEntity {
+  // Not null
   bookingDate: Date;
-  weekdayIndex?: number;
   spaceId: number;
   userId: number;
   companyId: number;
   startTime: number;
   endTime: number;
-  notes?: string;
   status: BookingStatus;
   statusUpdatedAt: Date;
+
+  // Nullable
+  weekdayIndex?: number;
+  notes?: string;
+
+  // FK
+  // spaceId, userId, companyId já estão acima
+
+  // Relationships
+  space?: Space;
+  user?: User;
+  company?: Company;
 }

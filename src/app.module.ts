@@ -6,17 +6,10 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { InterceptorsModule } from './shared/interceptors/interceptors.module';
 import { MorganMiddleware } from './shared/interceptors/logging/morgan.middleware';
 import { DatabaseModule } from './database/database.module';
-import { UserModule } from './modules/user/user.module';
 import { HelloController } from './hello.controller';
 
 @Module({
-  imports: [
-    ConfigModule,
-    DatabaseModule,
-    AuthModule,
-    InterceptorsModule,
-    UserModule,
-  ],
+  imports: [ConfigModule, DatabaseModule, AuthModule, InterceptorsModule],
   controllers: [HelloController],
   providers: [
     // Aplica o JwtAuthGuard globalmente - todas as rotas precisam de autenticação por padrão

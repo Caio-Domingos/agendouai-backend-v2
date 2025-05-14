@@ -1,4 +1,6 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Company } from '../companies/companies.model';
+import { User } from '../users/users.model';
 
 /**
  * Representa uma pessoa vinculada a uma empresa.
@@ -11,7 +13,6 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
  * @property {number} companyId - ID da empresa vinculada.
  * @property {string} photoUrl - URL da foto da pessoa.
  * @property {string} name - Nome da pessoa.
- * @property {string} role - Função/cargo da pessoa.
  * @property {string} city - Cidade.
  * @property {string} state - Estado.
  * @property {string} country - País.
@@ -20,19 +21,28 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
  * @property {Date} birthDate - Data de nascimento.
  */
 export interface Person extends IEntity {
-  cpf?: string;
+  // Not null
   phoneNumber: string;
-  cep?: string;
   createdBy: number;
   updatedBy: number;
   companyId: number;
+
+  // Nullable
+  cpf?: string;
+  cep?: string;
   photoUrl?: string;
   name?: string;
-  role?: string;
   city?: string;
   state?: string;
   country?: string;
   address?: string;
   addressNumber?: string;
   birthDate?: Date;
+
+  // FK
+  // companyId já está acima
+
+  // Relationships
+  company?: Company;
+  users?: User[];
 }

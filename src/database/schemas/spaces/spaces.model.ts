@@ -1,4 +1,7 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Company } from '../companies/companies.model';
+import { Availability } from '../availabilities/availabilities.model';
+import { Booking } from '../bookings/bookings.model';
 
 /**
  * Enum de status do espaço.
@@ -23,11 +26,22 @@ export enum SpaceStatus {
  * @property {number} updatedBy - ID do usuário que atualizou o espaço.
  */
 export interface Space extends IEntity {
-  status?: SpaceStatus;
-  multipleBookings?: boolean;
-  photoUrl?: string;
+  // Not null
   companyId: number;
   name: string;
   createdBy: number;
   updatedBy: number;
+
+  // Nullable
+  status?: SpaceStatus;
+  multipleBookings?: boolean;
+  photoUrl?: string;
+
+  // FK
+  // companyId já está acima
+
+  // Relationships
+  company?: Company;
+  availabilities?: Availability[];
+  bookings?: Booking[];
 }

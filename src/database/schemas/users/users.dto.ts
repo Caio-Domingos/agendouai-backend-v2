@@ -8,7 +8,7 @@ import {
 import { PartialType } from 'src/shared/validation/dto-helpers';
 import { UserStatus, UserPermission } from './users.model';
 
-export class UsersDto {
+export class UserDto {
   @IsNumber({}, { message: 'ID deve ser um número inteiro' })
   id: number;
 
@@ -60,7 +60,7 @@ export class UsersDto {
   pushToken?: string;
 }
 
-export class CreateUsersDTO {
+export class CreateUserDTO {
   @IsOptional()
   @IsEnum(UserStatus, {
     message: `Status deve ser um dos valores: ${Object.values(UserStatus).join(', ')}`,
@@ -110,4 +110,4 @@ export class CreateUsersDTO {
   pushToken?: string;
 }
 
-export class UpdateUsersDTO extends PartialType(CreateUsersDTO) {}
+export class UpdateUserDTO extends PartialType(CreateUserDTO) {}

@@ -1,49 +1,62 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Person } from '../people/people.model';
+import { Company } from '../companies/companies.model';
 
 /**
- * Enum de status do usuário.
+ * User status enum.
  */
 export enum UserStatus {
-  ATIVO = 'ativo',
-  INATIVO = 'inativo',
-  PENDENTE = 'pendente',
-  CANCELADO = 'cancelado',
-  CONCLUIDO = 'concluido',
+  ACTIVE = 'ativo',
+  INACTIVE = 'inativo',
+  PENDING = 'pendente',
+  CANCELED = 'cancelado',
+  COMPLETED = 'concluido',
 }
 
 /**
- * Enum de permissão do usuário.
+ * User permission enum.
  */
 export enum UserPermission {
   ADMIN = 'admin',
-  GESTOR = 'gestor',
-  USUARIO = 'usuario',
-  VISITANTE = 'visitante',
+  MANAGER = 'gestor',
+  EMPLOYEE = 'funcionario',
+  USER = 'usuario',
 }
 
 /**
- * Representa um usuário do sistema.
+ * Represents a system user.
  *
- * @property {UserStatus} status - Status do usuário.
- * @property {string} resetCode - Código de redefinição de senha.
- * @property {number} createdBy - ID do usuário que criou.
- * @property {number} updatedBy - ID do usuário que atualizou.
- * @property {UserPermission} permission - Permissão do usuário.
- * @property {number} companyId - ID da empresa.
- * @property {number} personId - ID da pessoa vinculada.
- * @property {string} username - Nome de usuário.
- * @property {string} password - Senha criptografada.
- * @property {string} pushToken - Token de push notification.
+ * @property {UserStatus} status - User status.
+ * @property {string} resetCode - Password reset code.
+ * @property {number} createdBy - ID of the user who created.
+ * @property {number} updatedBy - ID of the user who updated.
+ * @property {UserPermission} permission - User permission.
+ * @property {number} companyId - Company ID.
+ * @property {number} personId - Linked person ID.
+ * @property {string} username - Username.
+ * @property {string} password - Encrypted password.
+ * @property {string} pushToken - Push notification token.
+ * @property {Person} person - Linked person.
+ * @property {Company} company - Linked company.
  */
 export interface User extends IEntity {
-  status?: UserStatus;
-  resetCode?: string;
+  // Not null
   createdBy: number;
   updatedBy: number;
   permission: UserPermission;
-  companyId?: number;
-  personId?: number;
   username: string;
   password: string;
+
+  // Nullable
+  status?: UserStatus;
+  resetCode?: string;
   pushToken?: string;
+
+  // FK
+  companyId?: number;
+  personId?: number;
+
+  // Relationships
+  company?: Company;
+  person?: Person;
 }

@@ -6,6 +6,20 @@ import { CompaniesEntity } from '../companies/companies.entity';
 
 @Entity('availabilities')
 export class AvailabilitiesEntity extends BaseEntity implements Availability {
+  // Not null columns
+  @Column({ name: 'opening_time', type: 'integer' })
+  openingTime: number;
+
+  @Column({ name: 'closing_time', type: 'integer' })
+  closingTime: number;
+
+  @Column({ type: 'varchar', length: 20 })
+  weekday: string;
+
+  @Column({ name: 'company_id', type: 'integer' })
+  companyId: number;
+
+  // Nullable columns
   @Column({ type: 'boolean', default: true })
   active?: boolean;
 
@@ -21,23 +35,20 @@ export class AvailabilitiesEntity extends BaseEntity implements Availability {
   @Column({ name: 'space_id', type: 'integer', nullable: true })
   spaceId?: number;
 
-  @ManyToOne(() => SpacesEntity, { nullable: true })
+  // FK columns
+  // (companyId, spaceId já estão acima)
+
+  // Relationships
+  @ManyToOne(() => SpacesEntity, (space) => space.availabilities, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
   @JoinColumn({ name: 'space_id' })
   space: Relation<SpacesEntity>;
 
-  @Column({ name: 'opening_time', type: 'integer' })
-  openingTime: number;
-
-  @Column({ name: 'closing_time', type: 'integer' })
-  closingTime: number;
-
-  @Column({ type: 'varchar', length: 20 })
-  weekday: string;
-
-  @Column({ name: 'company_id', type: 'integer' })
-  companyId: number;
-
-  @ManyToOne(() => CompaniesEntity)
+  @ManyToOne(() => CompaniesEntity, (company) => company.availabilities, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompaniesEntity>;
 }

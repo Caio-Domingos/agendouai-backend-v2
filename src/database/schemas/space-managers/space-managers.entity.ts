@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { SpaceManager } from './space-managers.model';
 import { SpacesEntity } from '../spaces/spaces.entity';
-import { UsersEntity } from '../users/users.entity';
+import { UserEntity } from '../users/users.entity';
 import { CompaniesEntity } from '../companies/companies.entity';
 
 @Entity('space_managers')
@@ -17,9 +17,9 @@ export class SpaceManagersEntity extends BaseEntity implements SpaceManager {
   @Column({ name: 'user_id', type: 'integer' })
   userId: number;
 
-  @ManyToOne(() => UsersEntity)
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })
-  user: Relation<UsersEntity>;
+  user: Relation<UserEntity>;
 
   @Column({ name: 'company_id', type: 'integer' })
   companyId: number;

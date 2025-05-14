@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsOptional,
@@ -32,7 +33,8 @@ export class PeopleDto {
   updatedBy: number;
 
   @IsNumber({}, { message: 'ID da empresa deve ser um número' })
-  companyId: number;
+  @IsOptional()
+  companyId?: number;
 
   @IsOptional()
   @IsString({ message: 'URL da foto deve ser uma string' })
@@ -76,6 +78,7 @@ export class PeopleDto {
   addressNumber?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate({ message: 'Data de nascimento deve ser uma data válida' })
   birthDate?: Date;
 }
@@ -102,7 +105,8 @@ export class CreatePeopleDTO {
   updatedBy: number;
 
   @IsNumber({}, { message: 'ID da empresa deve ser um número' })
-  companyId: number;
+  @IsOptional()
+  companyId?: number;
 
   @IsOptional()
   @IsString({ message: 'URL da foto deve ser uma string' })
@@ -146,6 +150,7 @@ export class CreatePeopleDTO {
   addressNumber?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate({ message: 'Data de nascimento deve ser uma data válida' })
   birthDate?: Date;
 }

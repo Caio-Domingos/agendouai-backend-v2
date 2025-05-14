@@ -1,4 +1,6 @@
 import { IEntity } from 'src/shared/database/interfaces/entity.interface';
+import { Company } from '../companies/companies.model';
+import { Plan } from '../plans/plans.model';
 
 /**
  * Status de pagamento da assinatura da empresa.
@@ -27,14 +29,25 @@ export enum CompanySubscriptionPaymentStatus {
  * @property {Date} createdAt - Data de criação do registro.
  */
 export interface CompanySubscriptionHistory extends IEntity {
+  // Not null
   companyId: number;
   planId: number;
   paymentStatus: CompanySubscriptionPaymentStatus;
   startedAt: Date;
+
+  // Nullable
   endedAt?: Date;
   amountPaid?: number;
   stripeSubscriptionId?: string;
   stripePaymentIntentId?: string;
   metadata?: object;
+
+  // FK
+  // companyId, planId já estão acima
+
+  // Relationships
+  company?: Company;
+  plan?: Plan;
+
   createdAt: Date;
 }

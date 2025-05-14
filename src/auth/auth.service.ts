@@ -10,21 +10,24 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from './strategies/jwt.strategy';
-import { UserService } from 'src/modules/user/user.service';
+
+import { UsersService } from 'src/modules/users/users.service';
+import { CompaniesService } from 'src/modules/companies/companies.service';
 import {
   User,
-  UserRole,
+  UserPermission,
   UserStatus,
-} from 'src/database/schemas/user/user.model';
-import { CompanyService } from 'src/modules/companies/companies.service';
+} from 'src/database/schemas/users/users.model';
+import { PeopleService } from 'src/modules/people/people.service';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    private usersService: UserService,
-    private companyService: CompanyService,
+    private usersService: UsersService,
+    private peopleService: PeopleService,
+    private companyService: CompaniesService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -99,48 +102,39 @@ export class AuthService {
    */
   async register(registerDto: RegisterDto, loggedUser?: any) {
     try {
-      if (!loggedUser) {
-        throw new UnauthorizedException('Usuário não autenticado');
-      }
-
       // Validação de permissão por role
-      const creatorRole = loggedUser.role;
-      const targetRole = registerDto.role;
-      // TODO: Checar se isso bate com o que está no banco
-      // TODO: Bater o Unit tambem nos casos <= Unit
-      const creatorCompanyId = loggedUser.companyId;
-      const targetCompanyId = registerDto.companyId;
 
-      if (creatorRole === UserRole.EMPLOYEE) {
-        throw new UnauthorizedException('EMPLOYEE não pode criar usuários');
-      }
+      if (loggedUser) {
+        const creatorRole = loggedUser.role;
+        const targetRole = registerDto.permission;
 
-      if (creatorRole === UserRole.UNIT) {
-        if (targetRole === UserRole.ADMIN || targetRole === UserRole.COMPANY) {
+        const creatorCompanyId = loggedUser.companyId;
+        const targetCompanyId = registerDto.companyId;
+        if (
+          creatorRole === UserPermission.EMPLOYEE ||
+          creatorRole === UserPermission.USER
+        ) {
           throw new UnauthorizedException(
-            'UNIT só pode criar UNIT ou EMPLOYEE',
+            'EMPLOYEE ou USER não pode criar usuários',
           );
         }
-        if (targetCompanyId !== creatorCompanyId) {
-          throw new UnauthorizedException(
-            'UNIT só pode criar usuários na sua empresa',
-          );
-        }
-      }
 
-      if (creatorRole === UserRole.COMPANY) {
-        if (targetRole === UserRole.ADMIN) {
-          throw new UnauthorizedException('COMPANY não pode criar ADMIN');
+        if (creatorRole === UserPermission.MANAGER) {
+          if (targetRole === UserPermission.ADMIN) {
+            throw new UnauthorizedException('COMPANY não pode criar ADMIN');
+          }
+          if (targetCompanyId !== creatorCompanyId) {
+            throw new UnauthorizedException(
+              'COMPANY só pode criar usuários na sua empresa',
+            );
+          }
         }
-        if (targetCompanyId !== creatorCompanyId) {
-          throw new UnauthorizedException(
-            'COMPANY só pode criar usuários na sua empresa',
-          );
-        }
+      } else {
+        registerDto.permission = UserPermission.USER;
       }
 
       // ADMIN pode criar qualquer usuário
-      return this._registerUser(registerDto);
+      return this._registerUser(registerDto, loggedUser);
     } catch (error) {
       this.logger.error(
         `Erro ao registrar usuário: ${registerDto.email}`,
@@ -150,41 +144,87 @@ export class AuthService {
     }
   }
 
-  private async _registerUser(registerDto: RegisterDto) {
+  private async _registerUser(registerDto: RegisterDto, loggedUser?: any) {
     // Verifica se o email já está em uso
     const existingUser = await this.usersService.findByEmail(registerDto.email);
     if (existingUser) {
       throw new BadRequestException('Este email já está em uso');
     }
+
     // Gera o hash da senha
     const saltRounds = this.configService.get<number>(
       'auth.security.bcryptSaltRounds',
     );
     const hashedPassword = await bcrypt.hash(registerDto.password, saltRounds!);
-    // Cria o novo usuário
-    const user = await this.usersService.create({
-      ...registerDto,
-      password: hashedPassword,
+
+    // Separa dados de pessoa e usuário
+    const {
+      email,
+      permission,
+      status,
+      companyId,
+      // pessoa:
+      name,
+      cpf,
+      phoneNumber,
+      cep,
+      photoUrl,
+      city,
+      state,
+      country,
+      address,
+      addressNumber,
+      birthDate,
+    } = registerDto;
+
+    // Cria a pessoa primeiro
+    const person = await this.peopleService.create({
+      name,
+      cpf,
+      phoneNumber,
+      cep,
+      photoUrl,
+      city,
+      state,
+      country,
+      address,
+      addressNumber,
+      birthDate,
+      companyId: companyId ?? undefined,
+      createdBy: loggedUser?.id ?? null,
+      updatedBy: loggedUser?.id ?? null,
     });
+
+    // Cria o usuário associado à pessoa
+    const user = await this.usersService.create({
+      username: email,
+      password: hashedPassword,
+      permission: permission ?? undefined,
+      status: status ?? undefined,
+      companyId,
+      personId: person.id,
+      createdBy: loggedUser?.id ?? null,
+      updatedBy: loggedUser?.id ?? null,
+    });
+
     // Retorna os tokens de acesso
-    return this.generateTokens(user);
+    return this.generateTokens({
+      ...user,
+      person,
+    });
   }
 
   /**
    * Gera tokens de acesso e refresh para um usuário
    */
-  private generateTokens(user: User) {
+  private generateTokens(user: User & { person?: any }) {
     const payload: JwtPayload = {
       sub: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
+      email: user.username,
+      name: user.person?.name,
+      role: user.permission,
       companyId: user.companyId,
-      unitId: user.unitId,
-      // exp:
-      //   Math.floor(Date.now() / 1000) +
-      //   (this.configService.get<number>('auth.jwt.expirationTime') || 60),
-      // iat: Math.floor(Date.now() / 1000),
+      // unitId: user.unitId, // adicione se necessário
     };
 
     // Gera o token de acesso
@@ -201,11 +241,11 @@ export class AuthService {
       expiresIn: this.configService.get<number>('auth.jwt.expirationTime'),
       user: {
         id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
+        email: user.username,
+        name: user.person?.name,
+        role: user.permission,
         companyId: user.companyId,
-        unitId: user.unitId,
+        person: user.person,
       },
     };
   }
