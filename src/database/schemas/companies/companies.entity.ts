@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   Relation,
+  Index,
 } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Company, CompanyStatus, PaymentStatus } from './companies.model';
@@ -16,6 +17,12 @@ import { CompanySubscriptionHistoryEntity } from '../company-subscription-histor
 import { CompanyCategoriesEntity } from '../company-categories/company-categories.entity';
 
 @Entity('companies')
+@Index('IDX_COMPANIES_CPFCNPJ', ['cpfCnpj'], { unique: true })
+@Index('IDX_COMPANIES_CATEGORY', ['categoryId'])
+@Index('IDX_COMPANIES_CURRENT_PLAN', ['currentPlanId'])
+@Index('IDX_COMPANIES_STATUS', ['status'])
+@Index('IDX_COMPANIES_CREATED_BY', ['createdBy'])
+@Index('IDX_COMPANIES_UPDATED_BY', ['updatedBy'])
 export class CompaniesEntity extends BaseEntity implements Company {
   // Not null columns
   @Column({ name: 'cpf_cnpj', type: 'varchar', length: 20 })

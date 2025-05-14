@@ -1,4 +1,11 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  Index,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import {
   CompanySubscriptionHistory,
@@ -8,6 +15,11 @@ import { CompaniesEntity } from '../companies/companies.entity';
 import { PlansEntity } from '../plans/plans.entity';
 
 @Entity('company_subscription_history')
+@Index('IDX_CSH_COMPANY', ['companyId'])
+@Index('IDX_CSH_PLAN', ['planId'])
+@Index('IDX_CSH_PAYMENT_STATUS', ['paymentStatus'])
+@Index('IDX_CSH_STARTED_AT', ['startedAt'])
+@Index('IDX_CSH_ENDED_AT', ['endedAt'])
 export class CompanySubscriptionHistoryEntity
   extends BaseEntity
   implements CompanySubscriptionHistory

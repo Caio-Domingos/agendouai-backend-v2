@@ -1,4 +1,11 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  Index,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Booking, BookingStatus } from './bookings.model';
 import { SpacesEntity } from '../spaces/spaces.entity';
@@ -6,6 +13,12 @@ import { UserEntity } from '../users/users.entity';
 import { CompaniesEntity } from '../companies/companies.entity';
 
 @Entity('bookings')
+@Index('IDX_BOOKINGS_SPACE', ['spaceId'])
+@Index('IDX_BOOKINGS_USER', ['userId'])
+@Index('IDX_BOOKINGS_COMPANY', ['companyId'])
+@Index('IDX_BOOKINGS_DATE', ['bookingDate'])
+@Index('IDX_BOOKINGS_STATUS', ['status'])
+@Index('IDX_BOOKINGS_STATUS_UPDATED_AT', ['statusUpdatedAt'])
 export class BookingEntity extends BaseEntity implements Booking {
   // Not null columns
   @Column({ name: 'booking_date', type: 'timestamptz' })

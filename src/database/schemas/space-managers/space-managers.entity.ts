@@ -1,4 +1,11 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  Index,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { SpaceManager } from './space-managers.model';
 import { SpacesEntity } from '../spaces/spaces.entity';
@@ -6,6 +13,9 @@ import { UserEntity } from '../users/users.entity';
 import { CompaniesEntity } from '../companies/companies.entity';
 
 @Entity('space_managers')
+@Index('IDX_SPACE_MANAGERS_SPACE', ['spaceId'])
+@Index('IDX_SPACE_MANAGERS_USER', ['userId'])
+@Index('IDX_SPACE_MANAGERS_COMPANY', ['companyId'])
 export class SpaceManagersEntity extends BaseEntity implements SpaceManager {
   @Column({ name: 'space_id', type: 'integer' })
   spaceId: number;
@@ -27,18 +37,4 @@ export class SpaceManagersEntity extends BaseEntity implements SpaceManager {
   @ManyToOne(() => CompaniesEntity)
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompaniesEntity>;
-
-  @Column({
-    name: 'created_at',
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt: Date;
-
-  @Column({
-    name: 'updated_at',
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updatedAt: Date;
 }

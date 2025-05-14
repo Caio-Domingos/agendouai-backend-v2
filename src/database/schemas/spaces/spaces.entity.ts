@@ -5,6 +5,7 @@ import {
   JoinColumn,
   Relation,
   OneToMany,
+  Index,
 } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Space, SpaceStatus } from './spaces.model';
@@ -13,6 +14,11 @@ import { AvailabilitiesEntity } from '../availabilities/availabilities.entity';
 import { BookingEntity } from '../bookings/bookings.entity';
 
 @Entity('spaces')
+@Index('IDX_SPACES_COMPANY', ['companyId'])
+@Index('IDX_SPACES_STATUS', ['status'])
+@Index('IDX_SPACES_NAME', ['name'])
+@Index('IDX_SPACES_CREATED_BY', ['createdBy'])
+@Index('IDX_SPACES_UPDATED_BY', ['updatedBy'])
 export class SpacesEntity extends BaseEntity implements Space {
   // Not null columns
   @Column({ name: 'company_id', type: 'integer' })

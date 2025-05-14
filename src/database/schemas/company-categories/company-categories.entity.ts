@@ -1,9 +1,11 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, Index } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { CompanyCategory } from './company-categories.model';
 import { CompaniesEntity } from '../companies/companies.entity';
 
 @Entity('company_categories')
+@Index('IDX_COMPANY_CATEGORIES_DESCRIPTION', ['description'])
+@Index('IDX_COMPANY_CATEGORIES_PARTITION_PREFIX', ['partitionPrefix'])
 export class CompanyCategoriesEntity
   extends BaseEntity
   implements CompanyCategory

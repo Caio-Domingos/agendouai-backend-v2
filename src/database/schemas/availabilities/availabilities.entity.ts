@@ -1,10 +1,21 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  Index,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Availability } from './availabilities.model';
 import { SpacesEntity } from '../spaces/spaces.entity';
 import { CompaniesEntity } from '../companies/companies.entity';
 
 @Entity('availabilities')
+@Index('IDX_AVAILABILITIES_COMPANY', ['companyId'])
+@Index('IDX_AVAILABILITIES_SPACE', ['spaceId'])
+@Index('IDX_AVAILABILITIES_WEEKDAY', ['weekday'])
+@Index('IDX_AVAILABILITIES_ACTIVE', ['active'])
 export class AvailabilitiesEntity extends BaseEntity implements Availability {
   // Not null columns
   @Column({ name: 'opening_time', type: 'integer' })

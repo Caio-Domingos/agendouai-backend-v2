@@ -1,9 +1,11 @@
-import { Entity, Column, OneToMany, Relation } from 'typeorm';
+import { Entity, Column, OneToMany, Relation, Index } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { Plan } from './plans.model';
 import { CompanySubscriptionHistoryEntity } from '../company-subscription-history/company-subscription-history.entity';
 
 @Entity('plans')
+@Index('IDX_PLANS_STRIPE_PLAN_ID', ['stripePlanId'], { unique: true })
+@Index('IDX_PLANS_ACTIVE', ['active'])
 export class PlansEntity extends BaseEntity implements Plan {
   // Not null columns
   @Column({ type: 'varchar', length: 100 })

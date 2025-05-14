@@ -1,10 +1,24 @@
-import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  Relation,
+  Index,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { User, UserStatus, UserPermission } from './users.model';
 import { CompaniesEntity } from '../companies/companies.entity';
 import { PeopleEntity } from '../people/people.entity';
 
 @Entity('users')
+@Index('IDX_USERS_USERNAME', ['username'], { unique: true })
+@Index('IDX_USERS_COMPANY', ['companyId'])
+@Index('IDX_USERS_PERSON', ['personId'])
+@Index('IDX_USERS_PERMISSION', ['permission'])
+@Index('IDX_USERS_STATUS', ['status'])
+@Index('IDX_USERS_CREATED_BY', ['createdBy'])
+@Index('IDX_USERS_UPDATED_BY', ['updatedBy'])
 export class UserEntity extends BaseEntity implements User {
   // Not null columns
   @Column({ name: 'created_by', type: 'integer' })
