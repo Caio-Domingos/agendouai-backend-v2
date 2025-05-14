@@ -8,6 +8,18 @@ import appConfig from '../../config/app.config';
 import databaseConfig from '../../config/database.config';
 import authConfig from '../../config/auth.config';
 
+import { UserEntity } from '../schemas/users/users.entity';
+import { PeopleEntity } from '../schemas/people/people.entity';
+import { CompaniesEntity } from '../schemas/companies/companies.entity';
+import { CompanyCategoriesEntity } from '../schemas/company-categories/company-categories.entity';
+import { PlansEntity } from '../schemas/plans/plans.entity';
+import { CompanySubscriptionHistoryEntity } from '../schemas/company-subscription-history/company-subscription-history.entity';
+import { SpacesEntity } from '../schemas/spaces/spaces.entity';
+import { SpaceManagersEntity } from '../schemas/space-managers/space-managers.entity';
+import { BookingEntity } from '../schemas/bookings/bookings.entity';
+import { BookingStatusHistoryEntity } from '../schemas/booking-status-history/booking-status-history.entity';
+import { AvailabilitiesEntity } from '../schemas/availabilities/availabilities.entity';
+
 // Criar um módulo especial apenas para executar as seeds
 @Module({
   imports: [
@@ -26,11 +38,35 @@ import authConfig from '../../config/auth.config';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       schema: process.env.DATABASE_SCHEMA || 'public',
-      entities: [], // Especificar diretamente as entidades
+      entities: [
+        UserEntity,
+        PeopleEntity,
+        CompaniesEntity,
+        CompanyCategoriesEntity,
+        PlansEntity,
+        CompanySubscriptionHistoryEntity,
+        SpacesEntity,
+        SpaceManagersEntity,
+        BookingEntity,
+        BookingStatusHistoryEntity,
+        AvailabilitiesEntity,
+      ],
       synchronize: false,
     }),
     // Importar as entidades necessárias
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      PeopleEntity,
+      CompaniesEntity,
+      CompanyCategoriesEntity,
+      PlansEntity,
+      CompanySubscriptionHistoryEntity,
+      SpacesEntity,
+      SpaceManagersEntity,
+      BookingEntity,
+      BookingStatusHistoryEntity,
+      AvailabilitiesEntity,
+    ]),
   ],
   providers: [SeedsService],
 })

@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { UserEntity } from '../schemas/users/users.entity';
+import { PeopleEntity } from '../schemas/people/people.entity';
+import { CompaniesEntity } from '../schemas/companies/companies.entity';
 
 @Injectable()
 export class SeedsService {
@@ -11,6 +14,13 @@ export class SeedsService {
   constructor(
     private configService: ConfigService,
     private dataSource: DataSource,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+    @InjectRepository(PeopleEntity)
+    private peopleRepository: Repository<PeopleEntity>,
+    @InjectRepository(CompaniesEntity)
+    private companiesRepository: Repository<CompaniesEntity>,
+    // Adicione outros repositórios conforme necessário
   ) {}
 
   /**
