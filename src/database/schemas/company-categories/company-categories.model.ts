@@ -12,7 +12,7 @@ export interface CompanyCategory extends IEntity {
   description: string;
 
   // Nullable
-  partitionPrefix?: string;
+  spacePrefix?: string;
 
   // FK
   // (none)

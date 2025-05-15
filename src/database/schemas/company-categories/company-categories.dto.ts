@@ -14,7 +14,7 @@ export class CompanyCategoriesDto {
   @MaxLength(20, {
     message: 'Prefixo de partição deve ter no máximo 20 caracteres',
   })
-  partitionPrefix?: string;
+  spacePrefix?: string;
 }
 
 export class CreateCompanyCategoriesDTO {
@@ -27,7 +27,7 @@ export class CreateCompanyCategoriesDTO {
   @MaxLength(20, {
     message: 'Prefixo de partição deve ter no máximo 20 caracteres',
   })
-  partitionPrefix?: string;
+  spacePrefix?: string;
 }
 
 export class UpdateCompanyCategoriesDTO extends PartialType(

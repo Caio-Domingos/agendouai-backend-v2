@@ -16,12 +16,12 @@ export class CompanyCategoriesEntity
 
   // Nullable columns
   @Column({
-    name: 'partition_prefix',
+    name: 'space_prefix',
     type: 'varchar',
     length: 20,
     nullable: true,
   })
-  partitionPrefix?: string;
+  spacePrefix?: string;
 
   // FK columns
   // (none)

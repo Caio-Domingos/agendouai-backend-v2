@@ -118,6 +118,7 @@ export class SeedsService {
       { description: 'Salão de Beleza' },
       { description: 'Estúdio' },
       { description: 'Clínica' },
+      { description: 'Quadras' },
       { description: 'Outro' },
     ];
     for (const cat of defaultCategories) {
