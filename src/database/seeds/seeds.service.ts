@@ -6,6 +6,8 @@ import * as bcrypt from 'bcrypt';
 import { UserEntity } from '../schemas/users/users.entity';
 import { PeopleEntity } from '../schemas/people/people.entity';
 import { CompaniesEntity } from '../schemas/companies/companies.entity';
+import { PlansEntity } from '../schemas/plans/plans.entity';
+import { CompanyCategoriesEntity } from '../schemas/company-categories/company-categories.entity';
 import { UserStatus, UserPermission } from '../schemas/users/users.model';
 
 @Injectable()
@@ -19,6 +21,10 @@ export class SeedsService {
     private userRepository: Repository<UserEntity>,
     @InjectRepository(PeopleEntity)
     private peopleRepository: Repository<PeopleEntity>,
+    @InjectRepository(PlansEntity)
+    private plansRepository: Repository<PlansEntity>,
+    @InjectRepository(CompanyCategoriesEntity)
+    private companyCategoriesRepository: Repository<CompanyCategoriesEntity>,
     // Adicione outros repositórios conforme necessário
   ) {}
 
@@ -29,7 +35,10 @@ export class SeedsService {
     this.logger.log('Executando todas as seeds...');
 
     // Truncate tables to ensure clean seed
-    await this.truncateTables();
+    // await this.truncateTables();
+
+    // Seed de plans e categories default
+    await this.seedDefaultPlansAndCategories();
 
     // Seed inicial do sistema: cria admin
     await this.seedInitialAdmin();
@@ -57,6 +66,73 @@ export class SeedsService {
   }
 
   /**
+   * Seed de plans e categories default
+   */
+  async seedDefaultPlansAndCategories() {
+    this.logger.log('Verificando plans e categories default...');
+    // Plans defaults
+    const defaultPlans = [
+      {
+        name: 'Free',
+        price: 0,
+        interval: 'mensal',
+        description: 'Plano gratuito',
+        active: true,
+      },
+      {
+        name: 'Basic',
+        price: 49.9,
+        interval: 'mensal',
+        description: 'Plano básico',
+        active: true,
+      },
+      {
+        name: 'Pro',
+        price: 99.9,
+        interval: 'mensal',
+        description: 'Plano profissional',
+        active: true,
+      },
+      {
+        name: 'Enterprise',
+        price: 199.9,
+        interval: 'mensal',
+        description: 'Plano empresarial',
+        active: true,
+      },
+    ];
+    for (const plan of defaultPlans) {
+      const exists = await this.plansRepository.findOne({
+        where: { name: plan.name },
+      });
+      if (!exists) {
+        await this.plansRepository.save(plan);
+        this.logger.log(`Plano '${plan.name}' criado.`);
+      }
+    }
+    // Categories defaults
+    const defaultCategories = [
+      { description: 'Coworking' },
+      { description: 'Escritório Virtual' },
+      { description: 'Consultório' },
+      { description: 'Salão de Beleza' },
+      { description: 'Estúdio' },
+      { description: 'Clínica' },
+      { description: 'Outro' },
+    ];
+    for (const cat of defaultCategories) {
+      const exists = await this.companyCategoriesRepository.findOne({
+        where: { description: cat.description },
+      });
+      if (!exists) {
+        await this.companyCategoriesRepository.save(cat);
+        this.logger.log(`Categoria '${cat.description}' criada.`);
+      }
+    }
+    this.logger.log('Plans e categories default verificados/criados.');
+  }
+
+  /**
    * Seed inicial: cria um usuário admin com pessoa completa
    */
   async seedInitialAdmin() {
@@ -65,6 +141,16 @@ export class SeedsService {
     // Dados do admin
     const adminEmail = 'admin@agendouai.com';
     const adminPassword = 'Senha@123';
+
+    // Verifica se já existe admin
+    const existingAdmin = await this.userRepository.findOne({
+      where: { username: adminEmail },
+    });
+    if (existingAdmin) {
+      this.logger.log('Usuário admin já existe, não será criado novamente.');
+      return;
+    }
+
     const saltRounds = this.configService.get<number>(
       'auth.security.bcryptSaltRounds',
       10,
@@ -72,13 +158,13 @@ export class SeedsService {
     const hashedPassword = await bcrypt.hash(adminPassword, saltRounds);
 
     // Cria usuário admin
-    const user: DeepPartial<UserEntity> = {
+    const userPartial: DeepPartial<UserEntity> = {
       username: adminEmail,
       password: hashedPassword,
       permission: UserPermission.ADMIN,
       status: UserStatus.ACTIVE,
     };
-    await this.userRepository.save(user);
+    const user = await this.userRepository.save(userPartial);
 
     const peoplePartial: DeepPartial<PeopleEntity> = {
       userId: user.id,
@@ -96,7 +182,7 @@ export class SeedsService {
     };
 
     // Cria pessoa
-    const people = await this.peopleRepository.save(peoplePartial);
+    await this.peopleRepository.save(peoplePartial);
 
     this.logger.log('Usuário admin criado com sucesso!');
   }

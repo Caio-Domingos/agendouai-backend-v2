@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { setupSwagger } from './plugins/swagger-validation.plugin';
+import { SeedsService } from './database/seeds/seeds.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -43,6 +44,12 @@ async function bootstrap() {
     credentials: false,
     allowedHeaders: 'Authorization,Content-Type',
   });
+
+  await app.init();
+
+  // Executa seeds ao iniciar
+  const seedsService = app.get(SeedsService);
+  await seedsService.runAllSeeds();
 
   await app.listen(port);
   console.log(`Application is running on: ${appConfig.appUrl}/${globalPrefix}`);

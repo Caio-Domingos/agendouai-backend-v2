@@ -104,14 +104,10 @@ export class CompaniesDto {
 }
 
 export class CreateCompaniesDTO {
+  // --- OBRIGATÓRIOS ---
   @IsString({ message: 'CPF/CNPJ deve ser uma string' })
   @MaxLength(20, { message: 'CPF/CNPJ deve ter no máximo 20 caracteres' })
   cpfCnpj: string;
-
-  @IsOptional()
-  @IsString({ message: 'CEP deve ser uma string' })
-  @MaxLength(10, { message: 'CEP deve ter no máximo 10 caracteres' })
-  cep?: string;
 
   @IsNumber({}, { message: 'ID da categoria deve ser um número' })
   categoryId: number;
@@ -121,6 +117,12 @@ export class CreateCompaniesDTO {
 
   @IsNumber({}, { message: 'ID do atualizador deve ser um número' })
   updatedBy: number;
+
+  // --- OPCIONAIS ---
+  @IsOptional()
+  @IsString({ message: 'CEP deve ser uma string' })
+  @MaxLength(10, { message: 'CEP deve ter no máximo 10 caracteres' })
+  cep?: string;
 
   @IsOptional()
   @IsString({ message: 'Logo deve ser uma string' })
