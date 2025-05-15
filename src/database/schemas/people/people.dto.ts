@@ -36,6 +36,9 @@ export class PeopleDto {
   @IsOptional()
   companyId?: number;
 
+  @IsString({ message: 'ID do usuário deve ser uma string' })
+  userId: number;
+
   @IsOptional()
   @IsString({ message: 'URL da foto deve ser uma string' })
   photoUrl?: string;
@@ -107,6 +110,9 @@ export class CreatePeopleDTO {
   @IsNumber({}, { message: 'ID da empresa deve ser um número' })
   @IsOptional()
   companyId?: number;
+
+  @IsString({ message: 'ID do usuário deve ser uma string' })
+  userId: number;
 
   @IsOptional()
   @IsString({ message: 'URL da foto deve ser uma string' })

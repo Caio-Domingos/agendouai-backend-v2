@@ -69,9 +69,19 @@ export class SeedsService {
       'auth.security.bcryptSaltRounds',
       10,
     );
-
     const hashedPassword = await bcrypt.hash(adminPassword, saltRounds);
+
+    // Cria usuário admin
+    const user: DeepPartial<UserEntity> = {
+      username: adminEmail,
+      password: hashedPassword,
+      permission: UserPermission.ADMIN,
+      status: UserStatus.ACTIVE,
+    };
+    await this.userRepository.save(user);
+
     const peoplePartial: DeepPartial<PeopleEntity> = {
+      userId: user.id,
       cpf: '12345678901',
       phoneNumber: '+5511999999999',
       cep: '01001-000',
@@ -87,16 +97,6 @@ export class SeedsService {
 
     // Cria pessoa
     const people = await this.peopleRepository.save(peoplePartial);
-
-    // Cria usuário admin
-    const user: DeepPartial<UserEntity> = {
-      username: adminEmail,
-      password: hashedPassword,
-      permission: UserPermission.ADMIN,
-      status: UserStatus.ACTIVE,
-      peopleId: people.id,
-    };
-    await this.userRepository.save(user);
 
     this.logger.log('Usuário admin criado com sucesso!');
   }

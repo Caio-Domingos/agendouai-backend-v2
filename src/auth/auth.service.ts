@@ -20,6 +20,7 @@ import {
 } from 'src/database/schemas/users/users.model';
 import { PeopleService } from 'src/modules/people/people.service';
 import { CompanyStatus } from 'src/database/schemas/companies/companies.model';
+import { People } from 'src/database/schemas/people/people.model';
 
 @Injectable()
 export class AuthService {
@@ -234,6 +235,17 @@ export class AuthService {
       birthDate,
     } = registerDto;
 
+    // Cria o usuário associado à pessoa
+    const user = await this.usersService.create({
+      username: email,
+      password: hashedPassword,
+      permission: permission ?? UserPermission.USER,
+      status: status ?? undefined,
+      companyId,
+      createdBy: loggedUser?.id ?? null,
+      updatedBy: loggedUser?.id ?? null,
+    });
+
     // Cria a pessoa primeiro
     const person = await this.peopleService.create({
       name,
@@ -247,19 +259,8 @@ export class AuthService {
       address,
       addressNumber,
       birthDate,
+      userId: user.id,
       companyId: companyId ?? undefined,
-      createdBy: loggedUser?.id ?? null,
-      updatedBy: loggedUser?.id ?? null,
-    });
-
-    // Cria o usuário associado à pessoa
-    const user = await this.usersService.create({
-      username: email,
-      password: hashedPassword,
-      permission: permission ?? UserPermission.USER,
-      status: status ?? undefined,
-      companyId,
-      peopleId: person.id,
       createdBy: loggedUser?.id ?? null,
       updatedBy: loggedUser?.id ?? null,
     });
@@ -274,14 +275,13 @@ export class AuthService {
   /**
    * Gera tokens de acesso e refresh para um usuário
    */
-  private generateTokens(user: User & { person?: any }) {
+  private generateTokens(user: User & { person?: People }) {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.username,
       name: user.people?.name,
       role: user.permission,
       companyId: user.companyId,
-      // unitId: user.unitId, // adicione se necessário
     };
 
     // Gera o token de acesso

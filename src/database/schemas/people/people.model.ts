@@ -39,8 +39,8 @@ export interface People extends IEntity {
   birthDate?: Date;
 
   // FK
-  // companyId já está acima
+  userId: number;
 
   // Relationships
-  users?: User[];
+  user?: User;
 }

@@ -6,6 +6,7 @@ import {
   Relation,
   OneToMany,
   Index,
+  OneToOne,
 } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { People as People } from './people.model';
@@ -14,7 +15,7 @@ import { UserEntity } from '../users/users.entity';
 
 @Entity('people')
 @Index('IDX_PEOPLE_CPF', ['cpf'], { unique: true })
-@Index('IDX_PEOPLE_PHONE', ['phoneNumber'])
+@Index('IDX_PEOPLE_USER_ID', ['userId'])
 @Index('IDX_PEOPLE_CREATED_BY', ['createdBy'])
 @Index('IDX_PEOPLE_UPDATED_BY', ['updatedBy'])
 export class PeopleEntity extends BaseEntity implements People {
@@ -53,6 +54,9 @@ export class PeopleEntity extends BaseEntity implements People {
   @Column({ type: 'varchar', length: 200, nullable: true })
   address?: string;
 
+  @Column({ name: 'user_id', type: 'integer' })
+  userId: number;
+
   @Column({
     name: 'address_number',
     type: 'varchar',
@@ -68,6 +72,7 @@ export class PeopleEntity extends BaseEntity implements People {
   // (companyId já está acima)
 
   // Relationships
-  @OneToMany(() => UserEntity, (user) => user.people)
-  users: Relation<UserEntity[]>;
+  @OneToOne(() => UserEntity, { onDelete: 'CASCADE', nullable: true })
+  @JoinColumn({ name: 'user_id' })
+  user: Relation<UserEntity>;
 }

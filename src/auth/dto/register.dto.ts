@@ -9,6 +9,7 @@ import {
   IsNumber,
   MaxLength,
   IsDateString,
+  ValidateIf,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
@@ -66,8 +67,13 @@ export class RegisterDto {
   status?: UserStatus;
 
   @ApiProperty({ description: 'ID da empresa', required: false })
-  @IsOptional()
   @IsNumber({}, { message: 'ID da empresa deve ser um número' })
+  @ValidateIf(
+    (o) =>
+      o.permission &&
+      o.permission !== UserPermission.ADMIN &&
+      o.permission !== UserPermission.USER,
+  )
   companyId?: number;
 
   // PERSON FIELDS

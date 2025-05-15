@@ -20,15 +20,15 @@ export class UsersRepository extends CrudQueryRepository<
     return this.getRepository(UserEntity)
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.people', 'people')
-      .where('user.email = :email', { email })
+      .where('user.username = :email', { email })
       .getOne();
   }
 
   findByEmail(email: string) {
     return this.getRepository(UserEntity)
       .createQueryBuilder('user')
-      .where('user.email = :email', { email })
-      .select(['user.id', 'user.email'])
+      .where('user.username = :email', { email })
+      .select(['user.id', 'user.username'])
       .getOne();
   }
 }

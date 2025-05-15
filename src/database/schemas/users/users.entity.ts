@@ -6,6 +6,7 @@ import {
   Relation,
   Index,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { BaseEntity } from '../../../shared/database/entities/base.entity';
 import { User, UserStatus, UserPermission } from './users.model';
@@ -16,7 +17,6 @@ import { SpaceManagersEntity } from '../space-managers/space-managers.entity';
 @Entity('users')
 @Index('IDX_USERS_USERNAME', ['username'], { unique: true })
 @Index('IDX_USERS_COMPANY', ['companyId'])
-@Index('IDX_USERS_PEOPLE', ['peopleId'])
 @Index('IDX_USERS_PERMISSION', ['permission'])
 @Index('IDX_USERS_STATUS', ['status'])
 @Index('IDX_USERS_CREATED_BY', ['createdBy'])
@@ -54,9 +54,6 @@ export class UserEntity extends BaseEntity implements User {
   @Column({ name: 'company_id', type: 'integer', nullable: true })
   companyId?: number;
 
-  @Column({ name: 'people_id', type: 'integer', nullable: true })
-  peopleId?: number;
-
   @Column({ name: 'push_token', type: 'varchar', length: 255, nullable: true })
   pushToken?: string;
 
@@ -71,11 +68,9 @@ export class UserEntity extends BaseEntity implements User {
   @JoinColumn({ name: 'company_id' })
   company: Relation<CompaniesEntity>;
 
-  @ManyToOne(() => PeopleEntity, (person) => person.users, {
-    onDelete: 'SET NULL',
-    nullable: true,
+  @OneToOne(() => PeopleEntity, (person) => person.user, {
+    cascade: true,
   })
-  @JoinColumn({ name: 'people_id' })
   people: Relation<PeopleEntity>;
 
   @OneToMany(() => SpaceManagersEntity, (spaceManger) => spaceManger.user)

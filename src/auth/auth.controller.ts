@@ -44,6 +44,7 @@ export class AuthController {
   /**
    * Endpoint de registro - cria um novo usuário e retorna tokens
    */
+  @Public()
   @Post('register')
   @ApiEndpoint({
     summary: 'Registrar novo usuário',

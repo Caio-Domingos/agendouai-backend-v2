@@ -52,7 +52,6 @@ export interface User extends IEntity {
 
   // FK
   companyId?: number;
-  peopleId?: number;
 
   // Relationships
   company?: Company;

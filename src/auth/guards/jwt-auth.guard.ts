@@ -26,12 +26,25 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       context.getClass(),
     ]);
 
-    // Se for pública, permite acesso sem verificação
+    const request = context.switchToHttp().getRequest();
+    const authHeader =
+      request.headers['authorization'] || request.headers['Authorization'];
+    const hasToken = !!authHeader && authHeader.startsWith('Bearer ');
+
     if (isPublic) {
-      return true;
+      // Se for pública e não tem token, deixa passar
+      if (!hasToken) {
+        return true;
+      }
+      // Se for pública e tem token, tenta validar, mas se falhar, permite acesso
+      try {
+        return super.canActivate(context);
+      } catch {
+        return true;
+      }
     }
 
-    // Caso contrário, verifica o JWT
+    // Caso contrário, verifica o JWT normalmente
     return super.canActivate(context);
   }
 
