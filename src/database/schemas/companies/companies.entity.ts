@@ -36,8 +36,7 @@ export class CompaniesEntity extends BaseEntity implements Company {
   updatedBy: number;
 
   @Column({
-    type: 'enum',
-    enum: CompanyStatus,
+    type: 'varchar',
     default: CompanyStatus.ACTIVE,
   })
   status: CompanyStatus;
@@ -57,8 +56,7 @@ export class CompaniesEntity extends BaseEntity implements Company {
 
   @Column({
     name: 'current_payment_status',
-    type: 'enum',
-    enum: PaymentStatus,
+    type: 'varchar',
     default: PaymentStatus.TRIAL,
     nullable: true,
   })

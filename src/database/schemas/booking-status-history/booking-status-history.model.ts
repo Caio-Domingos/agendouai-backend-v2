@@ -4,11 +4,11 @@ import { IEntity } from 'src/shared/database/interfaces/entity.interface';
  * Enum para os possíveis status de uma reserva.
  */
 export enum BookingStatus {
-  ATIVO = 'ativo',
-  INATIVO = 'inativo',
-  PENDENTE = 'pendente',
-  CANCELADO = 'cancelado',
-  CONCLUIDO = 'concluido',
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  PENDING = 'pending',
+  CANCELED = 'canceled',
+  COMPLETED = 'completed',
 }
 
 /**

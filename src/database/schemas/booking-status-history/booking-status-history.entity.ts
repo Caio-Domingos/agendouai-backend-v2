@@ -17,9 +17,8 @@ export class BookingStatusHistoryEntity
   bookingId: number;
 
   @Column({
-    type: 'enum',
-    enum: BookingStatus,
-    default: BookingStatus.PENDENTE,
+    type: 'varchar',
+    default: BookingStatus.PENDING,
   })
   status: BookingStatus;
 

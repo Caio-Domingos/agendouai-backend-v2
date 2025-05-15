@@ -35,8 +35,8 @@ export class SpacesEntity extends BaseEntity implements Space {
   updatedBy: number;
 
   @Column({
-    type: 'enum',
-    enum: SpaceStatus,
+    type: 'varchar',
+
     default: SpaceStatus.ACTIVE,
   })
   status: SpaceStatus;

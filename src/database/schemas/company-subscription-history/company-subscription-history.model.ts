@@ -6,12 +6,12 @@ import { Plan } from '../plans/plans.model';
  * Status de pagamento da assinatura da empresa.
  */
 export enum CompanySubscriptionPaymentStatus {
-  ATIVO = 'ativo',
-  CANCELADO = 'cancelado',
-  PENDENTE = 'pendente',
-  FALHA = 'falha',
+  ACTIVE = 'active',
+  CANCELED = 'canceled',
+  PENDING = 'pending',
+  FAILED = 'failed',
   TRIAL = 'trial',
-  EXPIRADO = 'expirado',
+  EXPIRED = 'expired',
 }
 
 /**

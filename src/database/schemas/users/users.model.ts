@@ -7,11 +7,8 @@ import { SpaceManager } from '../space-managers/space-managers.model';
  * User status enum.
  */
 export enum UserStatus {
-  ACTIVE = 'ativo',
-  INACTIVE = 'inativo',
-  PENDING = 'pendente',
-  CANCELED = 'cancelado',
-  COMPLETED = 'concluido',
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
 }
 
 /**
@@ -19,9 +16,9 @@ export enum UserStatus {
  */
 export enum UserPermission {
   ADMIN = 'admin',
-  MANAGER = 'gestor',
-  EMPLOYEE = 'funcionario',
-  USER = 'usuario',
+  MANAGER = 'manager',
+  EMPLOYEE = 'employee',
+  USER = 'user',
 }
 
 /**

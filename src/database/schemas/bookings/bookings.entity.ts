@@ -40,8 +40,7 @@ export class BookingEntity extends BaseEntity implements Booking {
   endTime: number;
 
   @Column({
-    type: 'enum',
-    enum: BookingStatus,
+    type: 'varchar',
     default: BookingStatus.PENDING,
   })
   status: BookingStatus;

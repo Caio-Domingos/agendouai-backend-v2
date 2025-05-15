@@ -30,8 +30,7 @@ export class UserEntity extends BaseEntity implements User {
   updatedBy?: number;
 
   @Column({
-    type: 'enum',
-    enum: UserPermission,
+    type: 'varchar',
     default: UserPermission.USER,
   })
   permission: UserPermission;
@@ -44,8 +43,7 @@ export class UserEntity extends BaseEntity implements User {
 
   // Nullable columns
   @Column({
-    type: 'enum',
-    enum: UserStatus,
+    type: 'varchar',
     default: UserStatus.ACTIVE,
   })
   status: UserStatus;

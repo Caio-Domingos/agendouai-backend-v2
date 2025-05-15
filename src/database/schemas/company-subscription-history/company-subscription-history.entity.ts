@@ -32,8 +32,7 @@ export class CompanySubscriptionHistoryEntity
   planId: number;
 
   @Column({
-    name: 'payment_status',
-    type: 'enum',
+    type: 'varchar',
     enum: CompanySubscriptionPaymentStatus,
   })
   paymentStatus: CompanySubscriptionPaymentStatus;
