@@ -19,6 +19,7 @@ import {
   UserStatus,
 } from 'src/database/schemas/users/users.model';
 import { PeopleService } from 'src/modules/people/people.service';
+import { CompanyStatus } from 'src/database/schemas/companies/companies.model';
 
 @Injectable()
 export class AuthService {
@@ -102,38 +103,94 @@ export class AuthService {
    */
   async register(registerDto: RegisterDto, loggedUser?: any) {
     try {
-      // Validação de permissão por role
+      // 1. Identificação do fluxo e permissão
+      const requestedPermission = registerDto.permission ?? UserPermission.USER;
+      const isSelfRegistration = !loggedUser;
 
-      if (loggedUser) {
-        const creatorRole = loggedUser.role;
-        const targetRole = registerDto.permission;
-
-        const creatorCompanyId = loggedUser.companyId;
-        const targetCompanyId = registerDto.companyId;
-        if (
-          creatorRole === UserPermission.EMPLOYEE ||
-          creatorRole === UserPermission.USER
-        ) {
+      if (isSelfRegistration) {
+        // Registro livre: só pode criar USER
+        if (requestedPermission !== UserPermission.USER) {
           throw new UnauthorizedException(
-            'EMPLOYEE ou USER não pode criar usuários',
+            'Only USER self-registration is allowed without authentication.',
           );
         }
+        registerDto.permission = UserPermission.USER;
+      } else {
+        // Registro autenticado: regras por role
+        const creatorRole = loggedUser.role;
+        const creatorCompanyId = loggedUser.companyId;
+        const targetCompanyId = registerDto.companyId;
 
-        if (creatorRole === UserPermission.MANAGER) {
-          if (targetRole === UserPermission.ADMIN) {
-            throw new UnauthorizedException('COMPANY não pode criar ADMIN');
-          }
-          if (targetCompanyId !== creatorCompanyId) {
+        // USER não pode criar ninguém
+        if (creatorRole === UserPermission.USER) {
+          throw new UnauthorizedException('USER cannot create users.');
+        }
+        // EMPLOYEE não pode criar ADMIN nem USER
+        if (creatorRole === UserPermission.EMPLOYEE) {
+          if (
+            requestedPermission === UserPermission.ADMIN ||
+            requestedPermission === UserPermission.USER
+          ) {
             throw new UnauthorizedException(
-              'COMPANY só pode criar usuários na sua empresa',
+              'EMPLOYEE cannot create ADMIN or USER.',
             );
           }
         }
-      } else {
-        registerDto.permission = UserPermission.USER;
+        // MANAGER (COMPANY) não pode criar ADMIN
+        if (creatorRole === UserPermission.MANAGER) {
+          if (requestedPermission === UserPermission.ADMIN) {
+            throw new UnauthorizedException('MANAGER cannot create ADMIN.');
+          }
+        }
+        // MANAGER e EMPLOYEE só podem criar usuários na sua empresa
+        if (
+          (creatorRole === UserPermission.MANAGER ||
+            creatorRole === UserPermission.EMPLOYEE) &&
+          targetCompanyId !== creatorCompanyId
+        ) {
+          throw new UnauthorizedException(
+            'You can only create users in your own company.',
+          );
+        }
       }
 
-      // ADMIN pode criar qualquer usuário
+      // 2. Checagem de unicidade de email
+      const existingUser = await this.usersService.findByEmail(
+        registerDto.email,
+      );
+      if (existingUser) {
+        throw new BadRequestException('This email is already in use.');
+      }
+
+      // 3. Checagem de unicidade de CPF (se informado)
+      if (registerDto.cpf) {
+        const existingPerson = await this.peopleService.findByCpf(
+          registerDto.cpf,
+        );
+        if (existingPerson) {
+          throw new BadRequestException('This CPF is already in use.');
+        }
+      }
+
+      // 4. Se for criar MANAGER, EMPLOYEE ou USER, checar empresa
+      if (
+        (requestedPermission === UserPermission.MANAGER ||
+          requestedPermission === UserPermission.EMPLOYEE ||
+          requestedPermission === UserPermission.USER) &&
+        registerDto.companyId
+      ) {
+        const company = await this.companyService.findById(
+          registerDto.companyId,
+        );
+        if (!company) {
+          throw new BadRequestException('Company not found.');
+        }
+        if (company.status !== CompanyStatus.ACTIVE) {
+          throw new BadRequestException('Company is not active.');
+        }
+      }
+
+      // 5. Criação padrão
       return this._registerUser(registerDto, loggedUser);
     } catch (error) {
       this.logger.error(

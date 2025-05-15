@@ -15,4 +15,11 @@ export class PeopleRepository extends CrudQueryRepository<
   constructor(dataSource: DataSource, @Inject(REQUEST) request: Request) {
     super(dataSource, request, PeopleEntity);
   }
+
+  findByCpf(cpf: string) {
+    return this.getRepository(PeopleEntity)
+      .createQueryBuilder('people')
+      .where('people.cpf = :cpf', { cpf })
+      .getOne();
+  }
 }

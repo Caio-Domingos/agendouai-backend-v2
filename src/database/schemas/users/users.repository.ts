@@ -19,7 +19,7 @@ export class UsersRepository extends CrudQueryRepository<
   findByEmailWithPassword(email: string) {
     return this.getRepository(UserEntity)
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.person', 'person')
+      .leftJoinAndSelect('user.people', 'people')
       .where('user.email = :email', { email })
       .getOne();
   }

@@ -16,4 +16,8 @@ export class PeopleService extends CrudQueryService<
   constructor(private peopleRepository: PeopleRepository) {
     super(peopleRepository);
   }
+
+  async findByCpf(cpf: string) {
+    return this.peopleRepository.findByCpf(cpf);
+  }
 }
