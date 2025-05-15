@@ -8,7 +8,6 @@ import { MorganMiddleware } from './shared/interceptors/logging/morgan.middlewar
 import { DatabaseModule } from './database/database.module';
 import { HelloController } from './hello.controller';
 import { UsersModule } from './modules/users/users.module';
-import { UserModule } from './modules/user/user.module';
 import { PeopleModule } from './modules/people/people.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { CompanyCategoriesModule } from './modules/company-categories/company-categories.module';
@@ -22,7 +21,6 @@ import { AvailabilitiesModule } from './modules/availabilities/availabilities.mo
 
 const FEATURE_MODULES = [
   UsersModule,
-  UserModule,
   PeopleModule,
   CompaniesModule,
   CompanyCategoriesModule,

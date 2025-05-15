@@ -1,0 +1,1513 @@
+type: collection.insomnia.rest/5.0
+name: Agendou API
+meta:
+  id: wrk_80e2586e681041e4812eb68b89ab9ffe
+  created: 1747275721984
+  modified: 1747275721984
+collection:
+  - name: Auth
+    meta:
+      id: fld_30b13d9a21e84c219d61241ef23e260c
+      created: 0
+      modified: 1747276523294
+      sortKey: -1747275722113
+    children:
+      - url: '{{ base_url }}{{ route }}/register'
+        name: Register
+        meta:
+          id: req_494f304537e446949439cd6ad1904520
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721991
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "newuser@email.com",
+              "password": "Senha123",
+              "name": "Novo Usuário",
+              "phoneNumber": "+5511999999999"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/login'
+        name: Login
+        meta:
+          id: req_a16cfa20e8134757b5b56d3c62e4d7b6
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721990
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "user@email.com",
+              "password": "Senha123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /auth
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: People
+    meta:
+      id: fld_3c7d6e09ad4849cbb07eab72475a6424
+      created: 0
+      modified: 0
+      sortKey: -1747275721995
+    children:
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Person
+        meta:
+          id: req_46c20b29005b43138864d02ab50b1f7d
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721997
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Person by ID
+        meta:
+          id: req_50fb1812ab5345eaab973a0eb01a05f9
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721996
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Person
+        meta:
+          id: req_d22b6dcfe6f2410092243fefe3094e28
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721997
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "phoneNumber": "+5511999999999"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List People
+        meta:
+          id: req_e4fc847434c7491bab145111e7ba3839
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721996
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Person
+        meta:
+          id: req_fa2ed749677047ad85f417ac6974a5ca
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721997
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "phoneNumber": "+5511999999999",
+              "createdBy": 1,
+              "updatedBy": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /people
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: Bookings
+    meta:
+      id: fld_3da8258d76d64d8e97b53152f582a363
+      created: 0
+      modified: 0
+      sortKey: -1747275721997
+    children:
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Booking
+        meta:
+          id: req_66dd8b9acb794cda99b706f0c06a150b
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721998
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "status": "pending"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Booking
+        meta:
+          id: req_7d1ddebc5f2d4f888663d8d5ebaf439e
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721998
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "peopleId": 1,
+              "spaceId": 1,
+              "companyId": 1,
+              "date": "2025-05-14",
+              "status": "pending"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Booking
+        meta:
+          id: req_84824d066f2145d7bcd81e48dd622568
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721998
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Booking by ID
+        meta:
+          id: req_b638d19259ba4ba88ed14051dd0bc02e
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721998
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Bookings
+        meta:
+          id: req_d895139c79924686a685ce4f2969c55c
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721998
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /bookings
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: Plans
+    meta:
+      id: fld_4014c1e076ae42a3a5d3751146c656c1
+      created: 0
+      modified: 0
+      sortKey: -1747275722008
+    children:
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Plan
+        meta:
+          id: req_11e760e6c06d437b8183bc6d68403dc6
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722010
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Plano Teste",
+              "price": 99.99
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Plans
+        meta:
+          id: req_3f237d25713c478bb10d7a2d4e25d9ba
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722009
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Plan
+        meta:
+          id: req_4a45f4eacc804210988e45e5e36528f4
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722010
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Plano Teste"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Plan by ID
+        meta:
+          id: req_d999718759744d37bd90de34c7829089
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722010
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Plan
+        meta:
+          id: req_f39730ce3cea4e1aa000cee16e06ec81
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722011
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /plans
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: Booking Status History
+    meta:
+      id: fld_4cb231ef83d74728808439e6aeaedf13
+      created: 0
+      modified: 0
+      sortKey: -1747275722000
+    children:
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Booking Status History by ID
+        meta:
+          id: req_1af942da040c4acbb91964a8f12f4c9a
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722001
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Booking Status History
+        meta:
+          id: req_518ecb2bfd8344af9c216715b151fab3
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722003
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "bookingId": 1,
+              "status": "pending"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Booking Status History
+        meta:
+          id: req_5455bceafe3e4e548a330ee085fe267c
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722001
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Booking Status History
+        meta:
+          id: req_840a2c3cb11445419a698710d3bb6c8c
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722004
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Booking Status History
+        meta:
+          id: req_abdcdf7a9537421495aae57981d4c8eb
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722003
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "status": "pending"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /booking-status-history
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: Availabilities
+    meta:
+      id: fld_6a16627f828d4881adf2c07877c645b8
+      created: 0
+      modified: 0
+      sortKey: -1747275721999
+    children:
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Availability
+        meta:
+          id: req_36fd9dc704f544a1885756580921967f
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722000
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "start": "09:00",
+              "end": "18:00"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Availability by ID
+        meta:
+          id: req_600b7ea4820940eda2016570fde03baf
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721999
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Availability
+        meta:
+          id: req_9fd82124f13e4642a26227aa2a3fd0f5
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722000
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Availability
+        meta:
+          id: req_c4bed87f2d294405acf55e9cdb96b234
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722000
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "spaceId": 1,
+              "start": "09:00",
+              "end": "18:00"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Availabilities
+        meta:
+          id: req_ccd7fabf5d46411da8792185daa72bc0
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721999
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /availabilities
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: Users
+    meta:
+      id: fld_7d77a01ed7e540a2a2e4202f85d43e39
+      created: 0
+      modified: 0
+      sortKey: -1747275721991
+    children:
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get User by ID
+        meta:
+          id: req_1721e6ff1e80429d927e08d5e9ceebb5
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721992
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create User
+        meta:
+          id: req_30d6282a246c49f5b782986a1b6c478a
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721992
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "username": "user@email.com",
+              "password": "Senha123",
+              "permission": "user",
+              "createdBy": 1,
+              "updatedBy": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete User
+        meta:
+          id: req_526a1ee5b95a478e8029e8913a35615f
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721993
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Users
+        meta:
+          id: req_819560bfe5fa4d71ae3666cc2229480a
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721991
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update User
+        meta:
+          id: req_99232bcf19df4c8189f9bdf9f2f5fa18
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721993
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "username": "user@email.com",
+              "permission": "user"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /users
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: Company Subscription History
+    meta:
+      id: fld_7f3ac06a7d2a42a99b1c6d63f93e8ebc
+      created: 0
+      modified: 0
+      sortKey: -1747275722006
+    children:
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Company Subscription History
+        meta:
+          id: req_2d2d91fe99cb4cf7bc571aa266785fb3
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722007
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Company Subscription History by ID
+        meta:
+          id: req_35f2ef760db2488b96746a292c8d1775
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722007
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Company Subscription History
+        meta:
+          id: req_526d699e26c149cba472664b38b95d25
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722007
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "status": "active"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Company Subscription History
+        meta:
+          id: req_f149cbe7104d412faf03625391be462b
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722007
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "companyId": 1,
+              "planId": 1,
+              "status": "active"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Company Subscription History
+        meta:
+          id: req_fb33aa89dd3445f0a21b15e45fcd4753
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722007
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /company-subscription-history
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: Space Managers
+    meta:
+      id: fld_ae9320b2c1d747a28e3d240386fe7b5e
+      created: 0
+      modified: 0
+      sortKey: -1747275722011
+    children:
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Space Manager
+        meta:
+          id: req_10da5b83bda24b81bb18586455178529
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722012
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "userId": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Space Manager
+        meta:
+          id: req_15dad96e62804d13a2dd340e05535215
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722012
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Space Manager
+        meta:
+          id: req_861cbebce7be4e2b8a3141d604a5ffff
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722012
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "userId": 1,
+              "spaceId": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Space Manager by ID
+        meta:
+          id: req_c789c2e8ad9f40ad8977d71eba0e9103
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722012
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Space Managers
+        meta:
+          id: req_db72c22166e247548fd7238817987769
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722012
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /space-managers
+    environmentPropertyOrder:
+      '&':
+        - route
+  - name: Company Categories
+    meta:
+      id: fld_b4198dc217114e229382ad9f1fe23a9f
+      created: 0
+      modified: 0
+      sortKey: -1747275722004
+    children:
+      - url: '{{ base_url }}{{ route }}'
+        name: List Company Categories
+        meta:
+          id: req_0479d300ce15490dbd7feffd6e910043
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722005
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Company Category
+        meta:
+          id: req_1f23823e4c814cad9fd403fc58096794
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722005
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Categoria Teste"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Company Category
+        meta:
+          id: req_2cd540f83bcb4ad49f1fa6d03968a1ef
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722006
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Company Category by ID
+        meta:
+          id: req_cbc760461255440fa404629d3372931d
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722005
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Company Category
+        meta:
+          id: req_fbb433ecee974024bff6a1867bc1fe34
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722006
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Categoria Teste"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Companies
+    meta:
+      id: fld_c6dbafba5b7d4c899b214c5bec5e59db
+      created: 0
+      modified: 0
+      sortKey: -1747275721993
+    children:
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Company
+        meta:
+          id: req_1a9465de24f540c8b5288005f82aa1dd
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721995
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "cpfCnpj": "12345678901",
+              "status": "active"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Companies
+        meta:
+          id: req_a67949ea6fbb439da7f8afa52cd64151
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721994
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Company by ID
+        meta:
+          id: req_d324d448a0d84a0d85e899bc8a8db53e
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721994
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Company
+        meta:
+          id: req_dfbdffb0c3594546b88616b3eefa32cb
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721995
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Company
+        meta:
+          id: req_f65f50be06df40c1bd48503d343cc9f7
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275721994
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "cpfCnpj": "12345678901",
+              "categoryId": 1,
+              "createdBy": 1,
+              "updatedBy": 1,
+              "status": "active"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Spaces
+    meta:
+      id: fld_e82126e357a14c4c824a9f3aa502bfdb
+      created: 0
+      modified: 0
+      sortKey: -1747275722013
+    children:
+      - url: '{{ base_url }}{{ route }}'
+        name: Create Space
+        meta:
+          id: req_091c9dafc9fa4a20ab8d778c57b3aa1b
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722013
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Sala 1",
+              "companyId": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}'
+        name: List Spaces
+        meta:
+          id: req_47bd7b29f6ce4359b9e7d41fc554d1ba
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722013
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Delete Space
+        meta:
+          id: req_5402dd344e2444b1a1650a91eee12390
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722014
+        method: DELETE
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Get Space by ID
+        meta:
+          id: req_9a49fb3b74e74817a180ce8bef922bbe
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722013
+        method: GET
+        headers:
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ base_url }}{{ route }}/:id'
+        name: Update Space
+        meta:
+          id: req_d25cb16c60674006a55127bb8d5ea1ad
+          created: 0
+          modified: 0
+          isPrivate: false
+          sortKey: -1747275722013
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "Sala 1"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Authorization
+            value: Bearer {{ token }}
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      route: /spaces
+    environmentPropertyOrder:
+      '&':
+        - route
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_18d747c95e8bfe7e4e62b4a6f0119e8bb68fb80f
+    created: 1747275722016
+    modified: 1747275722016
+environments:
+  name: Base Environment
+  meta:
+    id: env_64de19a6a07d481085accd7929fc3e5d
+    created: 0
+    modified: 0
+    isPrivate: false
+  data:
+    base_url: http://localhost:3000
