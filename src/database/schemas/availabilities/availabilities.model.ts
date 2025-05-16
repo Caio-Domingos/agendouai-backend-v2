@@ -46,6 +46,8 @@ export interface Availability extends IEntity {
   weekdayIndex: WeekDayIndex;
   minDaysCancel: number;
   intervalMinutes: number;
+  isOpen: boolean;
+  is24Hours: boolean;
   configuration: Record<string, any>;
 
   // Nullable

@@ -15,4 +15,11 @@ export class CompaniesRepository extends CrudQueryRepository<
   constructor(dataSource: DataSource, @Inject(REQUEST) request: Request) {
     super(dataSource, request, CompaniesEntity);
   }
+
+  findByCnpj(cnpj: string) {
+    return this.getRepository(CompaniesEntity)
+      .createQueryBuilder('companies')
+      .where('companies.cpf_cnpj = :cnpj', { cnpj })
+      .getOne();
+  }
 }

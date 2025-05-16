@@ -77,4 +77,12 @@ export class CrudQueryService<
     // Se há opções, usa o método avançado de consulta
     return this.findOneWithOptions(id, options);
   }
+
+  // Sobrescreva estes métodos nos services que precisam de acesso ao request/user
+  protected getRequest(): any {
+    return undefined;
+  }
+  protected getUser(): any {
+    return undefined;
+  }
 }

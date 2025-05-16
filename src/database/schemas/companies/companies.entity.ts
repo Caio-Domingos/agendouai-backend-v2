@@ -26,6 +26,9 @@ import { SpaceManagersEntity } from '../space-managers/space-managers.entity';
 @Index('IDX_COMPANIES_UPDATED_BY', ['updatedBy'])
 export class CompaniesEntity extends BaseEntity implements Company {
   // Not null columns
+  @Column({ type: 'varchar', length: 200 })
+  name: string;
+
   @Column({ name: 'cpf_cnpj', type: 'varchar', length: 20 })
   cpfCnpj: string;
 
@@ -41,12 +44,12 @@ export class CompaniesEntity extends BaseEntity implements Company {
   })
   status: CompanyStatus;
 
+  @Column({ name: 'category_id', type: 'integer' })
+  categoryId: number;
+
   // Nullable columns
   @Column({ type: 'varchar', length: 10, nullable: true })
   cep?: string;
-
-  @Column({ name: 'category_id', type: 'integer' })
-  categoryId: number;
 
   @Column({ name: 'logo_url', type: 'text', nullable: true })
   logoUrl?: string;
@@ -70,9 +73,6 @@ export class CompaniesEntity extends BaseEntity implements Company {
   })
   stripeCustomerId?: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
-  name?: string;
-
   @Column({ type: 'varchar', length: 20, nullable: true })
   phone?: string;
 
@@ -95,13 +95,6 @@ export class CompaniesEntity extends BaseEntity implements Company {
     nullable: true,
   })
   addressNumber?: string;
-
-  @Column({
-    name: 'default_availability',
-    type: 'jsonb',
-    default: () => "'{}'",
-  })
-  defaultAvailability?: object;
 
   // FK columns
   // (categoryId, currentPlanId já estão acima como nullable)

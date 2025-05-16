@@ -44,6 +44,12 @@ export class AvailabilitiesDto {
   @IsOptional()
   @IsNumber({}, { message: 'ID do espaço deve ser um número' })
   spaceId?: number;
+
+  @IsBoolean({ message: 'Disponibilidade deve ser um booleano' })
+  isOpen: boolean;
+
+  @IsBoolean({ message: '24 horas deve ser um booleano' })
+  is24Hours: boolean;
 }
 
 export class CreateAvailabilitiesDTO {
@@ -81,6 +87,14 @@ export class CreateAvailabilitiesDTO {
   @IsOptional()
   @IsNumber({}, { message: 'ID do espaço deve ser um número' })
   spaceId?: number;
+
+  @IsOptional()
+  @IsBoolean({ message: 'Disponibilidade deve ser um booleano' })
+  isOpen?: boolean;
+
+  @IsOptional()
+  @IsBoolean({ message: '24 horas deve ser um booleano' })
+  is24Hours: boolean;
 }
 
 export class UpdateAvailabilitiesDTO extends PartialType(

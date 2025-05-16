@@ -42,6 +42,11 @@ export class AvailabilitiesEntity extends BaseEntity implements Availability {
   })
   configuration: Record<string, any>;
 
+  @Column({ name: 'is_open', type: 'boolean', default: true })
+  isOpen: boolean;
+  @Column({ name: 'is_24_hours', type: 'boolean', default: false })
+  is24Hours: boolean;
+
   // Nullable columns
 
   // FK columns

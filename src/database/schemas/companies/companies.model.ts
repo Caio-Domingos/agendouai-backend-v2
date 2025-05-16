@@ -50,6 +50,7 @@ export enum PaymentStatus {
 
 export interface Company extends IEntity {
   // Not null
+  name: string;
   cpfCnpj: string;
   createdBy: number;
   updatedBy: number;
@@ -58,14 +59,12 @@ export interface Company extends IEntity {
   // Nullable
   cep?: string;
   logoUrl?: string;
-  name?: string;
   phone?: string;
   city?: string;
   state?: string;
   country?: string;
   address?: string;
   addressNumber?: string;
-  defaultAvailability?: object;
 
   // FK
   categoryId: number;

@@ -17,7 +17,11 @@ export class CrudService<
    * Hook executado antes de create
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async beforeCreate(dto: CreateDto): Promise<CreateDto> {
+  protected async beforeCreate(
+    dto: CreateDto,
+    user?: any,
+    request?: any,
+  ): Promise<CreateDto> {
     return dto;
   }
 
@@ -25,7 +29,12 @@ export class CrudService<
    * Hook executado após create
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async afterCreate(entity: T): Promise<T> {
+  protected async afterCreate(
+    entity: T,
+    dto: CreateDto,
+    user?: any,
+    request?: any,
+  ): Promise<T> {
     return entity;
   }
 
@@ -33,7 +42,12 @@ export class CrudService<
    * Hook executado antes de update
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async beforeUpdate(id: number, dto: UpdateDto): Promise<UpdateDto> {
+  protected async beforeUpdate(
+    id: number,
+    dto: UpdateDto,
+    user?: any,
+    request?: any,
+  ): Promise<UpdateDto> {
     return dto;
   }
 
@@ -41,7 +55,12 @@ export class CrudService<
    * Hook executado após update
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async afterUpdate(entity: T): Promise<T> {
+  protected async afterUpdate(
+    entity: T,
+    dto: UpdateDto,
+    user?: any,
+    request?: any,
+  ): Promise<T> {
     return entity;
   }
 
@@ -49,7 +68,11 @@ export class CrudService<
    * Hook executado antes de remove
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async beforeRemove(id: number): Promise<void> {
+  protected async beforeRemove(
+    id: number,
+    user?: any,
+    request?: any,
+  ): Promise<void> {
     // Hook para ser sobrescrito
   }
 
@@ -57,8 +80,20 @@ export class CrudService<
    * Hook executado após remove
    * Pode ser sobrescrito para adicionar lógica personalizada
    */
-  protected async afterRemove(id: number): Promise<void> {
+  protected async afterRemove(
+    id: number,
+    user?: any,
+    request?: any,
+  ): Promise<void> {
     // Hook para ser sobrescrito
+  }
+
+  // Métodos utilitários para obter user/request (podem ser sobrescritos nos services filhos)
+  protected getRequest(): any {
+    return undefined;
+  }
+  protected getUser(): any {
+    return undefined;
   }
 
   async findAll() {
@@ -73,11 +108,13 @@ export class CrudService<
    * Cria uma nova entidade
    */
   async create(createDto: CreateDto): Promise<T> {
-    const processedDto = await this.beforeCreate(createDto);
+    const user = this.getUser();
+    const request = this.getRequest();
+    const processedDto = await this.beforeCreate(createDto, user, request);
 
     try {
       const savedEntity = await this.repository.create(processedDto);
-      return await this.afterCreate(savedEntity);
+      return await this.afterCreate(savedEntity, processedDto, user, request);
     } catch (error) {
       this.handleDatabaseError(error);
       throw error; // Nunca deve chegar aqui
@@ -90,12 +127,13 @@ export class CrudService<
   async update(id: number, updateDto: UpdateDto): Promise<T> {
     // Verificar se a entidade existe
     await this.findById(id);
-
-    const processedDto = await this.beforeUpdate(id, updateDto);
+    const user = this.getUser();
+    const request = this.getRequest();
+    const processedDto = await this.beforeUpdate(id, updateDto, user, request);
 
     try {
       const updatedEntity = await this.repository.update(id, processedDto);
-      return await this.afterUpdate(updatedEntity);
+      return await this.afterUpdate(updatedEntity, processedDto, user, request);
     } catch (error) {
       this.handleDatabaseError(error);
       throw error; // Nunca deve chegar aqui
@@ -108,11 +146,13 @@ export class CrudService<
   async remove(id: number): Promise<void> {
     // Verificar se a entidade existe
     await this.findById(id);
-    await this.beforeRemove(id);
+    const user = this.getUser();
+    const request = this.getRequest();
+    await this.beforeRemove(id, user, request);
 
     try {
       await this.repository.remove(id);
-      await this.afterRemove(id);
+      await this.afterRemove(id, user, request);
     } catch (error) {
       this.handleDatabaseError(error);
       throw error; // Nunca deve chegar aqui

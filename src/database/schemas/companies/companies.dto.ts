@@ -5,9 +5,13 @@ import {
   IsNumber,
   IsEnum,
   IsObject,
+  ValidateNested,
 } from 'class-validator';
 import { PartialType } from 'src/shared/validation/dto-helpers';
 import { CompanyStatus, PaymentStatus } from './companies.model';
+import { Transform } from 'class-transformer';
+import { CreateAvailabilitiesDTO } from '../availabilities/availabilities.dto';
+import { Type as TransformType } from 'class-transformer';
 
 export class CompaniesDto {
   @IsNumber({}, { message: 'ID deve ser um número inteiro' })
@@ -97,14 +101,14 @@ export class CompaniesDto {
     message: 'Número do endereço deve ter no máximo 20 caracteres',
   })
   addressNumber?: string;
-
-  @IsOptional()
-  @IsObject({ message: 'Disponibilidade padrão deve ser um objeto JSON' })
-  defaultAvailability?: object;
 }
 
 export class CreateCompaniesDTO {
   // --- OBRIGATÓRIOS ---
+  @IsString({ message: 'Nome deve ser uma string' })
+  @MaxLength(200, { message: 'Nome deve ter no máximo 200 caracteres' })
+  name: string;
+
   @IsString({ message: 'CPF/CNPJ deve ser uma string' })
   @MaxLength(20, { message: 'CPF/CNPJ deve ter no máximo 20 caracteres' })
   cpfCnpj: string;
@@ -112,13 +116,18 @@ export class CreateCompaniesDTO {
   @IsNumber({}, { message: 'ID da categoria deve ser um número' })
   categoryId: number;
 
-  @IsNumber({}, { message: 'ID do criador deve ser um número' })
-  createdBy: number;
+  @Transform(({ value }) => undefined)
+  createdBy?: number;
 
-  @IsNumber({}, { message: 'ID do atualizador deve ser um número' })
-  updatedBy: number;
+  @Transform(({ value }) => undefined)
+  updatedBy?: number;
 
   // --- OPCIONAIS ---
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @TransformType(() => CreateAvailabilitiesDTO)
+  companyAvailabilities?: CreateAvailabilitiesDTO[];
+
   @IsOptional()
   @IsString({ message: 'CEP deve ser uma string' })
   @MaxLength(10, { message: 'CEP deve ter no máximo 10 caracteres' })
@@ -156,11 +165,6 @@ export class CreateCompaniesDTO {
   stripeCustomerId?: string;
 
   @IsOptional()
-  @IsString({ message: 'Nome deve ser uma string' })
-  @MaxLength(200, { message: 'Nome deve ter no máximo 200 caracteres' })
-  name?: string;
-
-  @IsOptional()
   @IsString({ message: 'Telefone deve ser uma string' })
   @MaxLength(20, { message: 'Telefone deve ter no máximo 20 caracteres' })
   phone?: string;
@@ -191,10 +195,6 @@ export class CreateCompaniesDTO {
     message: 'Número do endereço deve ter no máximo 20 caracteres',
   })
   addressNumber?: string;
-
-  @IsOptional()
-  @IsObject({ message: 'Disponibilidade padrão deve ser um objeto JSON' })
-  defaultAvailability?: object;
 }
 
 export class UpdateCompaniesDTO extends PartialType(CreateCompaniesDTO) {}
