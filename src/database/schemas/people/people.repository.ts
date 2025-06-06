@@ -1,10 +1,8 @@
 import { CrudQueryRepository } from 'src/shared/database/repositories/crud-query.repository';
 import { DataSource } from 'typeorm';
 import { PeopleEntity } from './people.entity';
-import { Request } from 'express';
-import { REQUEST } from '@nestjs/core';
 import { CreatePeopleDTO, UpdatePeopleDTO } from './people.dto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PeopleRepository extends CrudQueryRepository<
@@ -12,8 +10,8 @@ export class PeopleRepository extends CrudQueryRepository<
   CreatePeopleDTO,
   UpdatePeopleDTO
 > {
-  constructor(dataSource: DataSource, @Inject(REQUEST) request: Request) {
-    super(dataSource, request, PeopleEntity);
+  constructor(dataSource: DataSource) {
+    super(dataSource, PeopleEntity);
   }
 
   findByCpf(cpf: string) {

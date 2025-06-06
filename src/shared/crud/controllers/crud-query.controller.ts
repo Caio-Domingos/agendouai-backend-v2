@@ -26,6 +26,8 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { QueryOptionsPipe } from '../pipes/query-options.pipe';
+import { Ctx } from 'src/auth/decorators/context.decorator';
+import { ContextObject } from 'src/shared/context/context.dto';
 
 /**
  * Cria um controlador que combina funcionalidades CRUD e de consulta avançada
@@ -72,8 +74,9 @@ export function CrudQueryController<
     })
     async findWithOptions(
       @Query(QueryOptionsPipe) options: QueryOptions = {},
+      @Ctx() context?: ContextObject,
     ): Promise<PaginatedResult<T>> {
-      return this.crudQueryService.findWithOptions(options);
+      return this.crudQueryService.findWithOptions(options, context);
     }
 
     /**
@@ -91,8 +94,9 @@ export function CrudQueryController<
     async findOneWithOptions(
       @Param('id', ParseIntPipe) id: number,
       @Query() options: QueryOptions = {},
+      @Ctx() context?: ContextObject,
     ): Promise<T> {
-      return this.crudQueryService.findOneWithOptions(id, options);
+      return this.crudQueryService.findOneWithOptions(id, options, context);
     }
 
     /**
@@ -105,8 +109,8 @@ export function CrudQueryController<
       description: `Lista de ${entityName}`,
       type: [returnDto],
     })
-    async findAll(): Promise<T[]> {
-      return this.crudQueryService.findAll();
+    async findAll(@Ctx() context?: ContextObject): Promise<T[]> {
+      return this.crudQueryService.findAll(context);
     }
 
     /**
@@ -123,9 +127,9 @@ export function CrudQueryController<
     @ApiResponse({ status: 404, description: `${entityName} não encontrado` })
     async findById(
       @Param('id', ParseIntPipe) id: number,
-      @Query() options: QueryOptions = {},
+      @Ctx() context?: ContextObject,
     ): Promise<T> {
-      return this.crudQueryService.findById(id, options);
+      return this.crudQueryService.findById(id, context);
     }
 
     /**
@@ -139,8 +143,11 @@ export function CrudQueryController<
       description: `${entityName} criado`,
       type: returnDto,
     })
-    async create(@Body() dto: InstanceType<CreateDto>) {
-      return this.crudQueryService.create(dto);
+    async create(
+      @Body() dto: InstanceType<CreateDto>,
+      @Ctx() context?: ContextObject,
+    ) {
+      return this.crudQueryService.create(dto, context);
     }
 
     /**
@@ -159,8 +166,9 @@ export function CrudQueryController<
     async update(
       @Param('id', ParseIntPipe) id: number,
       @Body() dto: InstanceType<UpdateDto>,
+      @Ctx() context?: ContextObject,
     ) {
-      return this.crudQueryService.update(id, dto);
+      return this.crudQueryService.update(id, dto, context);
     }
 
     /**
@@ -172,8 +180,11 @@ export function CrudQueryController<
     @ApiParam({ name: 'id', type: Number, description: `ID do ${entityName}` })
     @ApiResponse({ status: 204, description: `${entityName} removido` })
     @ApiResponse({ status: 404, description: `${entityName} não encontrado` })
-    async remove(@Param('id', ParseIntPipe) id: number) {
-      await this.crudQueryService.remove(id);
+    async remove(
+      @Param('id', ParseIntPipe) id: number,
+      @Ctx() context?: ContextObject,
+    ) {
+      await this.crudQueryService.remove(id, context);
     }
   }
 

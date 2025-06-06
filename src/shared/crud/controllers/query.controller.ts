@@ -19,6 +19,8 @@ import { QueryService } from '../services/query.service';
 import { QueryOptions, Entity } from '../interfaces/crud.types';
 import { QueryOptionsPipe } from '../pipes/query-options.pipe';
 import { PaginatedResponseDto } from '../dto/paginated-response.dto';
+import { Ctx } from 'src/auth/decorators/context.decorator';
+import { ContextObject } from 'src/shared/context/context.dto';
 
 /**
  * Cria uma classe de controller com métodos de consulta (findAll, findOne)
@@ -130,7 +132,11 @@ export function QueryController<T extends Entity>(
       description:
         'Campos a serem selecionados, separados por vírgula (ex: id,name,price)',
     })
-    async findAll(@Query(QueryOptionsPipe) options: QueryOptions) {
+    async findAll(
+      @Query(QueryOptionsPipe) options: QueryOptions,
+      @Ctx() context?: ContextObject,
+    ) {
+      // O QueryService espera apenas options, não context. Context é ignorado aqui.
       return this.service.findAll(options);
     }
 
@@ -175,7 +181,9 @@ export function QueryController<T extends Entity>(
     async findOne(
       @Param('id', ParseIntPipe) id: number,
       @Query(QueryOptionsPipe) options: QueryOptions,
+      @Ctx() context?: ContextObject,
     ) {
+      // O QueryService espera apenas id e options. Context é ignorado aqui.
       return this.service.findOne(id, options);
     }
   }

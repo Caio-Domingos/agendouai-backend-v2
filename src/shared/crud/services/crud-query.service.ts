@@ -9,6 +9,7 @@ import {
   IQueryRepository,
 } from '../../database/interfaces/repository.interface';
 import { CrudService } from './crud.service';
+import { ContextObject } from 'src/shared/context/context.dto';
 
 /**
  * Serviço que combina funcionalidades CRUD e de consulta avançada
@@ -37,6 +38,7 @@ export class CrudQueryService<
    */
   async findWithOptions(
     options: QueryOptions = {},
+    context?: ContextObject,
   ): Promise<PaginatedResult<T>> {
     return this.queryRepository.findWithOptions(options);
   }
@@ -44,7 +46,11 @@ export class CrudQueryService<
   /**
    * Encontra uma entidade por ID com opções de relações e seleção
    */
-  async findOneWithOptions(id: number, options: QueryOptions = {}): Promise<T> {
+  async findOneWithOptions(
+    id: number,
+    options: QueryOptions = {},
+    context?: ContextObject,
+  ): Promise<T> {
     return this.queryRepository.findOneWithOptions(id, options);
   }
 
@@ -54,28 +60,24 @@ export class CrudQueryService<
    */
   async findAllWithOptions(
     options: QueryOptions = {},
+    context?: ContextObject,
   ): Promise<PaginatedResult<T> | T[]> {
-    return this.findWithOptions(options);
+    return this.findWithOptions(options, context);
   }
 
   /**
    * Sobrescreve o método findAll para garantir compatibilidade com CrudService
    */
-  async findAll(): Promise<T[]> {
-    return super.findAll();
+  async findAll(context?: ContextObject): Promise<T[]> {
+    return super.findAll(context);
   }
 
   /**
    * Sobrescreve o método findById para usar o findOneWithOptions
    * para manter compatibilidade com CrudService
    */
-  async findById(id: number, options: QueryOptions = {}): Promise<T> {
-    if (Object.keys(options).length === 0) {
-      // Se não há opções, usa o comportamento padrão do CrudService
-      return super.findById(id);
-    }
-    // Se há opções, usa o método avançado de consulta
-    return this.findOneWithOptions(id, options);
+  async findById(id: number, context?: ContextObject): Promise<T> {
+    return super.findById(id, context);
   }
 
   // Sobrescreva estes métodos nos services que precisam de acesso ao request/user

@@ -4,7 +4,6 @@ import {
   Brackets,
   WhereExpressionBuilder,
 } from 'typeorm';
-import { Request } from 'express';
 import { BaseRepository } from './base.repository';
 import {
   QueryOptions,
@@ -36,11 +35,10 @@ export abstract class BaseQueryRepository<T extends IEntity>
 
   constructor(
     dataSource: DataSource,
-    request: Request,
     entityClass: new () => T,
     tableName?: string,
   ) {
-    super(dataSource, request);
+    super(dataSource);
     this.entityClass = entityClass;
 
     // Se o nome da tabela não for fornecido, usa o nome da classe em lowercase
@@ -330,6 +328,7 @@ export abstract class BaseQueryRepository<T extends IEntity>
    */
   async findWithOptions(
     options: QueryOptions = {},
+    request?: any,
   ): Promise<PaginatedResult<T>> {
     const {
       pagination = { page: 1, size: 10 },
@@ -342,6 +341,7 @@ export abstract class BaseQueryRepository<T extends IEntity>
     // Criar query builder
     const queryBuilder = this.getRepository(
       this.entityClass,
+      request,
     ).createQueryBuilder(this.tableName);
 
     // Aplicar seleção de campos
@@ -404,11 +404,16 @@ export abstract class BaseQueryRepository<T extends IEntity>
   /**
    * Encontrar uma entidade com opções de relações e seleção
    */
-  async findOneWithOptions(id: number, options: QueryOptions = {}): Promise<T> {
+  async findOneWithOptions(
+    id: number,
+    options: QueryOptions = {},
+    request?: any,
+  ): Promise<T> {
     const { relations, select } = options;
 
     const queryBuilder = this.getRepository(
       this.entityClass,
+      request,
     ).createQueryBuilder(this.tableName);
 
     // Aplicar seleção de campos

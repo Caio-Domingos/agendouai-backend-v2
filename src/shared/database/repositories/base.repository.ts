@@ -1,17 +1,10 @@
-import { ENTITY_MANAGER_KEY } from '../../interceptors/transaction/transaction.interceptor';
+import { DataSource, Repository, EntityTarget, EntityManager } from 'typeorm';
 import { Request } from 'express';
-import {
-  DataSource,
-  EntityManager,
-  Repository,
-  ObjectType,
-  EntityTarget,
-} from 'typeorm';
+import { ENTITY_MANAGER_KEY } from '../../interceptors/transaction/transaction.interceptor';
 
 export class BaseRepository<T extends object> {
   constructor(
     private dataSource: DataSource,
-    private request?: Request,
   ) {}
 
   /**
@@ -19,17 +12,14 @@ export class BaseRepository<T extends object> {
    * Se houver uma transação ativa no request, usa o EntityManager da transação
    * Caso contrário, usa o manager padrão do DataSource
    */
-  protected getRepository(entityClass: EntityTarget<T>): Repository<T> {
-    // Tenta obter o EntityManager da transação, senão usa o manager padrão
+  protected getRepository(entityClass: EntityTarget<T>, request?: Request): Repository<T> {
     const entityManager: EntityManager =
-      this.request?.[ENTITY_MANAGER_KEY] ?? this.dataSource.manager;
-
+      request?.[ENTITY_MANAGER_KEY] ?? this.dataSource.manager;
     if (!entityManager) {
       throw new Error(
         'EntityManager não disponível no request nem no DataSource.',
       );
     }
-
     return entityManager.getRepository(entityClass);
   }
 }

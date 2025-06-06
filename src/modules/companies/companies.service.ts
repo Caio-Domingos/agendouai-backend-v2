@@ -12,8 +12,6 @@ import {
   UpdateCompaniesDTO,
 } from 'src/database/schemas/companies/companies.dto';
 import { CompaniesRepository } from 'src/database/schemas/companies/companies.repository';
-import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
 import {
   WEEKDAY_NAMES,
   WeekDayIndex,
@@ -30,24 +28,13 @@ export class CompaniesService extends CrudQueryService<
   constructor(
     private companiesRepository: CompaniesRepository,
     private readonly availabilitiesService: AvailabilitiesService,
-    @Inject(REQUEST) private request: Request,
   ) {
     super(companiesRepository);
-  }
-
-  // Sobrescreve para fornecer o request injetado
-  protected getRequest(): any {
-    return this.request;
-  }
-  // Sobrescreve para fornecer o usuário logado
-  protected getUser(): any {
-    return this.request?.user;
   }
 
   protected async beforeCreate(
     dto: CreateCompaniesDTO,
     user?: any,
-    request?: Request,
   ): Promise<CreateCompaniesDTO> {
     try {
       if (!user) {
@@ -84,7 +71,6 @@ export class CompaniesService extends CrudQueryService<
     entity: CompaniesEntity,
     dto: CreateCompaniesDTO,
     user?: any,
-    request?: Request,
   ): Promise<CompaniesEntity> {
     // TODO: Plans aqui
 
@@ -162,7 +148,6 @@ export class CompaniesService extends CrudQueryService<
     id: number,
     dto: UpdateCompaniesDTO,
     user?: any,
-    request?: Request,
   ): Promise<UpdateCompaniesDTO> {
     if (!user) {
       throw new Error('User not found in request');

@@ -1,5 +1,4 @@
 import { DataSource } from 'typeorm';
-import { Request } from 'express';
 import { BaseCrudRepository } from './base-crud.repository';
 import { BaseQueryRepository } from './base-query.repository';
 import {
@@ -7,6 +6,7 @@ import {
   PaginatedResult,
 } from '../../crud/interfaces/crud.types';
 import { IEntity } from '../interfaces/entity.interface';
+import { ContextObject } from 'src/shared/context/context.dto';
 
 /**
  * Repositório que combina funcionalidades CRUD e de consulta avançada
@@ -25,16 +25,15 @@ export abstract class CrudQueryRepository<
 
   constructor(
     dataSource: DataSource,
-    request: Request,
     entityClass: new () => T,
     tableName?: string,
   ) {
-    super(dataSource, request, entityClass);
+    super(dataSource, entityClass);
 
     // Criamos uma instância interna de BaseQueryRepository para reutilizar a lógica de consulta
     this.queryRepo = new (class extends BaseQueryRepository<T> {
       constructor() {
-        super(dataSource, request, entityClass, tableName);
+        super(dataSource, entityClass, tableName);
       }
     })();
   }
@@ -44,14 +43,21 @@ export abstract class CrudQueryRepository<
    */
   async findWithOptions(
     options: QueryOptions = {},
+    context?: ContextObject,
   ): Promise<PaginatedResult<T>> {
-    return this.queryRepo.findWithOptions(options);
+    const request = context?.request;
+    return this.queryRepo.findWithOptions(options, request);
   }
 
   /**
    * Encontra uma entidade por ID com opções de relações e seleção
    */
-  async findOneWithOptions(id: number, options: QueryOptions = {}): Promise<T> {
-    return this.queryRepo.findOneWithOptions(id, options);
+  async findOneWithOptions(
+    id: number,
+    options: QueryOptions = {},
+    context?: ContextObject,
+  ): Promise<T> {
+    const request = context?.request;
+    return this.queryRepo.findOneWithOptions(id, options, request);
   }
 }

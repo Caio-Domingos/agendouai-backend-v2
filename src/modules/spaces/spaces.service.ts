@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CrudQueryService } from 'src/shared/crud/services/crud-query.service';
 import { SpacesEntity } from 'src/database/schemas/spaces/spaces.entity';
 import {
@@ -6,8 +6,6 @@ import {
   UpdateSpacesDTO,
 } from 'src/database/schemas/spaces/spaces.dto';
 import { SpacesRepository } from 'src/database/schemas/spaces/spaces.repository';
-import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
 import {
   WEEKDAY_NAMES,
   WeekDayIndex,
@@ -24,23 +22,14 @@ export class SpacesService extends CrudQueryService<
   constructor(
     private spacesRepository: SpacesRepository,
     private readonly availabilitiesService: AvailabilitiesService,
-    @Inject(REQUEST) private request: Request,
   ) {
     super(spacesRepository);
-  }
-
-  protected getRequest(): any {
-    return this.request;
-  }
-  protected getUser(): any {
-    return this.request?.user;
   }
 
   protected async afterCreate(
     entity: SpacesEntity,
     dto: CreateSpacesDTO,
     user?: any,
-    request?: Request,
   ): Promise<SpacesEntity> {
     const hasAvailability =
       dto.spaceAvailabilities && dto.spaceAvailabilities.length > 0;

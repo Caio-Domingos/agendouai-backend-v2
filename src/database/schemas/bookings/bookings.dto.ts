@@ -81,4 +81,16 @@ export class CreateBookingDTO {
   status?: BookingStatus;
 }
 
-export class UpdateBookingDTO extends PartialType(CreateBookingDTO) {}
+export class UpdateBookingDTO extends PartialType(CreateBookingDTO) {
+  @IsOptional()
+  @IsString({
+    message: 'Data de atualização do status deve ser uma string ISO',
+  })
+  statusUpdatedAt?: string;
+
+  @IsOptional()
+  @IsEnum(BookingStatus, {
+    message: `Status deve ser um dos valores: ${Object.values(BookingStatus).join(', ')}`,
+  })
+  status?: BookingStatus;
+}

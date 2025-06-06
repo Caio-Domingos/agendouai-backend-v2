@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { QueryService } from './query.service';
 import { Entity } from '../interfaces/crud.types';
 import { ICrudRepository } from '../../database/interfaces/repository.interface';
+import { ContextObject } from 'src/shared/context/context.dto';
 
 export class CrudService<
   T extends Entity,
@@ -19,8 +20,7 @@ export class CrudService<
    */
   protected async beforeCreate(
     dto: CreateDto,
-    user?: any,
-    request?: any,
+    context?: ContextObject,
   ): Promise<CreateDto> {
     return dto;
   }
@@ -32,8 +32,7 @@ export class CrudService<
   protected async afterCreate(
     entity: T,
     dto: CreateDto,
-    user?: any,
-    request?: any,
+    context?: ContextObject,
   ): Promise<T> {
     return entity;
   }
@@ -45,8 +44,7 @@ export class CrudService<
   protected async beforeUpdate(
     id: number,
     dto: UpdateDto,
-    user?: any,
-    request?: any,
+    context?: ContextObject,
   ): Promise<UpdateDto> {
     return dto;
   }
@@ -58,8 +56,7 @@ export class CrudService<
   protected async afterUpdate(
     entity: T,
     dto: UpdateDto,
-    user?: any,
-    request?: any,
+    context?: ContextObject,
   ): Promise<T> {
     return entity;
   }
@@ -70,8 +67,7 @@ export class CrudService<
    */
   protected async beforeRemove(
     id: number,
-    user?: any,
-    request?: any,
+    context?: ContextObject,
   ): Promise<void> {
     // Hook para ser sobrescrito
   }
@@ -82,39 +78,27 @@ export class CrudService<
    */
   protected async afterRemove(
     id: number,
-    user?: any,
-    request?: any,
+    context?: ContextObject,
   ): Promise<void> {
     // Hook para ser sobrescrito
   }
 
-  // Métodos utilitários para obter user/request (podem ser sobrescritos nos services filhos)
-  protected getRequest(): any {
-    return undefined;
-  }
-  protected getUser(): any {
-    return undefined;
-  }
-
-  async findAll() {
+  async findAll(context?: ContextObject) {
     return this.repository.findAll();
   }
 
-  async findById(id: number): Promise<T> {
+  async findById(id: number, context?: ContextObject): Promise<T> {
     return this.repository.findById(id);
   }
 
   /**
    * Cria uma nova entidade
    */
-  async create(createDto: CreateDto): Promise<T> {
-    const user = this.getUser();
-    const request = this.getRequest();
-    const processedDto = await this.beforeCreate(createDto, user, request);
-
+  async create(createDto: CreateDto, context?: ContextObject): Promise<T> {
+    const processedDto = await this.beforeCreate(createDto, context);
     try {
       const savedEntity = await this.repository.create(processedDto);
-      return await this.afterCreate(savedEntity, processedDto, user, request);
+      return await this.afterCreate(savedEntity, processedDto, context);
     } catch (error) {
       this.handleDatabaseError(error);
       throw error; // Nunca deve chegar aqui
@@ -124,16 +108,16 @@ export class CrudService<
   /**
    * Atualiza uma entidade existente
    */
-  async update(id: number, updateDto: UpdateDto): Promise<T> {
-    // Verificar se a entidade existe
-    await this.findById(id);
-    const user = this.getUser();
-    const request = this.getRequest();
-    const processedDto = await this.beforeUpdate(id, updateDto, user, request);
-
+  async update(
+    id: number,
+    updateDto: UpdateDto,
+    context?: ContextObject,
+  ): Promise<T> {
+    await this.findById(id, context);
+    const processedDto = await this.beforeUpdate(id, updateDto, context);
     try {
       const updatedEntity = await this.repository.update(id, processedDto);
-      return await this.afterUpdate(updatedEntity, processedDto, user, request);
+      return await this.afterUpdate(updatedEntity, processedDto, context);
     } catch (error) {
       this.handleDatabaseError(error);
       throw error; // Nunca deve chegar aqui
@@ -143,16 +127,12 @@ export class CrudService<
   /**
    * Remove uma entidade pelo ID
    */
-  async remove(id: number): Promise<void> {
-    // Verificar se a entidade existe
-    await this.findById(id);
-    const user = this.getUser();
-    const request = this.getRequest();
-    await this.beforeRemove(id, user, request);
-
+  async remove(id: number, context?: ContextObject): Promise<void> {
+    await this.findById(id, context);
+    await this.beforeRemove(id, context);
     try {
       await this.repository.remove(id);
-      await this.afterRemove(id, user, request);
+      await this.afterRemove(id, context);
     } catch (error) {
       this.handleDatabaseError(error);
       throw error; // Nunca deve chegar aqui
