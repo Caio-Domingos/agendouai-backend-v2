@@ -21,6 +21,7 @@ import { SpaceManagersService } from '../space-managers/space-managers.service';
 import { UserPermission } from 'src/database/schemas/users/users.model';
 import { UsersService } from '../users/users.service';
 import { Logger } from '@nestjs/common';
+import { BookingStatusHistoryService } from 'src/modules/booking-status-history/booking-status-history.service';
 
 @Injectable()
 export class BookingsService extends CrudQueryService<
@@ -36,6 +37,7 @@ export class BookingsService extends CrudQueryService<
     private availabilitiesService: AvailabilitiesService,
     private spaceManagersService: SpaceManagersService,
     private usersService: UsersService,
+    private bookingStatusHistoryService: BookingStatusHistoryService,
   ) {
     super(bookingsRepository);
   }
@@ -66,6 +68,16 @@ export class BookingsService extends CrudQueryService<
       this.logger.debug('Booking validado, criando...', dto);
       const result = await super.create(dto, context);
       this.logger.debug('Booking criado com sucesso', result);
+      // Cria histórico de status
+      await this.bookingStatusHistoryService.create({
+        bookingId: result.id,
+        status: result.status,
+        companyId: result.companyId,
+        changedBy: user?.id,
+        statusDate: result.statusUpdatedAt
+          ? new Date(result.statusUpdatedAt)
+          : new Date(),
+      });
       return result;
     } catch (error) {
       this.logger.error('Erro ao criar booking', { error, dto });
@@ -90,15 +102,20 @@ export class BookingsService extends CrudQueryService<
         throw new NotFoundException(`Agendamento com ID ${id} não encontrado`);
       }
       if (!(await this.canUserManageBooking({ user, booking }))) {
-        this.logger.warn('Permissão negada para editar booking', { user, booking });
+        this.logger.warn('Permissão negada para editar booking', {
+          user,
+          booking,
+        });
         throw new ForbiddenException(
           'Você não tem permissão para editar este agendamento',
         );
       }
       this.logger.debug('Permissão validada para editar booking');
+      let statusChanged = false;
       if (dto.status && dto.status !== booking.status) {
         await this.validateStatusChange(booking, dto.status);
         this.logger.debug('Transição de status validada');
+        statusChanged = true;
       }
       if (dto.bookingDate || dto.startTime || dto.endTime) {
         const updatedDto = {
@@ -131,6 +148,18 @@ export class BookingsService extends CrudQueryService<
       this.logger.debug(`Finalizando update do booking ${id}`, dto);
       const result = await super.update(id, dto, context);
       this.logger.debug(`Booking ${id} atualizado com sucesso`, result);
+      // Cria histórico de status se mudou
+      if (statusChanged) {
+        await this.bookingStatusHistoryService.create({
+          bookingId: result.id,
+          status: result.status,
+          companyId: result.companyId,
+          changedBy: user?.id,
+          statusDate: result.statusUpdatedAt
+            ? new Date(result.statusUpdatedAt)
+            : new Date(),
+        });
+      }
       return result;
     } catch (error) {
       this.logger.error(`Erro ao atualizar booking ${id}`, { error, dto });
@@ -151,7 +180,10 @@ export class BookingsService extends CrudQueryService<
         throw new NotFoundException(`Agendamento com ID ${id} não encontrado`);
       }
       if (!(await this.canUserManageBooking({ user, booking }))) {
-        this.logger.warn('Permissão negada para cancelar booking', { user, booking });
+        this.logger.warn('Permissão negada para cancelar booking', {
+          user,
+          booking,
+        });
         throw new ForbiddenException(
           'Você não tem permissão para cancelar este agendamento',
         );
@@ -159,8 +191,22 @@ export class BookingsService extends CrudQueryService<
       this.logger.debug('Permissão validada para cancelar booking');
       await this.validateCancellationDeadline(booking);
       this.logger.debug(`Booking ${id} validado para cancelamento`);
-      const result = await this.update(id, { status: BookingStatus.CANCELED }, context);
+      const result = await this.update(
+        id,
+        { status: BookingStatus.CANCELED },
+        context,
+      );
       this.logger.debug(`Booking ${id} cancelado com sucesso`, result);
+      // Cria histórico de status de cancelamento
+      await this.bookingStatusHistoryService.create({
+        bookingId: result.id,
+        status: result.status,
+        companyId: result.companyId,
+        changedBy: user?.id,
+        statusDate: result.statusUpdatedAt
+          ? new Date(result.statusUpdatedAt)
+          : new Date(),
+      });
       return result;
     } catch (error) {
       this.logger.error(`Erro ao cancelar booking ${id}`, { error });
@@ -189,12 +235,18 @@ export class BookingsService extends CrudQueryService<
       }
       this.logger.debug('Data do agendamento é futura', { bookingDate });
       if (dto.startTime >= dto.endTime) {
-        this.logger.warn('Horário de início não é anterior ao de término', { startTime: dto.startTime, endTime: dto.endTime });
+        this.logger.warn('Horário de início não é anterior ao de término', {
+          startTime: dto.startTime,
+          endTime: dto.endTime,
+        });
         throw new BadRequestException(
           'O horário de início deve ser anterior ao horário de término.',
         );
       }
-      this.logger.debug('Horário de início e término válidos', { startTime: dto.startTime, endTime: dto.endTime });
+      this.logger.debug('Horário de início e término válidos', {
+        startTime: dto.startTime,
+        endTime: dto.endTime,
+      });
     } catch (error) {
       this.logger.error('Erro ao validar dados do booking', { error, dto });
       throw error;
@@ -210,29 +262,59 @@ export class BookingsService extends CrudQueryService<
       let availability = await this.availabilitiesService
         .findWithOptions({
           filters: [
-            { field: 'spaceId', operator: FilterOperator.EQUALS, value: dto.spaceId },
-            { field: 'weekdayIndex', operator: FilterOperator.EQUALS, value: dto.weekdayIndex },
+            {
+              field: 'spaceId',
+              operator: FilterOperator.EQUALS,
+              value: dto.spaceId,
+            },
+            {
+              field: 'weekdayIndex',
+              operator: FilterOperator.EQUALS,
+              value: dto.weekdayIndex,
+            },
           ],
           pagination: { page: 1, size: 1 },
         })
         .then((result) => result.items[0]);
-      this.logger.debug('Resultado da busca de disponibilidade', { availability });
+      this.logger.debug('Resultado da busca de disponibilidade', {
+        availability,
+      });
       if (!availability) {
-        this.logger.warn('Nenhuma disponibilidade encontrada para o espaço/dia, buscando disponibilidade default da empresa', { spaceId: dto.spaceId, weekdayIndex: dto.weekdayIndex });
+        this.logger.warn(
+          'Nenhuma disponibilidade encontrada para o espaço/dia, buscando disponibilidade default da empresa',
+          { spaceId: dto.spaceId, weekdayIndex: dto.weekdayIndex },
+        );
         const space = await this.spacesService.findById(dto.spaceId);
         availability = await this.availabilitiesService
           .findWithOptions({
             filters: [
-              { field: 'spaceId', operator: FilterOperator.EQUALS, value: null },
-              { field: 'companyId', operator: FilterOperator.EQUALS, value: space.companyId },
-              { field: 'weekdayIndex', operator: FilterOperator.EQUALS, value: dto.weekdayIndex },
+              {
+                field: 'spaceId',
+                operator: FilterOperator.EQUALS,
+                value: null,
+              },
+              {
+                field: 'companyId',
+                operator: FilterOperator.EQUALS,
+                value: space.companyId,
+              },
+              {
+                field: 'weekdayIndex',
+                operator: FilterOperator.EQUALS,
+                value: dto.weekdayIndex,
+              },
             ],
             pagination: { page: 1, size: 1 },
           })
           .then((result) => result.items[0]);
-        this.logger.debug('Resultado da busca de disponibilidade default', { availability });
+        this.logger.debug('Resultado da busca de disponibilidade default', {
+          availability,
+        });
         if (!availability) {
-          this.logger.error('Não há disponibilidade configurada para este dia da semana', { spaceId: dto.spaceId, weekdayIndex: dto.weekdayIndex });
+          this.logger.error(
+            'Não há disponibilidade configurada para este dia da semana',
+            { spaceId: dto.spaceId, weekdayIndex: dto.weekdayIndex },
+          );
           throw new BadRequestException(
             `Não há disponibilidade configurada para este dia da semana.`,
           );
@@ -248,29 +330,49 @@ export class BookingsService extends CrudQueryService<
       this.logger.debug('Espaço está aberto neste dia', { availability });
       if (!availability.is24Hours) {
         if (dto.startTime < availability.openingTime) {
-          this.logger.warn('Tentativa de agendar antes do horário de abertura', { startTime: dto.startTime, openingTime: availability.openingTime });
+          this.logger.warn(
+            'Tentativa de agendar antes do horário de abertura',
+            { startTime: dto.startTime, openingTime: availability.openingTime },
+          );
           throw new BadRequestException(
             `O espaço só abre às ${String(Math.floor(availability.openingTime / 60)).padStart(2, '0')}:${String(availability.openingTime % 60).padStart(2, '0')}.`,
           );
         }
         if (dto.endTime > availability.closingTime) {
-          this.logger.warn('Tentativa de agendar após o horário de fechamento', { endTime: dto.endTime, closingTime: availability.closingTime });
+          this.logger.warn(
+            'Tentativa de agendar após o horário de fechamento',
+            { endTime: dto.endTime, closingTime: availability.closingTime },
+          );
           throw new BadRequestException(
             `O espaço fecha às ${String(Math.floor(availability.closingTime / 60)).padStart(2, '0')}:${String(availability.closingTime % 60).padStart(2, '0')}.`,
           );
         }
       }
-      this.logger.debug('Horário solicitado dentro do período disponível', { startTime: dto.startTime, endTime: dto.endTime, openingTime: availability.openingTime, closingTime: availability.closingTime });
+      this.logger.debug('Horário solicitado dentro do período disponível', {
+        startTime: dto.startTime,
+        endTime: dto.endTime,
+        openingTime: availability.openingTime,
+        closingTime: availability.closingTime,
+      });
       const durationMinutes = dto.endTime - dto.startTime;
       if (durationMinutes % availability.intervalMinutes !== 0) {
-        this.logger.warn('Duração do agendamento não é múltipla do intervalo mínimo', { durationMinutes, intervalMinutes: availability.intervalMinutes });
+        this.logger.warn(
+          'Duração do agendamento não é múltipla do intervalo mínimo',
+          { durationMinutes, intervalMinutes: availability.intervalMinutes },
+        );
         throw new BadRequestException(
           `A duração do agendamento deve ser múltipla de ${availability.intervalMinutes} minutos.`,
         );
       }
-      this.logger.debug('Duração do agendamento válida', { durationMinutes, intervalMinutes: availability.intervalMinutes });
+      this.logger.debug('Duração do agendamento válida', {
+        durationMinutes,
+        intervalMinutes: availability.intervalMinutes,
+      });
     } catch (error) {
-      this.logger.error('Erro ao verificar disponibilidade do espaço', { error, dto });
+      this.logger.error('Erro ao verificar disponibilidade do espaço', {
+        error,
+        dto,
+      });
       throw error;
     }
   }
@@ -295,14 +397,19 @@ export class BookingsService extends CrudQueryService<
         );
       const space = await this.spacesService.findById(dto.spaceId);
       if (conflictingBookings.length > 0 && !space.multipleBookings) {
-        this.logger.warn('Conflito de agendamento detectado', { conflictingBookings });
+        this.logger.warn('Conflito de agendamento detectado', {
+          conflictingBookings,
+        });
         throw new ConflictException(
           `Já existe um agendamento para este espaço neste horário.`,
         );
       }
       this.logger.debug('Nenhum conflito de agendamento detectado');
     } catch (error) {
-      this.logger.error('Erro ao verificar conflitos de booking', { error, dto });
+      this.logger.error('Erro ao verificar conflitos de booking', {
+        error,
+        dto,
+      });
       throw error;
     }
   }
@@ -411,7 +518,11 @@ export class BookingsService extends CrudQueryService<
     booking?: BookingEntity;
     dto?: CreateBookingDTO | UpdateBookingDTO;
   }): Promise<boolean> {
-    this.logger.debug('Verificando permissão do usuário para booking', { user, booking, dto });
+    this.logger.debug('Verificando permissão do usuário para booking', {
+      user,
+      booking,
+      dto,
+    });
     // Busca usuário completo
     const dbUser = await this.usersService.findById(user.sub);
     if (!dbUser) return false;

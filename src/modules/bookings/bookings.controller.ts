@@ -8,6 +8,8 @@ import {
   UpdateBookingDTO,
   BookingDto,
 } from 'src/database/schemas/bookings/bookings.dto';
+import { Post, Param } from '@nestjs/common';
+import { Ctx } from 'src/auth/decorators/context.decorator';
 
 // Cria o controlador base usando a função factory
 const BookingsControllerBase = CrudQueryController<
@@ -22,5 +24,10 @@ const BookingsControllerBase = CrudQueryController<
 export class BookingsController extends BookingsControllerBase {
   constructor(readonly bookingsService: BookingsService) {
     super(bookingsService);
+  }
+
+  @Post(':id/cancel')
+  async cancelBooking(@Param('id') id: number, @Ctx() context: any) {
+    return this.bookingsService.cancelBooking(id, context);
   }
 }

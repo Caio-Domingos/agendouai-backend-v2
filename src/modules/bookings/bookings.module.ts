@@ -17,6 +17,7 @@ import { UsersModule } from '../users/users.module';
     BookingStatusHistoryModule,
     SpaceManagersModule,
     UsersModule,
+    BookingStatusHistoryModule,
   ],
   providers: [BookingsService, BookingsRepository],
 })
