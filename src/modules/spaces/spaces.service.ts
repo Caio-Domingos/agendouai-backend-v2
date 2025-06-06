@@ -26,6 +26,21 @@ export class SpacesService extends CrudQueryService<
     super(spacesRepository);
   }
 
+  async beforeCreate(dto: CreateSpacesDTO, context?: { user?: any }): Promise<CreateSpacesDTO> {
+    if (context?.user?.id) {
+      dto.createdBy = context.user.id;
+      dto.updatedBy = context.user.id;
+    }
+    return dto;
+  }
+
+  async beforeUpdate(id: number, dto: UpdateSpacesDTO, context?: { user?: any }): Promise<UpdateSpacesDTO> {
+    if (context?.user?.id) {
+      dto.updatedBy = context.user.id;
+    }
+    return dto;
+  }
+
   protected async afterCreate(
     entity: SpacesEntity,
     dto: CreateSpacesDTO,

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
+import { UserPermission } from 'src/database/schemas/users/users.model';
 
 /**
  * Interface para o payload do JWT
@@ -10,7 +11,7 @@ export interface JwtPayload {
   sub: number;
   email: string;
   name?: string;
-  role?: string;
+  role?: UserPermission;
   companyId?: number;
   iat?: number;
   exp?: number;

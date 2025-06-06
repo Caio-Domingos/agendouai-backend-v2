@@ -71,6 +71,7 @@ export class BookingsRepository extends CrudQueryRepository<
       status: Not(BookingStatus.CANCELED),
     };
 
+    // TODO: Fazer um index disso
     if (excludeId) {
       conflictConditions.id = Not(excludeId);
     }

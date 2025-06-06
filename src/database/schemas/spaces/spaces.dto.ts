@@ -56,21 +56,22 @@ export class CreateSpacesDTO {
   @IsOptional()
   @IsString({ message: 'URL da foto deve ser uma string' })
   photoUrl?: string;
-
-  @IsNumber({}, { message: 'ID da empresa deve ser um número' })
+ 
   companyId: number;
 
   @IsString({ message: 'Nome deve ser uma string' })
   @MaxLength(100, { message: 'Nome deve ter no máximo 100 caracteres' })
   name: string;
 
+  @IsOptional()
+  @Transform(() => undefined)
   @IsNumber({}, { message: 'ID do criador deve ser um número' })
-  @Transform(({ value }) => undefined)
-  createdBy: number;
+  createdBy?: number;
 
-  @Transform(({ value }) => undefined)
+  @IsOptional()
+  @Transform(() => undefined)
   @IsNumber({}, { message: 'ID do atualizador deve ser um número' })
-  updatedBy: number;
+  updatedBy?: number;
 
   @IsOptional()
   @ValidateNested({ each: true })
